@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>과사람 자사관 프로젝트 | 2026 1학기 중간고사 대비</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B2A4A;
+  --navy-light: #2C3E6B;
+  --orange: #E8731A;
+  --orange-light: #F5A623;
+  --orange-glow: rgba(232, 115, 26, 0.15);
+  --white: #FFFFFF;
+  --gray-50: #F8F9FC;
+  --gray-100: #EEF1F6;
+  --gray-200: #D8DDE8;
+  --gray-400: #8E99B0;
+  --gray-600: #5A6477;
+  --gray-800: #2D3442;
+  --text: #1a1a2e;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow-sm: 0 2px 8px rgba(27,42,74,0.06);
+  --shadow-md: 0 8px 32px rgba(27,42,74,0.10);
+  --shadow-lg: 0 16px 48px rgba(27,42,74,0.14);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--gray-50);
+  color: var(--text);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Hero ── */
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 60%, #3a5298 100%);
+  color: var(--white);
+  padding: 56px 24px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -20%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(232,115,26,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 6px 20px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(8px);
+  animation: fadeDown 0.6s ease-out;
+}
+.hero h1 {
+  font-size: clamp(26px, 5vw, 38px);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 12px;
+  animation: fadeDown 0.6s ease-out 0.1s both;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--orange-light);
+}
+.hero-sub {
+  font-size: 15px;
+  font-weight: 300;
+  opacity: 0.8;
+  max-width: 420px;
+  margin: 0 auto;
+  animation: fadeDown 0.6s ease-out 0.2s both;
+}
+
+/* ── Container ── */
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ── Section ── */
+.section {
+  margin-top: 36px;
+  animation: fadeUp 0.5s ease-out both;
+}
+.section:nth-child(2) { animation-delay: 0.1s; }
+.section:nth-child(3) { animation-delay: 0.15s; }
+.section:nth-child(4) { animation-delay: 0.2s; }
+.section:nth-child(5) { animation-delay: 0.25s; }
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--orange);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 10px;
+}
+.section-label::before {
+  content: '';
+  width: 18px;
+  height: 2px;
+  background: var(--orange);
+  border-radius: 2px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 18px;
+  line-height: 1.4;
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ── Two-Track ── */
+.track-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 560px) {
+  .track-grid { grid-template-columns: 1fr; }
+}
+.track-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.track-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.track-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 4px;
+}
+.track-card.diagnosis::before { background: var(--navy); }
+.track-card.advanced::before { background: var(--orange); }
+
+.track-num {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.track-card.diagnosis .track-num { color: var(--navy-light); }
+.track-card.advanced .track-num { color: var(--orange); }
+
+.track-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+.track-en {
+  font-size: 11px;
+  color: var(--gray-400);
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+.track-desc {
+  font-size: 13px;
+  color: var(--gray-600);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+.track-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.track-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-800);
+  padding: 10px 14px;
+  background: var(--gray-50);
+  border-radius: var(--radius-sm);
+}
+.track-item .icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.track-card.diagnosis .icon { background: rgba(27,42,74,0.08); }
+.track-card.advanced .icon { background: var(--orange-glow); }
+
+/* ── Timeline ── */
+.timeline {
+  position: relative;
+  padding-left: 36px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--navy), var(--orange));
+  border-radius: 2px;
+}
+.tl-item {
+  position: relative;
+  margin-bottom: 24px;
+}
+.tl-item:last-child { margin-bottom: 0; }
+
+.tl-dot {
+  position: absolute;
+  left: -30px;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--navy);
+  border: 3px solid var(--gray-50);
+  box-shadow: 0 0 0 2px var(--navy);
+}
+.tl-item.highlight .tl-dot {
+  background: var(--orange);
+  box-shadow: 0 0 0 2px var(--orange);
+}
+
+.tl-date {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+.tl-item.highlight .tl-date { color: var(--orange); }
+
+.tl-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 3px;
+}
+.tl-desc {
+  font-size: 13px;
+  color: var(--gray-600);
+  line-height: 1.6;
+}
+.tl-time-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: var(--gray-100);
+  color: var(--gray-600);
+  margin-top: 6px;
+}
+
+/* ── Schedule Table ── */
+.schedule-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+}
+.schedule-table th {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-400);
+  text-align: left;
+  padding: 0 12px 8px;
+  letter-spacing: 0.5px;
+}
+.schedule-table td {
+  padding: 14px 12px;
+  font-size: 13px;
+  background: var(--white);
+}
+.schedule-table tr td:first-child {
+  border-radius: 10px 0 0 10px;
+  font-weight: 700;
+  color: var(--navy);
+  white-space: nowrap;
+}
+.schedule-table tr td:last-child {
+  border-radius: 0 10px 10px 0;
+}
+.schedule-table .tool-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 6px;
+}
+.badge-orange { background: var(--orange-glow); color: var(--orange); }
+.badge-navy { background: rgba(27,42,74,0.08); color: var(--navy); }
+
+/* ── Steps ── */
+.steps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  padding-left: 48px;
+}
+.step-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  position: relative;
+  padding: 12px 0;
+}
+.step-num {
+  position: absolute;
+  left: -48px;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--white);
+  flex-shrink: 0;
+}
+.step-num.navy { background: var(--navy); }
+.step-num.orange { background: var(--orange); }
+
+.step-content {
+  flex: 1;
+}
+.step-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 2px;
+}
+.step-desc {
+  font-size: 12px;
+  color: var(--gray-400);
+}
+.step-connector {
+  position: absolute;
+  left: -32px;
+  top: 44px;
+  width: 2px;
+  height: calc(100% - 32px);
+  background: var(--gray-200);
+}
+.step-row:last-child .step-connector { display: none; }
+
+/* ── Promise circle ── */
+.promise-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  text-align: center;
+}
+@media (max-width: 480px) {
+  .promise-grid { grid-template-columns: 1fr; }
+}
+.promise-item {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 24px 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.promise-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+.promise-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin: 0 auto 12px;
+}
+.promise-icon.pi-1 { background: rgba(27,42,74,0.08); }
+.promise-icon.pi-2 { background: var(--orange-glow); }
+.promise-icon.pi-3 { background: rgba(58,82,152,0.1); }
+
+.promise-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--orange);
+  margin-bottom: 4px;
+}
+.promise-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+.promise-desc {
+  font-size: 12px;
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+
+/* ── CTA Footer ── */
+.cta-section {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+.cta-box {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: var(--white);
+  border-radius: var(--radius);
+  padding: 36px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.cta-box::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(232,115,26,0.2), transparent);
+  border-radius: 50%;
+}
+.cta-quote {
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.cta-quote em {
+  font-style: normal;
+  color: var(--orange-light);
+}
+.cta-sub {
+  font-size: 13px;
+  opacity: 0.7;
+  font-weight: 300;
+}
+
+/* ── Animations ── */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Global touch ── */
+::selection {
+  background: var(--orange);
+  color: white;
+}
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-badge">자사관 프로젝트</div>
+  <h1>2026년 1학기<br><em>중간고사 대비</em> 상세 계획</h1>
+  <p class="hero-sub">완벽한 내신 대비를 위한 맞춤형 학습 및 특화 프로그램</p>
+</header>
+
+<div class="container">
+
+  <!-- Two-Track -->
+  <div class="section">
+    <div class="section-label">SYSTEM</div>
+    <div class="section-title">투트랙(Two-Track) 시스템</div>
+    <div class="track-grid">
+      <div class="track-card diagnosis">
+        <div class="track-num">TRACK 01</div>
+        <div class="track-title">개별 맞춤 학습</div>
+        <div class="track-en">Diagnosis & Care</div>
+        <div class="track-desc">학생별 수준과 상황에 맞춘<br>데이터 기반 밀착 관리</div>
+        <div class="track-items">
+          <div class="track-item"><span class="icon">📋</span> 미리보는 중간고사 (중2, 3)</div>
+          <div class="track-item"><span class="icon">🔍</span> 약점 보완 개별 클리닉</div>
+          <div class="track-item"><span class="icon">⚡</span> 시험 직전 보강</div>
+        </div>
+      </div>
+      <div class="track-card advanced">
+        <div class="track-num">TRACK 02</div>
+        <div class="track-title">내신 특화 수업</div>
+        <div class="track-en">Advanced Skill Building</div>
+        <div class="track-desc">최상위권 고득점을 위한<br>핵심 수학적 역량 강화</div>
+        <div class="track-items">
+          <div class="track-item"><span class="icon">✍️</span> 서술형 완벽 대비 집중 수업</div>
+          <div class="track-item"><span class="icon">📊</span> 내신 대비 기출 분석 특화 수업</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1단계: 미리보는 중간고사 -->
+  <div class="section">
+    <div class="section-label">STEP 1</div>
+    <div class="section-title">미리보는 중간고사</div>
+    <div class="card">
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px;">
+        <span style="font-size:12px; font-weight:600; background:var(--gray-100); padding:5px 14px; border-radius:100px; color:var(--gray-600);">대상: 중학교 2, 3학년</span>
+        <span style="font-size:12px; font-weight:600; background:var(--orange-glow); padding:5px 14px; border-radius:100px; color:var(--orange);">시행일: 3월 28일</span>
+      </div>
+      <div style="display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap;">
+        <div style="font-size:12px; color:var(--gray-600); line-height:1.7;">
+          <strong style="color:var(--gray-800);">🏫 오프라인 등원</strong><br>
+          오전 10:00~13:00 또는<br>오후 14:00~17:00 중 선택
+        </div>
+        <div style="font-size:12px; color:var(--gray-600); line-height:1.7;">
+          <strong style="color:var(--gray-800);">💻 온라인 진행</strong><br>
+          정해진 시간 엄수
+        </div>
+      </div>
+      <table class="schedule-table">
+        <thead>
+          <tr><th>시간</th><th>내용</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>10:00~10:40</td>
+            <td><span class="tool-badge badge-orange">오르조 앱</span>동래구 지역 2025년 기출 1</td>
+          </tr>
+          <tr>
+            <td>10:50~11:30</td>
+            <td><span class="tool-badge badge-orange">오르조 앱</span>동래구 지역 2025년 기출 2</td>
+          </tr>
+          <tr>
+            <td>11:40~12:20</td>
+            <td><span class="tool-badge badge-navy">클래스인</span>서술형 문제 풀이</td>
+          </tr>
+          <tr>
+            <td>12:30~13:00</td>
+            <td><span class="tool-badge badge-navy">분석</span>틀린 문제 완벽 분석 · 1:1 피드백</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 2단계: 개별 클리닉 -->
+  <div class="section">
+    <div class="section-label">STEP 2</div>
+    <div class="section-title">개별 클리닉 및 직전 보강</div>
+    <div class="card">
+      <p style="font-size:13px; color:var(--gray-600); margin-bottom:20px; padding:12px 16px; background:var(--gray-50); border-radius:var(--radius-sm); border-left:3px solid var(--orange);">
+        '미리보는 중간고사' 성적 데이터 분석 결과에 따라<br>개별 등원 대상자 선정 (약점 집중 케어)
+      </p>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">4월 4일 (토)</div>
+          <div class="tl-title">1차 개별 클리닉</div>
+          <div class="tl-desc">미리보는 중간고사 결과에 따라 뚜렷한 약점 단원이 있거나 집중 개별 케어가 필요한 학생 대상</div>
+          <span class="tl-time-badge">10:00 ~ 13:00</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">4월 11일 (토)</div>
+          <div class="tl-title">2차 개별 클리닉</div>
+          <div class="tl-desc">1차 클리닉 이후에도 보완이 필요하거나 부모님·학생 요청이 있는 경우 추가 진행</div>
+          <span class="tl-time-badge">10:00 ~ 13:00</span>
+        </div>
+        <div class="tl-item highlight">
+          <div class="tl-dot"></div>
+          <div class="tl-date">D-1 (시험 전날)</div>
+          <div class="tl-title">최종 직전 보강</div>
+          <div class="tl-desc">시험 전날 마지막 점검 및 핵심 정리</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 특화 수업 1: 서술형 -->
+  <div class="section">
+    <div class="section-label">SPECIAL 1</div>
+    <div class="section-title">서술형 대비 특화 수업</div>
+    <div class="card">
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px;">
+        <span style="font-size:12px; font-weight:600; background:var(--gray-100); padding:5px 14px; border-radius:100px; color:var(--gray-600);">수업 시간: 20:30 ~ 22:00</span>
+        <span style="font-size:12px; font-weight:600; background:rgba(27,42,74,0.08); padding:5px 14px; border-radius:100px; color:var(--navy);">플랫폼: 클래스인 (100% 복습 가능)</span>
+      </div>
+      <div class="steps-container">
+        <div class="step-row">
+          <div class="step-num navy">1</div>
+          <div class="step-content">
+            <div class="step-title">핵심 조건과 단서 명시</div>
+            <div class="step-desc">문제의 의도 파악</div>
+          </div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-row">
+          <div class="step-num navy">2</div>
+          <div class="step-content">
+            <div class="step-title">순서도 작성</div>
+            <div class="step-desc">문제 해결을 위한 논리적 플로우 기획</div>
+          </div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-row">
+          <div class="step-num navy">3</div>
+          <div class="step-content">
+            <div class="step-title">공식 및 수학적 정의 활용</div>
+            <div class="step-desc">정확한 수학적 근거 제시</div>
+          </div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-row">
+          <div class="step-num navy">4</div>
+          <div class="step-content">
+            <div class="step-title">논리적인 연결어 작성</div>
+            <div class="step-desc">감점 없는 완벽한 문장 구조 완성</div>
+          </div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-row">
+          <div class="step-num orange">5</div>
+          <div class="step-content">
+            <div class="step-title">전문 강사의 1:1 첨삭</div>
+            <div class="step-desc">개별 피드백으로 완성도 극대화</div>
+          </div>
+          <div class="step-connector"></div>
+        </div>
+      </div>
+      <p style="font-size:12px; color:var(--gray-400); margin-top:20px; text-align:center;">인근 지역 과년도 기출문제를 기반으로 한 실전 집중 훈련</p>
+    </div>
+  </div>
+
+  <!-- 특화 수업 2: 기출 분석 -->
+  <div class="section">
+    <div class="section-label">SPECIAL 2</div>
+    <div class="section-title">내신 대비 기출 특화 수업</div>
+    <div class="card">
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px;">
+        <span style="font-size:12px; font-weight:600; background:var(--gray-100); padding:5px 14px; border-radius:100px; color:var(--gray-600);">수업 시간: 20:30 ~ 22:00</span>
+      </div>
+      <div style="display:flex; gap:16px; align-items:center; padding:20px; background:var(--gray-50); border-radius:var(--radius-sm); margin-bottom:20px; flex-wrap:wrap;">
+        <div style="flex:1; min-width:200px;">
+          <div style="font-size:15px; font-weight:800; color:var(--navy); margin-bottom:6px;">서울 강남 3구 기출문제</div>
+          <div style="font-size:13px; color:var(--gray-600);">폭넓도 반영 · 고난도/킬러 문항 완벽 대비</div>
+        </div>
+        <div style="width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg, var(--orange), var(--orange-light)); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <div style="width:56px; height:56px; border-radius:50%; background:var(--navy); display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:10px; color:white; text-align:center; font-weight:600; line-height:1.3;">기본<br>+응용</span>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:13px; font-weight:700; color:var(--navy); margin-bottom:12px;">오르조 학습 앱 활용</div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; align-items:center; gap:10px; font-size:13px; color:var(--gray-800);">
+          <span style="color:var(--orange); font-weight:bold;">✓</span> 실시간 학생 학습 상태 및 풀이 과정 데이터 확인
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; font-size:13px; color:var(--gray-800);">
+          <span style="color:var(--orange); font-weight:bold;">✓</span> 개인별 맞춤 오답 노트 자동 생성 및 제공
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; font-size:13px; color:var(--gray-800);">
+          <span style="color:var(--orange); font-weight:bold;">✓</span> 취약점 즉각 보완 및 밀착 추적 관리
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 약속 -->
+  <div class="section">
+    <div class="section-label">PROMISE</div>
+    <div class="section-title">완벽을 디자인하는 자사관의 약속</div>
+    <div class="promise-grid">
+      <div class="promise-item">
+        <div class="promise-icon pi-1">🎯</div>
+        <div class="promise-num">01</div>
+        <div class="promise-title">정밀한 진단</div>
+        <div class="promise-desc">데이터 기반<br>미리보는 중간고사</div>
+      </div>
+      <div class="promise-item">
+        <div class="promise-icon pi-2">🔧</div>
+        <div class="promise-num">02</div>
+        <div class="promise-title">완벽한 보완</div>
+        <div class="promise-desc">빈틈없는 개별 클리닉과<br>실시간 오답 관리</div>
+      </div>
+      <div class="promise-item">
+        <div class="promise-icon pi-3">🏆</div>
+        <div class="promise-num">03</div>
+        <div class="promise-title">압도적 실력</div>
+        <div class="promise-desc">강남 3구 수준의 기출 및<br>5단계 서술형 훈련</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="cta-box">
+      <div class="cta-quote">불안감은 <em>확신</em>으로,<br>과정은 <em>결과</em>로 증명합니다.</div>
+      <div class="cta-sub">2026학년도 1학기 중간고사, 과사람 자사관과 함께 완벽하게 대비하십시오.</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
