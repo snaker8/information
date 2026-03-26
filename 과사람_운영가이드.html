@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>과사람 수학학원 | 수업모델 운영 가이드</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif; background: #f7f7f3; color: #1a1a2e; line-height: 1.75; word-break: keep-all; -webkit-font-smoothing: antialiased; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 24px 80px; padding-top: 80px; }
+
+  /* ── Sticky Glass Navigation ── */
+  .top-nav { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; align-items: center; gap: 2px; background: rgba(255,255,255,0.82); backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); border: 1px solid rgba(45,106,79,0.12); border-radius: 14px; padding: 6px 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04); transition: all 0.5s cubic-bezier(0.16,1,0.3,1); }
+  .top-nav.scrolled { background: rgba(255,255,255,0.92); box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+  .nav-btn { padding: 7px 14px; border: none; border-radius: 10px; background: transparent; color: #555; font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); white-space: nowrap; }
+  .nav-btn:hover { background: rgba(45,106,79,0.08); color: #2d6a4f; transform: translateY(-1px); }
+  .nav-btn.active { background: #2d6a4f; color: #fff; box-shadow: 0 2px 8px rgba(45,106,79,0.25); }
+  .nav-divider { width: 1px; height: 18px; background: rgba(0,0,0,0.08); margin: 0 2px; flex-shrink: 0; }
+
+  /* ── Header ── */
+  .report-header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1a3a3a 100%); color: #fff; padding: 48px 40px; border-radius: 20px; margin-bottom: 32px; position: relative; overflow: hidden; }
+  .report-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(45,106,79,0.15), transparent 70%); pointer-events: none; }
+  .report-header h1 { font-size: 30px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.02em; position: relative; }
+  .report-header .sub { font-size: 14px; color: #a0b4d0; font-weight: 400; position: relative; }
+
+  /* ── Typography ── */
+  h2 { font-size: 19px; font-weight: 800; margin: 40px 0 16px; color: #1a1a2e; padding-left: 14px; border-left: 4px solid #2d6a4f; letter-spacing: -0.01em; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 10px; color: #2d6a4f; }
+
+  /* ── Cards ── */
+  .card { background: #fff; border-radius: 16px; padding: 24px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.04); transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .card:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.05); transform: translateY(-1px); }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th { background: #2d6a4f; color: #fff; padding: 11px 10px; text-align: center; font-weight: 600; font-size: 12px; letter-spacing: 0.02em; }
+  th:first-child { border-radius: 8px 0 0 0; }
+  th:last-child { border-radius: 0 8px 0 0; }
+  td { padding: 10px 8px; text-align: center; border-bottom: 1px solid #f0f0ec; }
+  tr:hover td { background: #f8faf8; }
+  tr:last-child td { border-bottom: none; }
+  .td-left { text-align: left; font-weight: 600; background: #fafaf8; }
+
+  /* ── Badges ── */
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.01em; }
+  .b-main { background: #2d6a4f; color: #fff; }
+  .b-sub { background: #457b9d; color: #fff; }
+  .b-ms { background: #e76f51; color: #fff; }
+  .b-tag { background: #f0f0ec; color: #555; }
+  .b-high { background: #d4380d; color: #fff; }
+  .b-mid { background: #d48806; color: #fff; }
+  .b-low { background: #8c8c8c; color: #fff; }
+
+  /* ── Time Grid ── */
+  .time-grid { display: grid; grid-template-columns: 100px 1fr 1fr; gap: 3px; margin: 14px 0; }
+  .tg-cell { padding: 10px; border-radius: 8px; font-size: 12px; text-align: center; }
+  .tg-head { background: #1a1a2e; color: #fff; font-weight: 600; padding: 9px; border-radius: 8px; }
+  .c-concept { background: #d8f3dc; border: 1px solid #95d5b2; }
+  .c-type { background: #d4e4f7; border: 1px solid #a2c4e0; }
+  .c-clinic { background: #fde8d0; border: 1px solid #f4a261; }
+  .c-test { background: #f0f0ec; border: 1px solid #d8d8d0; }
+
+  /* ── Legends ── */
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin: 10px 0; font-size: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-box { width: 14px; height: 14px; border-radius: 4px; }
+
+  /* ── Highlights & Insights ── */
+  .highlight { background: #fffbeb; padding: 14px 18px; border-radius: 12px; border: 1px solid #f0d060; margin: 12px 0; font-size: 13px; }
+  .insight { background: #f0f7f4; padding: 14px 18px; border-radius: 12px; border: 1px solid #b7e4c7; margin: 12px 0; font-size: 13px; }
+
+  /* ── Week Grid ── */
+  .week-grid { display: grid; grid-template-columns: 110px repeat(5, 1fr); gap: 3px; margin: 14px 0; font-size: 12px; }
+  .wc { padding: 8px 4px; text-align: center; border-radius: 6px; }
+  .w-head { background: #1a1a2e; color: #fff; font-weight: 600; }
+  .w-on { background: #d8f3dc; border: 1px solid #95d5b2; font-weight: 500; }
+  .w-off { background: #fafaf8; color: #ccc; }
+  .w-label { background: #fafaf8; font-weight: 600; text-align: left; padding-left: 8px; }
+  .w-special { background: #f0e6ff; border: 1px solid #c9b1ff; }
+
+  .note { font-size: 12px; color: #888; margin-top: 8px; }
+
+  /* ── Tabs ── */
+  .tab-wrap { margin: 16px 0; }
+  .tabs { display: flex; gap: 4px; }
+  .tab { padding: 9px 18px; background: #f0f0ec; border: none; border-radius: 10px 10px 0 0; cursor: pointer; font-size: 13px; font-weight: 600; color: #666; font-family: inherit; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .tab:hover { background: #e8e8e2; }
+  .tab.active { background: #fff; color: #2d6a4f; }
+  .tc { display: none; background: #fff; padding: 20px; border-radius: 0 12px 12px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.03); }
+  .tc.active { display: block; }
+
+  .formula { background: #fafaf8; padding: 10px 16px; border-radius: 8px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; margin: 10px 0; border: 1px solid #e8e8e2; }
+
+  .flex-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .flex-row > div { flex: 1; min-width: 280px; }
+
+  /* ── Course Sections ── */
+  .course-section { margin: 10px 0; padding: 14px 18px; border-radius: 12px; }
+  .cs-middle { background: #f0f7f4; border: 1px solid #b7e4c7; }
+  .cs-high-core { background: #e8f0fe; border: 1px solid #a2c4e0; }
+  .cs-high-adv { background: #fdf2e9; border: 1px solid #f4a261; }
+
+  /* ── Path Arrows ── */
+  .path-arrow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 10px 0; font-size: 12px; }
+  .path-arrow .step { background: #fff; border: 1px solid #d8d8d0; border-radius: 8px; padding: 5px 12px; font-weight: 600; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .path-arrow .step:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .path-arrow .arrow { color: #bbb; font-weight: bold; }
+  .path-arrow .step.active { background: #2d6a4f; color: #fff; border-color: #2d6a4f; box-shadow: 0 2px 8px rgba(45,106,79,0.2); }
+
+  /* ── Scroll Reveal Animation ── */
+  .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── Print ── */
+  @media print {
+    .top-nav { display: none; }
+    body { background: #fff; }
+    .container { padding-top: 0; }
+    .card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+    .tab:not(.active), .tabs { display: none; }
+    .tc { display: block !important; box-shadow: none; border: 1px solid #ddd; }
+    .fade-in { opacity: 1; transform: none; }
+  }
+  @media (max-width: 700px) {
+    .top-nav { top: 8px; padding: 4px 6px; border-radius: 12px; overflow-x: auto; max-width: calc(100vw - 16px); }
+    .nav-btn { font-size: 11px; padding: 6px 10px; }
+    .nav-divider { display: none; }
+    .container { padding-top: 64px; }
+    .report-header { padding: 32px 20px; border-radius: 16px; }
+    .report-header h1 { font-size: 22px; }
+    .time-grid { grid-template-columns: 70px 1fr 1fr; font-size: 11px; }
+    .week-grid { font-size: 10px; grid-template-columns: 80px repeat(5, 1fr); }
+    .flex-row > div { min-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Sticky Glass Navigation ── -->
+<nav class="top-nav" id="topNav">
+  <button class="nav-btn active" onclick="scrollToSec('sec-1')">개요</button>
+  <div class="nav-divider"></div>
+  <button class="nav-btn" onclick="scrollToSec('sec-2')">라인업</button>
+  <button class="nav-btn" onclick="scrollToSec('sec-3')">시간표</button>
+  <button class="nav-btn" onclick="scrollToSec('sec-8')">교재</button>
+  <button class="nav-btn" onclick="scrollToSec('sec-9')">커리큘럼</button>
+  <div class="nav-divider"></div>
+  <button class="nav-btn" onclick="scrollToSec('sec-12')">평가</button>
+  <button class="nav-btn" onclick="scrollToSec('sec-13')">에듀테크</button>
+  <button class="nav-btn" onclick="scrollToSec('sec-15')">학부모</button>
+  <button class="nav-btn" onclick="scrollToSec('sec-16')">입학</button>
+  <button class="nav-btn" onclick="scrollToSec('sec-18')">강사</button>
+</nav>
+
+<div class="container">
+
+<!-- ===== 헤더 ===== -->
+<div class="report-header fade-in">
+  <h1>과사람 수학학원 수업모델 운영 가이드</h1>
+  <div class="sub">중등 대상 | 일반고 최상위권 · 전국단위 자사고 진학 목표 | 하이브리드 수업모델</div>
+</div>
+
+<!-- ===== 1. 개요 ===== -->
+<h2 id="sec-1">1. 수업모델 개요</h2>
+<div class="card fade-in">
+  <p style="font-size:14px;margin-bottom:12px;">
+    과사람 수학학원은 <b>"체계적 개념 전달"</b>과 <b>"데이터 기반 개별 약점 보완"</b>을 하나의 시간표 안에 결합한 하이브리드 수업모델을 운영합니다. 강의식 수업의 체계적 커리큘럼과, 과외식 수업의 1:1 맞춤 관리를 동시에 제공하여 최상위권 학생과 전국단위 자사고 진학을 목표로 하는 학생에게 최적화된 학습 환경을 만듭니다.
+  </p>
+  <div class="insight fade-in">
+    <b>핵심 구조:</b> A/B 2트랙 교차 운영으로, 1인의 메인강사와 1인의 서브강사만으로 개념수업 · 유형학습 · 특강 · 개별클리닉 4가지 프로그램을 효율적으로 순환
+  </div>
+
+  <h3>가이드 목차</h3>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-size:12px;">
+    <div style="background:#f0f7f4;border:1px solid #b7e4c7;border-radius:6px;padding:8px 10px;">
+      <div style="color:#2d6a4f;font-weight:700;margin-bottom:4px;">수업 설계</div>
+      <div style="color:#555;line-height:1.6;">
+        2. 과정별 라인업<br>
+        3. 1일 시간표 구조<br>
+        4. 강사별 시간대 배치<br>
+        5. 규모별 시뮬레이션<br>
+        6. 주간 반 배치 예시
+      </div>
+    </div>
+    <div style="background:#e8f0fe;border:1px solid #a2c4e0;border-radius:6px;padding:8px 10px;">
+      <div style="color:#457b9d;font-weight:700;margin-bottom:4px;">커리큘럼</div>
+      <div style="color:#555;line-height:1.6;">
+        7. 특강 & 클리닉 설계<br>
+        8. 과정별 교재 라인업<br>
+        9. 주간 수업 구성<br>
+        10. 단계별 확장 로드맵<br>
+        11. 3개년 로드맵
+      </div>
+    </div>
+    <div style="background:#fdf2e9;border:1px solid #f4a261;border-radius:6px;padding:8px 10px;">
+      <div style="color:#e76f51;font-weight:700;margin-bottom:4px;">관리 시스템</div>
+      <div style="color:#555;line-height:1.6;">
+        12. 평가 시스템<br>
+        13. 에듀테크 시스템<br>
+        14. 학습 데이터 관리<br>
+        15. 학부모 소통 체계<br>
+        16. 입학·배치 프로세스<br>
+        17. 내신 대비 운영<br>
+        18. 강사 채용·육성 기준<br>
+        19. 졸업 후 연결 경로
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 2. 과정별 라인업 ===== -->
+<h2 id="sec-2">2. 과정별 라인업</h2>
+<div class="card fade-in">
+  <p style="font-size:13px;margin-bottom:12px;">학년이 아닌 <b>과정(커리큘럼) 기준</b>으로 반을 편성합니다. 중1이든 중2든 동일 과정을 수강하는 학생끼리 한 반이 되어 반당 적정 인원을 확보하고, 선행 학생의 학년 혼재 문제를 해결합니다.</p>
+
+  <div class="course-section cs-middle">
+    <h3 style="margin-top:0;">중등 과정 — 5개</h3>
+    <table>
+      <tr><th>과정명</th><th>주요 내용</th><th>주요 대상</th><th>수요</th></tr>
+      <tr><td><b>중1-2</b></td><td>좌표평면, 정비례·반비례, 기본도형, 작도·합동</td><td>예비중1 신규, 중1 현행</td><td><span class="badge b-mid">중</span></td></tr>
+      <tr><td><b>중2-1</b></td><td>유리수·순환소수, 식의 계산, 연립방정식, 부등식</td><td>중1 선행, 중2 현행</td><td><span class="badge b-mid">중</span></td></tr>
+      <tr><td><b>중2-2</b></td><td>일차함수, 확률, 도형의 성질(삼각형·사각형)</td><td>중1 빠른선행, 중2 현행</td><td><span class="badge b-mid">중</span></td></tr>
+      <tr><td><b>중3-1</b></td><td>제곱근·실수, 인수분해, 이차방정식, 이차함수</td><td>중1~2 선행, 중3 현행</td><td><span class="badge b-high">높음</span></td></tr>
+      <tr><td><b>중3-2</b></td><td>삼각비, 원의 성질, 통계</td><td>중2 선행, 중3 현행</td><td><span class="badge b-mid">중</span></td></tr>
+    </table>
+  </div>
+
+  <div class="course-section cs-high-core">
+    <h3 style="margin-top:0;">고등 핵심 선행 — 4개 (상시 개설)</h3>
+    <table>
+      <tr><th>과정명</th><th>주요 내용</th><th>주요 대상</th><th>수요</th></tr>
+      <tr><td><b>공통수학1</b></td><td>다항식, 방정식·부등식, 경우의 수</td><td>중2~3 선행</td><td><span class="badge b-high">높음</span></td></tr>
+      <tr><td><b>공통수학2</b></td><td>도형의 방정식, 집합·명제, 함수</td><td>중2~3 선행</td><td><span class="badge b-high">높음</span></td></tr>
+      <tr><td><b>대수</b></td><td>지수·로그, 삼각함수, 수열</td><td>중2~3 빠른선행</td><td><span class="badge b-high">높음</span></td></tr>
+      <tr><td><b>미적분Ⅰ</b></td><td>함수의 극한·연속, 미분과 적분</td><td>중3 선행</td><td><span class="badge b-mid">중~높음</span></td></tr>
+    </table>
+  </div>
+
+  <div class="course-section cs-high-adv">
+    <h3 style="margin-top:0;">고등 심화 선행 — 3개 (수요 기반 · 특강 운영)</h3>
+    <table>
+      <tr><th>과정명</th><th>주요 내용</th><th>주요 대상</th><th>운영 형태</th></tr>
+      <tr><td><b>미적분Ⅱ</b></td><td>수열의 극한, 미분법, 적분법</td><td>중3 최선행</td><td><span class="badge b-tag">특강반</span></td></tr>
+      <tr><td><b>확률과 통계</b></td><td>확률, 통계</td><td>필요 학생</td><td><span class="badge b-tag">시기별 특강</span></td></tr>
+      <tr><td><b>기하</b></td><td>이차곡선, 벡터, 공간도형</td><td>필요 학생</td><td><span class="badge b-tag">시기별 특강</span></td></tr>
+    </table>
+    <div class="note">* 미적분Ⅱ · 확통 · 기하는 정규 시간표의 "특강 슬롯"을 활용하여 소수정예 운영</div>
+  </div>
+</div>
+
+<div class="card fade-in">
+  <h3>자사고 목표 학생의 전형적 선행 경로</h3>
+  <p style="font-size:12px;color:#666;margin-bottom:10px;">학년은 입학 시점 기준, 과정은 학원 수강 시작점 기준</p>
+  <table style="font-size:12px;">
+    <tr><th>학년</th><th>진입 과정</th><th>1년 후 목표</th><th>선행 경로</th></tr>
+    <tr>
+      <td><b>중1 입학</b></td>
+      <td>중1-2 또는 중2-1</td>
+      <td>중3-1 ~ 공통수학1</td>
+      <td>
+        <div class="path-arrow">
+          <span class="step">중1-2</span><span class="arrow">→</span>
+          <span class="step">중2-1</span><span class="arrow">→</span>
+          <span class="step">중2-2</span><span class="arrow">→</span>
+          <span class="step active">중3-1</span>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td><b>중2</b></td>
+      <td>중3-1 또는 공통수학1</td>
+      <td>대수 ~ 미적분Ⅰ</td>
+      <td>
+        <div class="path-arrow">
+          <span class="step">중3-1</span><span class="arrow">→</span>
+          <span class="step">공통1</span><span class="arrow">→</span>
+          <span class="step">공통2</span><span class="arrow">→</span>
+          <span class="step active">대수</span>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td><b>중3</b></td>
+      <td>대수 또는 미적분Ⅰ</td>
+      <td>미적분Ⅱ</td>
+      <td>
+        <div class="path-arrow">
+          <span class="step">대수</span><span class="arrow">→</span>
+          <span class="step">미적분Ⅰ</span><span class="arrow">→</span>
+          <span class="step active">미적분Ⅱ</span>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<!-- ===== 3. 시간표 ===== -->
+<h2 id="sec-3">3. 1일 시간표 구조</h2>
+<div class="card fade-in">
+  <div class="legend">
+    <div class="legend-item"><div class="legend-box" style="background:#d8f3dc;border:1px solid #95d5b2;"></div> 개념진도 <span class="badge b-main">메인</span></div>
+    <div class="legend-item"><div class="legend-box" style="background:#d4e4f7;border:1px solid #a2c4e0;"></div> 유형학습·일일테스트 <span class="badge b-sub">서브</span></div>
+    <div class="legend-item"><div class="legend-box" style="background:#fde8d0;border:1px solid #f4a261;"></div> 특강 / 개별클리닉 <span class="badge b-ms">메인 or 서브</span></div>
+    <div class="legend-item"><div class="legend-box" style="background:#e8e8e8;border:1px solid #ccc;"></div> 복습테스트</div>
+  </div>
+
+  <div class="time-grid">
+    <div class="tg-head"></div><div class="tg-head">수업모델 A</div><div class="tg-head">수업모델 B</div>
+    <div class="tg-cell" style="background:#f0f0f0;font-weight:600;">5:00~5:30</div>
+    <div class="tg-cell c-test">복습테스트</div><div class="tg-cell c-test">복습테스트</div>
+    <div class="tg-cell" style="background:#f0f0f0;font-weight:600;">5:30~7:00</div>
+    <div class="tg-cell c-concept"><b>개념 진도</b><br><span class="badge b-main">메인강사</span></div>
+    <div class="tg-cell c-clinic">특강 or 개별클리닉<br><span class="badge b-ms">메인 or 서브</span></div>
+    <div class="tg-cell" style="background:#f0f0f0;font-weight:600;">7:00~8:30</div>
+    <div class="tg-cell c-type">유형학습 & 일일테스트<br><span class="badge b-sub">서브강사</span></div>
+    <div class="tg-cell c-concept"><b>개념 진도</b><br><span class="badge b-main">메인강사</span></div>
+    <div class="tg-cell" style="background:#f0f0f0;font-weight:600;">8:30~10:00</div>
+    <div class="tg-cell c-clinic">특강 or 개별클리닉<br><span class="badge b-ms">메인 or 서브</span></div>
+    <div class="tg-cell c-type">유형학습 & 일일테스트<br><span class="badge b-sub">서브강사</span></div>
+  </div>
+</div>
+
+<!-- ===== 4. 강사 배치 ===== -->
+<h2 id="sec-4">4. 강사별 시간대 배치</h2>
+<div class="card fade-in">
+  <table>
+    <tr><th>시간</th><th>메인강사</th><th>서브강사</th></tr>
+    <tr><td>5:00~5:30</td><td colspan="2">복습테스트 감독 (A+B반)</td></tr>
+    <tr><td>5:30~7:00</td><td style="background:#d8f3dc;">A반 개념진도</td><td style="background:#fde8d0;">B반 개별클리닉</td></tr>
+    <tr><td>7:00~8:30</td><td style="background:#d8f3dc;">B반 개념진도</td><td style="background:#d4e4f7;">A반 유형학습</td></tr>
+    <tr><td>8:30~10:00</td><td style="background:#fde8d0;">A반 특강</td><td style="background:#d4e4f7;">B반 유형학습</td></tr>
+  </table>
+  <div class="insight fade-in">
+    <b>강사 역할 설계 원칙</b><br>
+    • <b>메인강사</b> — 강의력 중심. 개념진도(판서 수업)와 특강(심화·응용·고난도) 담당<br>
+    • <b>서브강사</b> — 꼼꼼함 중심. 유형학습·일일테스트 관리와 개별클리닉(약점 진단·보완) 담당<br>
+    • 반 확장 시 메인/서브 역할은 유연하게 혼합 운영 가능
+  </div>
+</div>
+
+<!-- ===== 5. 규모별 시뮬레이션 ===== -->
+<h2 id="sec-5">5. 규모별 반 수 · 강사 수 시뮬레이션</h2>
+
+<div class="tab-wrap fade-in">
+  <div class="tabs">
+    <button class="tab active" onclick="sw(event,'t1')">규모별 시나리오</button>
+    <button class="tab" onclick="sw(event,'t2')">산출 공식</button>
+  </div>
+  <div id="t1" class="tc active">
+    <table>
+      <tr><th>구분</th><th>소규모 (런칭)</th><th>중규모 (안정기)</th><th>대규모 (확장기)</th></tr>
+      <tr><td class="td-left">A/B 세트 수</td><td>1세트</td><td>2세트</td><td>3~4세트</td></tr>
+      <tr><td class="td-left">하루 운영 반</td><td>2반</td><td>4반</td><td>6~8반</td></tr>
+      <tr><td class="td-left">총 반 수 (주2일 기준)</td><td><b>5반</b></td><td><b>10반</b></td><td><b>15~20반</b></td></tr>
+      <tr><td class="td-left">메인강사</td><td>1명</td><td>2명</td><td>3~4명</td></tr>
+      <tr><td class="td-left">서브강사</td><td>1명</td><td>2명</td><td>3~4명</td></tr>
+      <tr><td class="td-left">총 강사</td><td><b>2명</b></td><td><b>4명</b></td><td><b>6~8명</b></td></tr>
+      <tr><td class="td-left">반당 학생 수</td><td>8~12명</td><td>10~15명</td><td>10~15명</td></tr>
+      <tr><td class="td-left">총 학생 수</td><td>40~60명</td><td>100~150명</td><td>150~300명</td></tr>
+      <tr><td class="td-left">강의실</td><td>2개</td><td>4개</td><td>6~8개</td></tr>
+      <tr><td class="td-left">클리닉/특강 공간</td><td>1개 (겸용)</td><td>1~2개</td><td>2~3개</td></tr>
+    </table>
+  </div>
+  <div id="t2" class="tc">
+    <h3>기본 산출 공식</h3>
+    <div class="formula">
+      하루 운영 반 수 = A/B 세트 수 × 2<br>
+      주간 총 수업 슬롯 = 하루 반 수 × 5일<br>
+      총 운영 반 수 = 주간 총 슬롯 ÷ 주당 수업일(2일)<br><br>
+      메인강사 = 서브강사 = A/B 세트 수<br>
+      총 강사 수 = A/B 세트 수 × 2
+    </div>
+    <div class="highlight fade-in">
+      <b>예시:</b> A/B 2세트 운영 시 → 하루 4반 → 주 20슬롯 → 주2일 기준 <b>10반</b> 운영 가능 → 메인 2 + 서브 2 = <b>총 4명</b>
+    </div>
+  </div>
+</div>
+
+<div class="card fade-in" style="background:linear-gradient(135deg,#f0f7f4,#e8f0fe);border:1.5px solid #2d6a4f;">
+  <h3 style="margin-top:0;font-size:15px;font-weight:700;color:#2d6a4f;">현행 시간표 → 과정별 전환 시뮬레이션</h3>
+  <p style="font-size:13px;color:#555;margin-bottom:10px;">
+    현재 학년별 14반/6명 체제를 과사람 A/B 2트랙 과정별 모델로 전환하면 <b>10~12반/4~6명</b>으로 같은 학생 수를 더 효율적으로 운영할 수 있습니다. 현행 강사를 유지하면 추가 모집 여력까지 확보됩니다.
+  </p>
+  <button onclick="window.open('과사람_전환시뮬레이션.html','_blank')" style="display:inline-block;padding:8px 20px;background:#2d6a4f;color:#fff;border-radius:8px;font-size:12px;font-weight:600;border:none;cursor:pointer;font-family:inherit;">전환 시뮬레이션 상세 보기 →</button>
+</div>
+
+<!-- ===== 6. 주간 배치표 ===== -->
+<h2 id="sec-6">6. 주간 반 배치 예시 (주2일 수업 기준)</h2>
+
+<div class="tab-wrap fade-in">
+  <div class="tabs">
+    <button class="tab active" onclick="sw(event,'w1')">소규모 — 1세트 / 5반</button>
+    <button class="tab" onclick="sw(event,'w2')">중규모 — 2세트 / 10반</button>
+  </div>
+
+  <div id="w1" class="tc active">
+    <p style="font-size:13px;margin-bottom:8px;"><b>메인 1명 + 서브 1명 | 강의실 2개 | 과정 기준 편성</b></p>
+    <div class="week-grid">
+      <div class="wc w-head"></div><div class="wc w-head">월</div><div class="wc w-head">화</div><div class="wc w-head">수</div><div class="wc w-head">목</div><div class="wc w-head">금</div>
+      <div class="wc w-label">중2-1 과정</div><div class="wc w-on">A</div><div class="wc w-off">-</div><div class="wc w-on">A</div><div class="wc w-off">-</div><div class="wc w-off">-</div>
+      <div class="wc w-label">중3-1 과정</div><div class="wc w-on">B</div><div class="wc w-off">-</div><div class="wc w-on">B</div><div class="wc w-off">-</div><div class="wc w-off">-</div>
+      <div class="wc w-label">공통수학1</div><div class="wc w-off">-</div><div class="wc w-on">A</div><div class="wc w-off">-</div><div class="wc w-on">A</div><div class="wc w-off">-</div>
+      <div class="wc w-label">공통수학2</div><div class="wc w-off">-</div><div class="wc w-on">B</div><div class="wc w-off">-</div><div class="wc w-on">B</div><div class="wc w-off">-</div>
+      <div class="wc w-label">대수</div><div class="wc w-off">-</div><div class="wc w-off">-</div><div class="wc w-off">-</div><div class="wc w-off">-</div><div class="wc w-special">A+B</div>
+    </div>
+    <div class="note">* 수요가 가장 높은 중3-1, 공통수학1~2, 대수를 우선 배치한 예시<br>* 금요일: 대수 또는 필요에 따라 다른 과정으로 교체 가능</div>
+  </div>
+
+  <div id="w2" class="tc">
+    <p style="font-size:13px;margin-bottom:8px;"><b>메인 2명 + 서브 2명 | 강의실 4개 (세트1: 1·2호 / 세트2: 3·4호) | 과정 기준 편성</b></p>
+    <div class="week-grid" style="font-size:11px;">
+      <div class="wc w-head"></div><div class="wc w-head">월</div><div class="wc w-head">화</div><div class="wc w-head">수</div><div class="wc w-head">목</div><div class="wc w-head">금</div>
+      <div class="wc w-label">중1-2 과정</div><div class="wc w-on">1-A</div><div class="wc w-off">-</div><div class="wc w-on">1-A</div><div class="wc w-off">-</div><div class="wc w-off">-</div>
+      <div class="wc w-label">중2-1 과정</div><div class="wc w-on">1-B</div><div class="wc w-off">-</div><div class="wc w-on">1-B</div><div class="wc w-off">-</div><div class="wc w-off">-</div>
+      <div class="wc w-label">중3-1 과정</div><div class="wc w-on">2-A</div><div class="wc w-off">-</div><div class="wc w-on">2-A</div><div class="wc w-off">-</div><div class="wc w-off">-</div>
+      <div class="wc w-label">중3-2 과정</div><div class="wc w-on">2-B</div><div class="wc w-off">-</div><div class="wc w-on">2-B</div><div class="wc w-off">-</div><div class="wc w-off">-</div>
+      <div class="wc w-label">공통수학1</div><div class="wc w-off">-</div><div class="wc w-on">1-A</div><div class="wc w-off">-</div><div class="wc w-on">1-A</div><div class="wc w-off">-</div>
+      <div class="wc w-label">공통수학2</div><div class="wc w-off">-</div><div class="wc w-on">1-B</div><div class="wc w-off">-</div><div class="wc w-on">1-B</div><div class="wc w-off">-</div>
+      <div class="wc w-label">대수</div><div class="wc w-off">-</div><div class="wc w-on">2-A</div><div class="wc w-off">-</div><div class="wc w-on">2-A</div><div class="wc w-off">-</div>
+      <div class="wc w-label">미적분Ⅰ</div><div class="wc w-off">-</div><div class="wc w-on">2-B</div><div class="wc w-off">-</div><div class="wc w-on">2-B</div><div class="wc w-off">-</div>
+      <div class="wc w-label">미적분Ⅱ 특강</div><div class="wc w-off">-</div><div class="wc w-off">-</div><div class="wc w-off">-</div><div class="wc w-off">-</div><div class="wc w-special">세트1</div>
+      <div class="wc w-label">중2-2 / 보강</div><div class="wc w-off">-</div><div class="wc w-off">-</div><div class="wc w-off">-</div><div class="wc w-off">-</div><div class="wc w-special">세트2</div>
+    </div>
+    <div class="note">* 월수: 중등 과정 집중 / 화목: 고등 선행 집중<br>* 금요일: 미적분Ⅱ 특강, 보강반, 확통·기하 특강 등 유연 운영</div>
+  </div>
+</div>
+
+<!-- ===== 7. 특강 & 클리닉 ===== -->
+<h2 id="sec-7">7. 특강 & 개별클리닉 운영 설계</h2>
+
+<div class="flex-row">
+  <div>
+    <div class="card fade-in" style="border-left:4px solid #2d6a4f;">
+      <h3 style="margin-top:0;">특강수업 <span class="badge b-main">메인강사 담당</span></h3>
+      <table style="font-size:12px;">
+        <tr><th>유형</th><th>내용</th><th>대상</th></tr>
+        <tr><td>심화 문제풀이</td><td>과정별 고난도 문제<br>(최상위·에이급 등)</td><td>응용 수료자</td></tr>
+        <tr><td>킬러문항 특강</td><td>상위권 변별력 문제<br>고난도 서술형</td><td>고등 선행</td></tr>
+        <tr><td>모의고사 실전반</td><td>실전 모의고사<br>OMR·서술형 병행</td><td>전체</td></tr>
+        <tr><td>내신 킬러특강</td><td>학교별 기출 고난도 서술형</td><td>시험기간</td></tr>
+        <tr><td>자사고 입시 대비</td><td>수학 심층면접, 사고력 문제</td><td>자사고 지원</td></tr>
+        <tr><td>고등 심화선행</td><td>미적분Ⅱ · 확통 · 기하</td><td>중3 최선행</td></tr>
+        <tr><td>경시/올림피아드</td><td>KMO·영재원 대비</td><td>최상위 희망</td></tr>
+      </table>
+      <div class="note">* 특강의 다양성이 학원의 프로그램 경쟁력이자 추가 매출원. 메인강사의 강의력으로 수업 퀄리티를 대외적으로 어필.</div>
+    </div>
+  </div>
+  <div>
+    <div class="card fade-in" style="border-left:4px solid #457b9d;">
+      <h3 style="margin-top:0;">개별 클리닉 <span class="badge b-sub">서브강사 담당</span></h3>
+      <table style="font-size:12px;">
+        <tr><th>단계</th><th>내용</th></tr>
+        <tr><td><b>① 진단</b></td><td>데이터 기반 약점 분석<br>(오답률·단원별 성취도)</td></tr>
+        <tr><td><b>② 처방</b></td><td>개별 맞춤 보충 문제 배정<br>(구멍 단원 집중 공략)</td></tr>
+        <tr><td><b>③ 치료</b></td><td>1:1 / 소그룹 밀착 설명<br>이해될 때까지 반복</td></tr>
+        <tr><td><b>④ 확인</b></td><td>재테스트로 완전학습 검증<br>학부모 리포트 발송</td></tr>
+      </table>
+      <div class="note">* 단순 질의응답이 아닌, 체계적 진단→처방→확인 프로세스</div>
+    </div>
+  </div>
+</div>
+
+<div class="card fade-in" style="border-left:4px solid #e76f51;">
+  <h3 style="margin-top:0;">특강/클리닉 시간 배분 전략</h3>
+  <table style="font-size:12px;">
+    <tr><th>트랙</th><th>해당 시간대</th><th>평상시</th><th>시험기간</th></tr>
+    <tr><td>A반</td><td>8:30~10:00</td><td>특강(메인) 위주</td><td>킬러특강(메인) + 취약클리닉(서브)</td></tr>
+    <tr><td>B반</td><td>5:30~7:00</td><td>클리닉(서브) 위주</td><td>클리닉 집중 + 필요시 특강강사 추가</td></tr>
+  </table>
+  <div class="highlight fade-in">
+    <b>운영 원칙:</b> 초기에는 A반=특강, B반=클리닉으로 단순 운영. 반 확장 시 요일별로 특강/클리닉을 교차 배치하거나, 별도 특강 전담 강사를 추가 투입하여 유연하게 확장.
+  </div>
+</div>
+
+<!-- ===== 8. 교재 라인업 ===== -->
+<h2 id="sec-8">8. 과정별 교재 라인업</h2>
+
+<div class="card fade-in">
+  <p style="font-size:13px;margin-bottom:12px;">정규 과정(기본→응용)과 심화 특강에서 사용하는 교재를 단계별로 표준화합니다. 학생 수준과 과정에 맞는 교재를 체계적으로 배정하여 수업 퀄리티의 일관성을 확보합니다.</p>
+
+  <h3>중등 과정 교재</h3>
+  <table>
+    <tr>
+      <th>단계</th>
+      <th>교재</th>
+      <th>용도</th>
+      <th>비고</th>
+    </tr>
+    <tr>
+      <td class="td-left" rowspan="2">기본<br>(1~6주)</td>
+      <td><b>개념쎈</b></td>
+      <td>개념 진도 수업 메인 교재<br>단원별 개념 정리 + 기본 유형</td>
+      <td>개념맵 노트와 연계</td>
+    </tr>
+    <tr>
+      <td><b>바이블</b></td>
+      <td>개념 보충 + 유형학습<br>기본 유형 반복 훈련</td>
+      <td>유형학습 시간에 활용</td>
+    </tr>
+    <tr>
+      <td class="td-left" rowspan="2">응용<br>(7~12주)</td>
+      <td><b>일품</b></td>
+      <td>응용력 강화 메인 교재<br>중상 난이도 문제풀이</td>
+      <td>응용 단계 핵심 교재</td>
+    </tr>
+    <tr>
+      <td><b>블랙라벨</b></td>
+      <td>상위권 응용 교재<br>서술형 · 고난도 유형</td>
+      <td>응용 후반 또는 상위권 학생</td>
+    </tr>
+    <tr>
+      <td class="td-left" rowspan="2">심화 특강</td>
+      <td><b>최상위</b></td>
+      <td>최고난도 문제풀이<br>사고력 · 창의력 문제</td>
+      <td>심화 특강 메인</td>
+    </tr>
+    <tr>
+      <td><b>에이급</b></td>
+      <td>경시 · 영재원 수준 문제<br>수학적 사고력 확장</td>
+      <td>최상위권 대상</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card fade-in">
+  <h3>고등 과정 교재</h3>
+  <table>
+    <tr>
+      <th>단계</th>
+      <th>교재</th>
+      <th>용도</th>
+      <th>비고</th>
+    </tr>
+    <tr>
+      <td class="td-left" rowspan="2">기본<br>(1~8주)</td>
+      <td><b>개념쎈</b></td>
+      <td>개념 진도 수업 메인 교재<br>고등 개념 체계 정립</td>
+      <td>개념맵 노트와 연계</td>
+    </tr>
+    <tr>
+      <td><b>바이블</b></td>
+      <td>개념 보충 + 유형학습<br>기본 유형 반복 훈련</td>
+      <td>유형학습 시간에 활용</td>
+    </tr>
+    <tr>
+      <td class="td-left" rowspan="2">응용<br>(9~16주)</td>
+      <td><b>마플시너지</b></td>
+      <td>고등 응용력 강화 메인 교재<br>개념 연결 + 응용 문제</td>
+      <td>응용 단계 핵심 교재</td>
+    </tr>
+    <tr>
+      <td><b>내신고쟁이</b></td>
+      <td>내신 대비 응용 교재<br>학교 시험 유형 훈련</td>
+      <td>내신 시즌 병행 활용</td>
+    </tr>
+    <tr>
+      <td class="td-left" rowspan="2">심화 특강</td>
+      <td><b>모의고사 고난도 기출</b></td>
+      <td>수능 · 모의고사 킬러문항<br>실전 변별력 문제 훈련</td>
+      <td>심화 특강 메인</td>
+    </tr>
+    <tr>
+      <td><b>자사고 기출</b></td>
+      <td>전국단위 자사고 입시 기출<br>심층면접 · 사고력 문제</td>
+      <td>자사고 대비 특강</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card fade-in">
+  <h3>교재 배정 흐름도</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+    <div style="background:#f0f7f4;border:1px solid #b7e4c7;border-radius:8px;padding:14px;">
+      <div style="font-weight:700;color:#2d6a4f;margin-bottom:8px;">중등 과정</div>
+      <div class="path-arrow">
+        <span class="step" style="background:#d8f3dc;border-color:#95d5b2;">개념쎈<br>바이블</span>
+        <span class="arrow">→</span>
+        <span class="step" style="background:#fde8d0;border-color:#f4a261;">일품<br>블랙라벨</span>
+        <span class="arrow">→</span>
+        <span class="step active">최상위<br>에이급</span>
+      </div>
+      <div style="font-size:11px;color:#666;margin-top:6px;">기본(6주) → 응용(6주) → 심화(특강)</div>
+    </div>
+    <div style="background:#e8f0fe;border:1px solid #a2c4e0;border-radius:8px;padding:14px;">
+      <div style="font-weight:700;color:#457b9d;margin-bottom:8px;">고등 과정</div>
+      <div class="path-arrow">
+        <span class="step" style="background:#d8f3dc;border-color:#95d5b2;">개념쎈<br>바이블</span>
+        <span class="arrow">→</span>
+        <span class="step" style="background:#fde8d0;border-color:#f4a261;">마플시너지<br>내신고쟁이</span>
+        <span class="arrow">→</span>
+        <span class="step active">모의고사기출<br>자사고기출</span>
+      </div>
+      <div style="font-size:11px;color:#666;margin-top:6px;">기본(8주) → 응용(8주) → 심화(특강)</div>
+    </div>
+  </div>
+  <div class="note" style="margin-top:10px;">* 교재는 표준 라인업이며, 학생 개별 상황에 따라 개별클리닉에서 추가 교재 배정 가능</div>
+</div>
+
+<!-- ===== 9. 주간 수업 구성 ===== -->
+<h2 id="sec-9">9. 주간 수업 구성</h2>
+
+<div class="card fade-in">
+  <div class="highlight fade-in">
+    <b>과정 기간 설계:</b> 중등 과정은 <b>3개월(12주)</b>, 고등 과정은 내용 밀도를 고려하여 <b>4개월(16주)</b>로 운영.<br>
+    정규 과정은 <b>기본 → 응용</b>까지, <b>심화는 특강</b>으로 분리 운영합니다.<br>
+    • 중등 5과정 × 3개월 = 15개월<br>
+    • 고등 핵심 4과정 × 4개월 = 16개월<br>
+    • 잔여 5개월 → 미적분Ⅱ · 확통 · 기하 특강
+  </div>
+
+  <h3>중등 과정 — 12주 정규 커리큘럼 (3개월 · 기본→응용)</h3>
+  <table>
+    <tr><th>단계</th><th>기간</th><th>주당 수업</th><th>수업 구성 (1회 5시간)</th><th>특강/클리닉 비중</th></tr>
+    <tr><td class="td-left">기본</td><td>1~6주</td><td>주 2회</td><td>개념진도 + 유형학습 + 클리닉 위주</td><td>클리닉 70% : 특강 30%</td></tr>
+    <tr><td class="td-left">응용</td><td>7~12주</td><td>주 2회</td><td>개념진도 + 유형학습 + 특강 확대</td><td>클리닉 40% : 특강 60%</td></tr>
+  </table>
+
+  <h3>고등 과정 — 16주 정규 커리큘럼 (4개월 · 기본→응용)</h3>
+  <table>
+    <tr><th>단계</th><th>기간</th><th>주당 수업</th><th>수업 구성 (1회 5시간)</th><th>특강/클리닉 비중</th></tr>
+    <tr><td class="td-left">기본</td><td>1~8주</td><td>주 2회</td><td>개념진도 + 유형학습 + 클리닉 위주</td><td>클리닉 70% : 특강 30%</td></tr>
+    <tr><td class="td-left">응용</td><td>9~16주</td><td>주 2회</td><td>개념진도 + 유형학습 + 특강 확대</td><td>클리닉 40% : 특강 60%</td></tr>
+  </table>
+
+  <h3>중등 12주 커리큘럼 주차별 흐름</h3>
+  <p style="font-size:12px;color:#666;margin-bottom:8px;">교재 라인업(8번)·평가 타임라인(12번)과 연동됩니다. 예시: 중3-1 과정 기준</p>
+  <table style="font-size:12px;">
+    <tr>
+      <th style="width:7%;">주차</th>
+      <th style="width:8%;">단계</th>
+      <th style="width:22%;">개념진도 (5:30~7:00)</th>
+      <th style="width:20%;">유형학습 (7:00~8:30)</th>
+      <th style="width:18%;">교재</th>
+      <th style="width:13%;">특강/클리닉</th>
+      <th style="width:12%;">평가</th>
+    </tr>
+    <tr><td><b>1주</b></td><td rowspan="6" style="background:#d8f3dc;font-weight:600;vertical-align:middle;writing-mode:vertical-rl;">기본</td>
+      <td>제곱근의 뜻과 성질</td><td>기본 유형 풀이</td><td>개념쎈 / 바이블</td><td style="background:#fde8d0;">클리닉 70%</td><td>복습+일일</td></tr>
+    <tr><td><b>2주</b></td><td>무리수와 실수</td><td>기본 유형 풀이</td><td>개념쎈 / 바이블</td><td style="background:#fde8d0;">클리닉 70%</td><td>복습+일일</td></tr>
+    <tr><td><b>3주</b></td><td>근호를 포함한 식의 계산</td><td>유형 반복 + 오답 클리어</td><td>개념쎈 / 바이블</td><td style="background:#fde8d0;">클리닉 70%</td><td style="background:#fde8d0;"><b>1차 누적</b></td></tr>
+    <tr><td><b>4주</b></td><td>인수분해(1) 공통인수, 공식</td><td>기본 유형 풀이</td><td>개념쎈 / 바이블</td><td style="background:#fde8d0;">클리닉 70%</td><td>복습+일일</td></tr>
+    <tr><td><b>5주</b></td><td>인수분해(2) 복잡한 식</td><td>유형 심화 풀이</td><td>개념쎈 / 바이블</td><td style="background:#fde8d0;">클리닉 70%</td><td>복습+일일</td></tr>
+    <tr><td><b>6주</b></td><td>이차방정식(1) 풀이</td><td>유형 반복 + 오답 클리어</td><td>개념쎈 / 바이블</td><td style="background:#fde8d0;">클리닉 70%</td><td style="background:#fde8d0;"><b>2차 누적</b></td></tr>
+    <tr><td><b>7주</b></td><td rowspan="6" style="background:#d4e4f7;font-weight:600;vertical-align:middle;writing-mode:vertical-rl;">응용</td>
+      <td>이차방정식(2) 활용</td><td>응용 유형 풀이</td><td>일품 / 블랙라벨</td><td style="background:#d4e4f7;">특강 60%</td><td>복습+일일</td></tr>
+    <tr><td><b>8주</b></td><td>이차함수(1) 그래프</td><td>응용 유형 풀이</td><td>일품 / 블랙라벨</td><td style="background:#d4e4f7;">특강 60%</td><td>복습+일일</td></tr>
+    <tr><td><b>9주</b></td><td>이차함수(2) 최대·최소</td><td>응용 유형 + 서술형</td><td>일품 / 블랙라벨</td><td style="background:#d4e4f7;">특강 60%</td><td style="background:#fde8d0;"><b>3차 누적</b></td></tr>
+    <tr><td><b>10주</b></td><td>이차함수(3) 활용</td><td>고난도 유형 풀이</td><td>일품 / 블랙라벨</td><td style="background:#d4e4f7;">특강 60%</td><td>복습+일일</td></tr>
+    <tr><td><b>11주</b></td><td>전 범위 총복습</td><td>오답노트 기반 재풀이</td><td>오답노트 + 변형</td><td style="background:#d4e4f7;">특강 60%</td><td>복습+일일</td></tr>
+    <tr><td><b>12주</b></td><td>마무리 + 다음 과정 안내</td><td>최종 점검 풀이</td><td>종합 시험지</td><td style="background:#d4e4f7;">특강 60%</td><td style="background:#e76f51;color:#fff;"><b>제로테스트</b></td></tr>
+  </table>
+
+  <h3>고등 16주 커리큘럼 주차별 흐름</h3>
+  <p style="font-size:12px;color:#666;margin-bottom:8px;">예시: 공통수학1 과정 기준</p>
+  <table style="font-size:12px;">
+    <tr>
+      <th style="width:7%;">주차</th>
+      <th style="width:8%;">단계</th>
+      <th style="width:22%;">개념진도 (5:30~7:00)</th>
+      <th style="width:20%;">유형학습 (7:00~8:30)</th>
+      <th style="width:18%;">교재</th>
+      <th style="width:13%;">특강/클리닉</th>
+      <th style="width:12%;">평가</th>
+    </tr>
+    <tr><td><b>1주</b></td><td rowspan="8" style="background:#d8f3dc;font-weight:600;vertical-align:middle;writing-mode:vertical-rl;">기본</td>
+      <td>다항식의 연산</td><td>기본 유형 풀이</td><td>개념쎈 / 바이블</td><td style="background:#fde8d0;">클리닉 70%</td><td>복습+일일</td></tr>
+    <tr><td><b>2주</b></td><td>항등식과 나머지정리</td><td>기본 유형 풀이</td><td>개념쎈 / 바이블</td><td style="background:#fde8d0;">클리닉 70%</td><td>복습+일일</td></tr>
+    <tr><td><b>3주</b></td><td>인수분해</td><td>유형 반복 + 오답 클리어</td><td>개념쎈 / 바이블</td><td style="background:#fde8d0;">클리닉 70%</td><td>복습+일일</td></tr>
+    <tr><td><b>4주</b></td><td>복소수와 이차방정식</td><td>유형 반복 + 오답 클리어</td><td>개념쎈 / 바이블</td><td style="background:#fde8d0;">클리닉 70%</td><td style="background:#fde8d0;"><b>1차 누적</b></td></tr>
+    <tr><td><b>5주</b></td><td>이차방정식의 판별식·근과 계수</td><td>기본 유형 풀이</td><td>개념쎈 / 바이블</td><td style="background:#fde8d0;">클리닉 70%</td><td>복습+일일</td></tr>
+    <tr><td><b>6주</b></td><td>여러 가지 방정식</td><td>기본 유형 풀이</td><td>개념쎈 / 바이블</td><td style="background:#fde8d0;">클리닉 70%</td><td>복습+일일</td></tr>
+    <tr><td><b>7주</b></td><td>여러 가지 부등식</td><td>유형 반복 + 오답 클리어</td><td>개념쎈 / 바이블</td><td style="background:#fde8d0;">클리닉 70%</td><td>복습+일일</td></tr>
+    <tr><td><b>8주</b></td><td>경우의 수(1) 순열</td><td>유형 반복 + 오답 클리어</td><td>개념쎈 / 바이블</td><td style="background:#fde8d0;">클리닉 70%</td><td style="background:#fde8d0;"><b>2차 누적</b></td></tr>
+    <tr><td><b>9주</b></td><td rowspan="8" style="background:#d4e4f7;font-weight:600;vertical-align:middle;writing-mode:vertical-rl;">응용</td>
+      <td>경우의 수(2) 조합</td><td>응용 유형 풀이</td><td>마플시너지 / 내신고쟁이</td><td style="background:#d4e4f7;">특강 60%</td><td>복습+일일</td></tr>
+    <tr><td><b>10주</b></td><td>다항식 응용</td><td>응용 유형 풀이</td><td>마플시너지 / 내신고쟁이</td><td style="background:#d4e4f7;">특강 60%</td><td>복습+일일</td></tr>
+    <tr><td><b>11주</b></td><td>방정식 응용</td><td>응용 유형 + 서술형</td><td>마플시너지 / 내신고쟁이</td><td style="background:#d4e4f7;">특강 60%</td><td>복습+일일</td></tr>
+    <tr><td><b>12주</b></td><td>부등식 응용</td><td>응용 유형 + 서술형</td><td>마플시너지 / 내신고쟁이</td><td style="background:#d4e4f7;">특강 60%</td><td style="background:#fde8d0;"><b>3차 누적</b></td></tr>
+    <tr><td><b>13주</b></td><td>경우의 수 응용</td><td>고난도 유형 풀이</td><td>마플시너지 / 내신고쟁이</td><td style="background:#d4e4f7;">특강 60%</td><td>복습+일일</td></tr>
+    <tr><td><b>14주</b></td><td>전 범위 고난도 융합</td><td>고난도 유형 풀이</td><td>마플시너지 / 내신고쟁이</td><td style="background:#d4e4f7;">특강 60%</td><td>복습+일일</td></tr>
+    <tr><td><b>15주</b></td><td>전 범위 총복습</td><td>오답노트 기반 재풀이</td><td>오답노트 + 변형</td><td style="background:#d4e4f7;">특강 60%</td><td>복습+일일</td></tr>
+    <tr><td><b>16주</b></td><td>마무리 + 다음 과정 안내</td><td>최종 점검 풀이</td><td>종합 시험지</td><td style="background:#d4e4f7;">특강 60%</td><td style="background:#e76f51;color:#fff;"><b>제로테스트</b></td></tr>
+  </table>
+
+  <div class="note">* 위 주차별 흐름은 예시이며, 실제 단원 배분은 과정별 교재 라인업(8번)과 매쓰홀릭 커리큘럼 매핑에 따라 조정됩니다.</div>
+
+  <h3>심화 과정 — 특강 라인업 (중등 · 고등 공통)</h3>
+  <p style="font-size:13px;margin-bottom:10px;">심화는 정규 과정과 분리하여 특강으로 운영합니다. 특강 구성을 다양화하면 수업의 폭이 넓어지고 매출 다변화에도 유리합니다.</p>
+  <table>
+    <tr><th>특강 유형</th><th>내용</th><th>대상</th><th>운영 시기</th></tr>
+    <tr><td class="td-left">심화 문제풀이</td><td>최상위·에이급 등 고난도 문제<br>과정별 심화 완성</td><td>해당 과정 응용 수료자</td><td>상시</td></tr>
+    <tr><td class="td-left">킬러문항 특강</td><td>고등 킬러문항, 상위권 변별력 문제<br>고난도 서술형 훈련</td><td>고등 선행 학생</td><td>상시</td></tr>
+    <tr><td class="td-left">모의고사 실전반</td><td>OMR·서술형 병행 실전 모의고사<br>시간 관리 + 실전 감각</td><td>전체</td><td>분기별</td></tr>
+    <tr><td class="td-left">내신 킬러특강</td><td>학교별 기출 분석, 고난도 서술형<br>내신 최상위 대비</td><td>시험 대비 학생</td><td>시험기간</td></tr>
+    <tr><td class="td-left">자사고 입시 대비</td><td>수학 심층면접, 사고력 문제<br>전국단위 자사고 기출</td><td>자사고 지원 학생</td><td>입시 시즌</td></tr>
+    <tr><td class="td-left">고등 심화선행</td><td>미적분Ⅱ · 확률과 통계 · 기하<br>소수정예 집중 과정</td><td>중3 최선행</td><td>수요 기반</td></tr>
+    <tr><td class="td-left">단원별 약점 특강</td><td>이차함수, 인수분해 등<br>특정 단원 집중 보강</td><td>해당 단원 약점 학생</td><td>수시</td></tr>
+    <tr><td class="td-left">경시/올림피아드</td><td>KMO·영재원 대비<br>사고력 수학</td><td>최상위권 희망자</td><td>수요 기반</td></tr>
+  </table>
+
+  <div class="insight fade-in">
+    <b>설계 의도:</b> 정규 과정(기본→응용)으로 개념과 적용력을 확실히 잡고, 심화는 특강으로 분리하여 다양한 니즈에 유연하게 대응. 특강의 다양성이 곧 학원의 프로그램 경쟁력이자 추가 매출원이 됩니다. 과정 전환 시점에 총괄 테스트(제로테스트)를 실시하여 다음 단계 준비도를 검증.
+  </div>
+</div>
+
+<div class="card fade-in">
+  <h3>1회 수업 상세 구성 (5시간)</h3>
+  <table>
+    <tr><th>시간</th><th>활동</th><th>목적</th></tr>
+    <tr><td>5:00~5:30<br>(30분)</td><td><b>복습테스트</b> — 전회 핵심 개념 확인</td><td>장기기억 전환 / 결손 즉시 파악</td></tr>
+    <tr><td>5:30~7:00<br>(90분)</td><td><b>개념진도</b> — 판서 수업 + 개념맵 노트 + 백지 구조화</td><td>메타인지 극대화 / 개념 뼈대</td></tr>
+    <tr><td>7:00~8:30<br>(90분)</td><td><b>유형학습 & 일일테스트</b> — 문제풀이 + 오답 클리어존</td><td>적용력 훈련 / 오답 완전 소화</td></tr>
+    <tr><td>8:30~10:00<br>(90분)</td><td><b>특강 or 개별클리닉</b> — 과정·상태에 따라 배분</td><td>실력 확장 or 약점 보완</td></tr>
+  </table>
+</div>
+
+<!-- ===== 10. 확장 로드맵 ===== -->
+<h2 id="sec-10">10. 단계별 확장 로드맵</h2>
+<div class="card fade-in">
+  <table>
+    <tr><th>단계</th><th>규모</th><th>강사</th><th>핵심 과제</th></tr>
+    <tr>
+      <td class="td-left">1단계<br><b>런칭</b></td>
+      <td>5반<br>(40~60명)</td>
+      <td>메인 1 + 서브 1<br>= <b>2명</b></td>
+      <td style="text-align:left;font-weight:normal;">• 수요 높은 과정 중심 개설 (중3-1, 공통수학1~2, 대수)<br>• 메인이 특강 겸임<br>• 수업모델 안정화 및 학부모 신뢰 확보</td>
+    </tr>
+    <tr>
+      <td class="td-left">2단계<br><b>안정</b></td>
+      <td>10반<br>(100~150명)</td>
+      <td>메인 2 + 서브 2<br>= <b>4명</b></td>
+      <td style="text-align:left;font-weight:normal;">• 전 과정 커버 (중등 5 + 고등 핵심 4)<br>• 수요 높은 과정에서 복수 반 개설 시작<br>• 고등 심화선행 특강 본격화</td>
+    </tr>
+    <tr>
+      <td class="td-left">3단계<br><b>확장</b></td>
+      <td>15~20반<br>(150~250명)</td>
+      <td>메인 3~4 + 서브 3~4<br>= <b>6~8명</b></td>
+      <td style="text-align:left;font-weight:normal;">• 과정별 수준 분리 (기본/심화)<br>• 자사고 전문 프로그램 신설<br>• 브릿지반 운영 (개별 보완 → 정규 합류)<br>• 강사 평가제 · 학부모 만족도 조사</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ===== 11. 3개년 로드맵 ===== -->
+<h2 id="sec-11">11. 과사람 3개년 로드맵 — "중등에서 고등 수학을 완성한다"</h2>
+
+<div class="card fade-in">
+  <div class="insight fade-in" style="font-size:14px;">
+    <b>과사람의 약속:</b> 과사람을 졸업하면 고등 수학은 이미 끝나있다. 일반고 진학 시 최상위권, 자사고 진학 시에도 수학에서 앞서가는 학생을 만든다. 졸업 후 인강만으로도 1~2등급 고2·고3, 재수생 커리를 따라갈 수 있는 실력을 중등 3년 안에 완성시킨다.
+  </div>
+</div>
+
+<div class="card fade-in">
+  <h3>입학 → 졸업 3개년 타임라인</h3>
+  <p style="font-size:12px;color:#666;margin-bottom:10px;">중1 입학 기준 | 중등 3개월·고등 4개월 1과정 | 주2일 수업</p>
+
+  <div style="overflow-x:auto;">
+  <table style="font-size:11px;min-width:800px;">
+    <tr>
+      <th rowspan="2">시기</th>
+      <th colspan="4" style="background:#1a6b3c;">중1 (12개월)</th>
+      <th colspan="4" style="background:#0d5e8a;">중2 (12개월)</th>
+      <th colspan="4" style="background:#8b3a0e;">중3 (12개월)</th>
+    </tr>
+    <tr>
+      <th style="background:#22874d;">3~5월</th>
+      <th style="background:#22874d;">6~8월</th>
+      <th style="background:#22874d;">9~11월</th>
+      <th style="background:#22874d;">12~2월</th>
+      <th style="background:#1572a8;">3~5월</th>
+      <th style="background:#1572a8;">6~8월</th>
+      <th style="background:#1572a8;">9~11월</th>
+      <th style="background:#1572a8;">12~2월</th>
+      <th style="background:#a8481a;">3~5월</th>
+      <th style="background:#a8481a;">6~8월</th>
+      <th style="background:#a8481a;">9~11월</th>
+      <th style="background:#a8481a;">12~2월</th>
+    </tr>
+    <tr>
+      <td class="td-left">표준 트랙</td>
+      <td style="background:#d8f3dc;">중1-2<br><span style="font-size:9px;color:#666;">3개월</span></td>
+      <td style="background:#d8f3dc;">중2-1<br><span style="font-size:9px;color:#666;">3개월</span></td>
+      <td style="background:#d8f3dc;">중2-2<br><span style="font-size:9px;color:#666;">3개월</span></td>
+      <td style="background:#d8f3dc;">중3-1<br><span style="font-size:9px;color:#666;">3개월</span></td>
+      <td style="background:#d4e4f7;">중3-2<br><span style="font-size:9px;color:#666;">3개월</span></td>
+      <td style="background:#d4e4f7;" colspan="2">공통수학1<br><span style="font-size:9px;color:#666;">4개월</span></td>
+      <td style="background:#d4e4f7;" rowspan="1">공통2 시작<br><span style="font-size:9px;color:#666;">4개월↗</span></td>
+      <td style="background:#fde8d0;">공통2 완료<br>→ 대수 시작</td>
+      <td style="background:#fde8d0;" colspan="2">대수 → 미적분Ⅰ<br><span style="font-size:9px;color:#666;">각 4개월</span></td>
+      <td style="background:#f0e6ff;font-weight:600;">미적분Ⅱ<br>확통·기하<br><span style="font-size:9px;">특강 완성</span></td>
+    </tr>
+    <tr>
+      <td class="td-left">속성 트랙</td>
+      <td style="background:#d8f3dc;">중2-1<br><span style="font-size:9px;color:#666;">3개월</span></td>
+      <td style="background:#d8f3dc;">중2-2<br><span style="font-size:9px;color:#666;">3개월</span></td>
+      <td style="background:#d8f3dc;">중3-1<br><span style="font-size:9px;color:#666;">3개월</span></td>
+      <td style="background:#d8f3dc;">중3-2<br><span style="font-size:9px;color:#666;">3개월</span></td>
+      <td style="background:#d4e4f7;" colspan="2">공통수학1<br><span style="font-size:9px;color:#666;">4개월</span></td>
+      <td style="background:#d4e4f7;" colspan="2">공통수학2<br><span style="font-size:9px;color:#666;">4개월</span></td>
+      <td style="background:#fde8d0;" colspan="2">대수 → 미적분Ⅰ<br><span style="font-size:9px;color:#666;">각 4개월</span></td>
+      <td style="background:#f0e6ff;font-weight:600;" colspan="2">졸업 · 고등 완성<br>미적분Ⅱ·확통·기하<br><span style="font-size:9px;">+ 심화 특강</span></td>
+    </tr>
+    <tr>
+      <td class="td-left" style="background:#fff3e0;">최상위 트랙</td>
+      <td style="background:#d4e4f7;" colspan="2">공통수학1<br><span style="font-size:9px;color:#666;">4개월</span></td>
+      <td style="background:#d4e4f7;" colspan="2">공통수학2<br><span style="font-size:9px;color:#666;">4개월</span></td>
+      <td style="background:#fde8d0;" colspan="2">대수<br><span style="font-size:9px;color:#666;">4개월</span></td>
+      <td style="background:#fde8d0;" colspan="2">미적분Ⅰ<br><span style="font-size:9px;color:#666;">4개월</span></td>
+      <td style="background:#fde8d0;" colspan="2">미적분Ⅱ<br><span style="font-size:9px;color:#666;">4개월</span></td>
+      <td style="background:#f0e6ff;font-weight:600;" colspan="2">졸업 · 전과정 완성<br>확통·기하 + 심화특강<br><span style="font-size:9px;">중3부터 여유</span></td>
+    </tr>
+    <tr>
+      <td class="td-left">중2 편입<br>(예시)</td>
+      <td colspan="4" style="color:#ccc;">—</td>
+      <td style="background:#d4e4f7;">중3-1<br><span style="font-size:9px;color:#666;">3개월</span></td>
+      <td style="background:#d4e4f7;">중3-2<br><span style="font-size:9px;color:#666;">3개월</span></td>
+      <td style="background:#d4e4f7;" colspan="2">공통수학1<br><span style="font-size:9px;color:#666;">4개월</span></td>
+      <td style="background:#fde8d0;" colspan="2">공통2 → 대수<br><span style="font-size:9px;color:#666;">각 4개월</span></td>
+      <td style="background:#fde8d0;">미적분Ⅰ<br><span style="font-size:9px;color:#666;">4개월</span></td>
+      <td style="background:#f0e6ff;font-weight:600;">미적분Ⅱ<br><span style="font-size:9px;">특강 완성</span></td>
+    </tr>
+  </table>
+  </div>
+
+  <div class="highlight fade-in" style="margin-top:12px;">
+    <b>핵심:</b> 중등은 3개월 속도감, 고등은 4개월 깊이. 어떤 트랙이든 중3 졸업 시점에 고등 수학 전 과정(미적분Ⅱ + 확통·기하)을 완성하는 것이 목표. 속성 트랙은 중3 후반에 여유가 생겨 심화 특강으로 완성도를 더 높인다.
+  </div>
+</div>
+
+<!-- ===== 12. 평가 시스템 ===== -->
+<h2 id="sec-12">12. 평가 시스템</h2>
+<div class="card fade-in">
+  <p style="font-size:14px;margin-bottom:12px;">
+    과사람의 평가 체계는 <b>"매일 확인 → 누적 점검 → 과정 총괄 → 전체 위치 파악"</b>의 4단계로 구성됩니다. 모든 평가 결과는 데이터로 축적되어 학생별 약점 맵과 학부모 리포트의 근거 자료가 됩니다.
+  </p>
+
+  <h3>4단계 평가 체계</h3>
+  <table>
+    <tr><th style="width:15%;">단계</th><th style="width:18%;">평가명</th><th style="width:12%;">주기</th><th>내용</th><th style="width:15%;">담당</th></tr>
+    <tr>
+      <td><span class="badge b-sub">1단계</span></td>
+      <td><b>복습테스트</b></td>
+      <td>매일</td>
+      <td class="td-left" style="font-weight:normal;">지난 차시 핵심 개념 + 대표 유형 5~10문항 (5:00~5:30, 수업 시작 전 30분)</td>
+      <td>서브강사 채점·피드백</td>
+    </tr>
+    <tr>
+      <td><span class="badge b-sub">2단계</span></td>
+      <td><b>일일테스트</b></td>
+      <td>매일</td>
+      <td class="td-left" style="font-weight:normal;">당일 유형학습 후 이해도 확인 (7:00~8:30 유형학습 시간 내 실시). 오답은 <b>오답 클리어존</b>에서 유사 문제로 즉시 재풀이 → 0% 오답 원칙</td>
+      <td>메인 or 서브강사</td>
+    </tr>
+    <tr>
+      <td><span class="badge b-main">3단계</span></td>
+      <td><b>단원 누적 테스트</b></td>
+      <td>2~3주마다</td>
+      <td class="td-left" style="font-weight:normal;">진행 중인 과정 내 누적 범위 출제. 이전 단원을 반복 포함하여 장기 기억을 유도하고 결손 단원을 즉시 발견</td>
+      <td>메인강사 출제</td>
+    </tr>
+    <tr>
+      <td><span class="badge b-ms">4단계</span></td>
+      <td><b>과정 종합 평가<br>(제로테스트)</b></td>
+      <td>과정 종료 시</td>
+      <td class="td-left" style="font-weight:normal;">과정 전 범위 총괄 평가. G형(기본~응용) / H형(응용~심화) 수준별 출제. 재원생 전체 평균·석차 산출로 객관적 위치 파악</td>
+      <td>메인강사 출제<br>본원 주관</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card fade-in">
+  <h3>분기별 학력 진단 모의고사</h3>
+  <p style="font-size:13px;margin-bottom:10px;">4단계 평가와 별도로, <b>연 4회 분기별 학력 진단 모의고사</b>를 실시합니다. 과정 내 평가가 "현재 배우는 과정의 완성도"를 본다면, 모의고사는 "전체 수학 실력의 절대적 위치"를 측정합니다.</p>
+
+  <table>
+    <tr><th style="width:18%;">시기</th><th style="width:22%;">대상</th><th>형식</th><th style="width:20%;">활용</th></tr>
+    <tr><td><b>3월</b> (1분기)</td><td>전 재원생</td><td>학년별 범위 / OMR + 서술형 / 시간제한 실전 환경</td><td>신학기 배치·수준 진단</td></tr>
+    <tr><td><b>6월</b> (2분기)</td><td>전 재원생</td><td>동일 포맷</td><td>상반기 성장도 측정</td></tr>
+    <tr><td><b>9월</b> (3분기)</td><td>전 재원생</td><td>동일 포맷</td><td>하반기 전략 수립</td></tr>
+    <tr><td><b>12월</b> (4분기)</td><td>전 재원생</td><td>동일 포맷</td><td>연간 성장 총평·차년도 배치</td></tr>
+  </table>
+
+  <div class="insight fade-in">
+    <b>운영 포인트:</b> OMR 카드 작성을 병행하여 초등·중등 학생도 실제 내신 시험 환경을 미리 경험합니다. 결과는 과정별·단원별·문항유형별로 분석하여 학부모 리포트에 반영합니다.
+  </div>
+</div>
+
+<div class="card fade-in">
+  <h3>과정 내 평가 타임라인 (중등 3개월 기준)</h3>
+  <table style="font-size:12px;">
+    <tr><th>주차</th><th>복습테스트</th><th>일일테스트</th><th>누적테스트</th><th>과정 종합 평가</th></tr>
+    <tr><td>1~2주</td><td style="background:#d8f3dc;">매일</td><td style="background:#d4e4f7;">매일</td><td>—</td><td>—</td></tr>
+    <tr><td>3주</td><td style="background:#d8f3dc;">매일</td><td style="background:#d4e4f7;">매일</td><td style="background:#fde8d0;"><b>1차 누적</b></td><td>—</td></tr>
+    <tr><td>4~5주</td><td style="background:#d8f3dc;">매일</td><td style="background:#d4e4f7;">매일</td><td>—</td><td>—</td></tr>
+    <tr><td>6주</td><td style="background:#d8f3dc;">매일</td><td style="background:#d4e4f7;">매일</td><td style="background:#fde8d0;"><b>2차 누적</b></td><td>—</td></tr>
+    <tr><td>7~8주</td><td style="background:#d8f3dc;">매일</td><td style="background:#d4e4f7;">매일</td><td>—</td><td>—</td></tr>
+    <tr><td>9주</td><td style="background:#d8f3dc;">매일</td><td style="background:#d4e4f7;">매일</td><td style="background:#fde8d0;"><b>3차 누적</b></td><td>—</td></tr>
+    <tr><td>10~11주</td><td style="background:#d8f3dc;">매일</td><td style="background:#d4e4f7;">매일</td><td>—</td><td>—</td></tr>
+    <tr><td><b>12주</b></td><td style="background:#d8f3dc;">매일</td><td style="background:#d4e4f7;">매일</td><td>—</td><td style="background:#e76f51;color:#fff;"><b>제로테스트</b></td></tr>
+  </table>
+  <div class="note">* 고등 과정은 4개월(16주) 기준, 4주마다 누적테스트 실시 (총 3회 + 제로테스트 1회)</div>
+</div>
+
+<div class="card fade-in">
+  <h3>오답 클리어존 운영 원칙</h3>
+  <div class="flex-row">
+    <div>
+      <div class="highlight fade-in">
+        <b>즉시 재풀이 원칙</b><br>
+        일일테스트·누적테스트에서 틀린 문제는 <b>조건·숫자가 변형된 유사 문제</b>를 즉시 풀이. 오답률 0%가 될 때까지 반복하며, 해결 전 귀가 불가 원칙 적용.
+      </div>
+    </div>
+    <div>
+      <div class="highlight fade-in">
+        <b>개별 오답노트 축적</b><br>
+        질문했거나 별표 친 문제를 별도로 모아 <b>학생별 오답노트</b>를 제작. 누적테스트 전 오답노트 기반 복습 수업을 진행하여 반복 실수를 원천 차단.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card fade-in">
+  <h3>평가 데이터 활용 흐름</h3>
+  <div class="path-arrow" style="justify-content:center;font-size:13px;">
+    <span class="step">매일 테스트 데이터</span>
+    <span class="arrow">→</span>
+    <span class="step">주간 약점 리포트</span>
+    <span class="arrow">→</span>
+    <span class="step">누적테스트 결손 분석</span>
+    <span class="arrow">→</span>
+    <span class="step">개별 클리닉 처방</span>
+    <span class="arrow">→</span>
+    <span class="step active">제로테스트 최종 검증</span>
+  </div>
+  <div class="insight fade-in" style="margin-top:12px;">
+    <b>핵심:</b> 모든 평가는 "점수 매기기"가 아니라 <b>"다음 수업에서 무엇을 보완할지"</b>를 결정하는 데이터입니다. 복습테스트 → 클리닉 배분, 누적테스트 → 약점 단원 재진도, 제로테스트 → 다음 과정 진입 여부 판단에 직접 연결됩니다.
+  </div>
+</div>
+
+<!-- ===== 13. 에듀테크 시스템 ===== -->
+<h2 id="sec-13">13. 에듀테크 시스템</h2>
+<div class="card fade-in">
+  <p style="font-size:14px;margin-bottom:12px;">
+    과사람 수학학원은 <b>클래스인(ClassIn) 전자칠판</b>과 <b>매쓰홀릭(MathHolic) AI 학습관리</b>를 결합하여, 수업 현장의 인터랙티브 경험과 데이터 기반 개별 학습관리를 동시에 구현합니다.
+  </p>
+</div>
+
+<div class="card fade-in">
+  <h3>클래스인(ClassIn) 전자칠판 — 인터랙티브 수업 플랫폼</h3>
+  <p style="font-size:13px;margin-bottom:12px;">기존 일방향 판서 수업을 넘어, 강사와 학생이 실시간으로 연동되는 양방향 수업 환경을 제공합니다.</p>
+
+  <div class="flex-row">
+    <div>
+      <div class="course-section cs-middle" style="height:100%;">
+        <b style="color:#2d6a4f;">수업 중 핵심 기능</b>
+        <table style="margin-top:8px;">
+          <tr><th style="width:35%;">기능</th><th>설명</th></tr>
+          <tr><td><b>50페이지 블랙보드</b></td><td>충분한 판서 공간 + EDB 파일로 판서 저장·공유·편집</td></tr>
+          <tr><td><b>작은 칠판</b></td><td>학생 개별 답안을 실시간 확인 — 이해도 즉시 파악</td></tr>
+          <tr><td><b>학생 판서 권한</b></td><td>학생도 직접 판서 가능 → 풀이 과정 실시간 점검</td></tr>
+          <tr><td><b>그룹 토론</b></td><td>소그룹 분할 토론 + 타이머 활용한 시간 관리</td></tr>
+          <tr><td><b>화상 수업 내장</b></td><td>대면·원격 학생에게 동일한 수업 경험 제공</td></tr>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="course-section cs-high-core" style="height:100%;">
+        <b style="color:#457b9d;">과사람 활용 포인트</b>
+        <table style="margin-top:8px;">
+          <tr><th style="width:35%;">활용</th><th>효과</th></tr>
+          <tr><td><b>개념수업</b></td><td>메인강사 판서 + 학생 작은칠판 동시 진행 → 메타인지 극대화</td></tr>
+          <tr><td><b>유형학습</b></td><td>학생 풀이 과정을 실시간 모니터링 → 오답 즉시 개입</td></tr>
+          <tr><td><b>개별클리닉</b></td><td>서브강사가 학생별 화면 확인 → 1:1 맞춤 피드백</td></tr>
+          <tr><td><b>온라인 연결</b></td><td>자사고·특목고 졸업생 원격 수업에 동일 플랫폼 사용</td></tr>
+          <tr><td><b>데이터 보존</b></td><td>모든 판서·영상 자동 저장 → 리포트·아카이브 연동</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card fade-in">
+  <h3>매쓰홀릭(MathHolic) — AI 기반 수학 학습관리 솔루션</h3>
+  <p style="font-size:13px;margin-bottom:12px;">국내 최다 수학 교과서·시중 교재를 연동한 문제은행과 AI 분석으로, 학생 개별 학습 이력을 데이터화하여 맞춤 관리합니다. 기존 오르조(Orzo) 학습의 대체로 도입하여 관리 효율을 대폭 향상합니다.</p>
+
+  <h3 style="margin-top:16px;">매쓰홀릭 6대 핵심 관리 기능</h3>
+  <table>
+    <tr><th style="width:5%;">①</th><th style="width:20%;">기능</th><th>설명</th><th style="width:22%;">과사람 활용</th></tr>
+    <tr>
+      <td><span class="badge b-main">1</span></td>
+      <td><b>일일 학습리포트</b></td>
+      <td class="td-left" style="font-weight:normal;">학생별 일일 학습 이력이 자동 생성됩니다. 날짜별 진도, 풀이 문항 수, 정오답 기록, 학습 시간이 한눈에 정리되어 학부모에게 투명하게 공유 가능합니다.</td>
+      <td>복습테스트·일일테스트 결과를 학부모에게 자동 전달</td>
+    </tr>
+    <tr>
+      <td><span class="badge b-main">2</span></td>
+      <td><b>주간 클리닉 생성</b></td>
+      <td class="td-left" style="font-weight:normal;">학생별 약점 데이터를 기반으로 주간 클리닉 자료를 자동 생성합니다. 반 선택, 주제·난이도 지정으로 개별 맞춤 클리닉 교재를 만들 수 있습니다.</td>
+      <td>개별클리닉(8:30~10:00) 시간에 서브강사가 활용</td>
+    </tr>
+    <tr>
+      <td><span class="badge b-sub">3</span></td>
+      <td><b>교재 연동·커리큘럼 매핑</b></td>
+      <td class="td-left" style="font-weight:normal;">시중 교재(고쟁이 쌍둥이, 개념쎈, 일품 등)를 소단원 단위로 매핑합니다. 교재별 진도 일정을 설정하고 과정별 커리큘럼과 자동 연동됩니다.</td>
+      <td>교재 라인업(8번 섹션)과 1:1 매칭된 진도 관리</td>
+    </tr>
+    <tr>
+      <td><span class="badge b-sub">4</span></td>
+      <td><b>시험지 제작</b></td>
+      <td class="td-left" style="font-weight:normal;">문항 단위로 선택하여 맞춤 시험지를 제작합니다. 유형별·난이도별 필터링, 쌍둥이 유사 문제 자동 생성, 오답 기반 재출제가 가능합니다.</td>
+      <td>누적테스트·제로테스트 출제에 직접 활용</td>
+    </tr>
+    <tr>
+      <td><span class="badge b-ms">5</span></td>
+      <td><b>단원분석 히트맵</b></td>
+      <td class="td-left" style="font-weight:normal;">소단원(1.1.1, 1.1.2…) 단위로 학생 성취도를 색상 히트맵으로 시각화합니다. <span style="color:#2d6a4f;font-weight:600;">초록</span>=양호, <span style="color:#d4380d;font-weight:600;">빨강</span>=취약, <span style="color:#d48806;font-weight:600;">주황</span>=보통, <span style="color:#8c8c8c;font-weight:600;">회색</span>=미진행. 난이도(기본/실력/심화)별로 분리 확인 가능합니다.</td>
+      <td>약점 단원 즉시 파악 → 클리닉 처방 근거</td>
+    </tr>
+    <tr>
+      <td><span class="badge b-ms">6</span></td>
+      <td><b>유형이력 추적</b></td>
+      <td class="td-left" style="font-weight:normal;">날짜별·유형별 학습 이력을 색상 도트로 추적합니다. 시간 경과에 따른 성취도 변화를 한눈에 파악하여 장기적 성장 추이와 반복 취약 유형을 발견합니다.</td>
+      <td>3개년 로드맵 진행 상황 모니터링</td>
+    </tr>
+  </table>
+
+  <div class="highlight fade-in" style="margin-top:12px;">
+    <b>오르조 → 매쓰홀릭 전환 이유:</b> 교재 연동 범위가 넓고, 단원분석 히트맵·유형이력 추적 등 학생별 데이터 시각화가 훨씬 정교합니다. 특히 주간 클리닉 자동 생성 기능은 과사람의 개별클리닉 시간과 직접 연동되어 서브강사의 준비 부담을 대폭 줄여줍니다.
+  </div>
+
+  <div class="insight fade-in">
+    <b>과사람 × 매쓰홀릭 시너지:</b> 클래스인 수업에서 발생하는 학습 데이터와 매쓰홀릭의 AI 분석이 결합되어, 복습테스트 → 일일테스트 → 누적테스트 → 제로테스트의 4단계 평가 체계(12번 섹션)에 필요한 문제 출제와 성적 관리가 자동화됩니다.
+  </div>
+</div>
+
+<div class="card fade-in">
+  <h3>에듀테크 통합 수업 흐름</h3>
+  <div class="path-arrow" style="justify-content:center;font-size:13px;">
+    <span class="step active" style="background:#2d6a4f;">클래스인 전자칠판<br><span style="font-size:10px;font-weight:400;">인터랙티브 수업</span></span>
+    <span class="arrow">→</span>
+    <span class="step" style="background:#457b9d;color:#fff;border-color:#457b9d;">매쓰홀릭 AI<br><span style="font-size:10px;font-weight:400;">문제 출제·채점·분석</span></span>
+    <span class="arrow">→</span>
+    <span class="step" style="background:#e76f51;color:#fff;border-color:#e76f51;">ClassIn 리포트<br><span style="font-size:10px;font-weight:400;">학부모 데이터 공유</span></span>
+    <span class="arrow">→</span>
+    <span class="step" style="background:#555;color:#fff;border-color:#555;">ClassIn 아카이브<br><span style="font-size:10px;font-weight:400;">학생 복습 DB</span></span>
+  </div>
+</div>
+
+<!-- ===== 14. 학습 데이터 관리 시스템 ===== -->
+<h2 id="sec-14">14. 학습 데이터 관리 시스템</h2>
+<div class="card fade-in">
+  <p style="font-size:14px;margin-bottom:12px;">
+    클래스인 수업에서 생성되는 판서·영상 데이터를 <b>학부모용 리포트</b>와 <b>학생용 아카이브</b>로 가공하여 전달하는 자체 개발 시스템입니다. "보이지 않는 공부를 데이터로 증명"하는 과사람만의 기술적 차별화 포인트입니다.
+  </p>
+</div>
+
+<div class="card fade-in">
+  <h3>솔루션 ① ClassIn 리포트 — 학부모 데이터 기반 확신 제공</h3>
+  <p style="font-size:13px;margin-bottom:12px;">클래스인 수업 판서(88×2000px 저해상도 PNG)를 AI가 자동 분석·재구성하여, 학부모가 한눈에 이해할 수 있는 학습 리포트로 변환합니다.</p>
+
+  <table>
+    <tr><th style="width:25%;">기능</th><th>설명</th><th style="width:20%;">효과</th></tr>
+    <tr><td><b>판서 시각화</b></td><td>가독성 낮은 긴 PNG를 크고 선명한 형태로 자동 재구성</td><td>학부모 열람률 대폭 향상</td></tr>
+    <tr><td><b>AI 성취도 분석</b></td><td>판서 내용을 AI가 분석하여 학습 성취도를 자동 도출</td><td>"오늘 이만큼 해냈구나" 확신</td></tr>
+    <tr><td><b>정기 리포트 발송</b></td><td>주간/월간 리포트를 학부모에게 자동 전달</td><td>막연한 불안 → 데이터 확신</td></tr>
+  </table>
+
+  <div class="highlight fade-in">
+    <b>BEFORE → AFTER:</b> 가독성 제로의 판서 PNG 원본 → AI 분석 학습 리포트(판서 시각화 + 성취도 분석 + 피드백). 학부모 반응: <i>"공부하고 있겠지"</i> → <i>"오늘 이 단원에서 이만큼 성장했구나"</i>
+  </div>
+</div>
+
+<div class="card fade-in">
+  <h3>솔루션 ② ClassIn 아카이브 — 학생 개별화 복습 DB</h3>
+  <p style="font-size:13px;margin-bottom:12px;">수업 영상과 판서 데이터를 학생 개별로 정리하여, 효율적인 복습과 영구적인 학습 자산 축적을 가능하게 합니다.</p>
+
+  <table>
+    <tr><th style="width:25%;">기능</th><th>설명</th><th style="width:20%;">효과</th></tr>
+    <tr><td><b>듀얼 판서 비교</b></td><td>선생님 판서와 학생 판서를 한 화면에서 실시간 비교</td><td>이해 격차 즉시 파악</td></tr>
+    <tr><td><b>무음 자동 편집</b></td><td>영상 무음 구간 자동 스킵 → 핵심만 남긴 복습 영상</td><td>복습 시간 획기적 단축</td></tr>
+    <tr><td><b>영구 학습 DB</b></td><td>3개월 자동 삭제 없이 영구 보존되는 개별화 학습 자산</td><td>퇴원 방지(Lock-in) 효과</td></tr>
+  </table>
+
+  <div class="highlight fade-in">
+    <b>BEFORE → AFTER:</b> 편집 없는 긴 영상 탐색 + 3개월 후 데이터 소멸 → 효율적 핵심 영상 + 판서 비교 + 영구 보존. 학생의 <b>자기주도 복습 역량</b>을 근본적으로 강화합니다.
+  </div>
+</div>
+
+<div class="card fade-in">
+  <h3>기술적 차별화 (Technical Moat)</h3>
+  <div class="flex-row">
+    <div>
+      <div style="background:#fdf2e9;border:1px solid #f4a261;border-radius:10px;padding:16px;">
+        <div style="font-size:13px;font-weight:700;color:#e76f51;margin-bottom:8px;">일반 클래스인 사용 학원</div>
+        <div style="font-size:12px;line-height:1.8;color:#666;">
+          ✗ 상용 ClassIn 기본 기능만 사용<br>
+          ✗ 판서 → 가독성 낮은 PNG 그대로<br>
+          ✗ 영상 → 편집 없이 전체 제공<br>
+          ✗ 3개월 후 모든 데이터 자동 삭제<br>
+          ✗ 학부모 피드백 시스템 부재
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="background:#f0f7f4;border:1px solid #b7e4c7;border-radius:10px;padding:16px;">
+        <div style="font-size:13px;font-weight:700;color:#2d6a4f;margin-bottom:8px;">과사람 (자체 개발 솔루션)</div>
+        <div style="font-size:12px;line-height:1.8;color:#333;">
+          ✓ AI 판서 분석 + 성취도 자동 도출<br>
+          ✓ 판서 시각화 및 자동 재구성<br>
+          ✓ 무음 구간 자동 편집 영상<br>
+          ✓ 영구적 개별화 학습 DB<br>
+          ✓ 정기 AI 리포트 학부모 발송
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight fade-in" style="margin-top:12px;">
+    <b>브랜딩 메시지:</b> "과사람은 수업만 잘하는 학원이 아닙니다. 수업의 모든 과정이 데이터로 남고, 그 데이터가 학부모에겐 확신을, 학생에겐 최적화된 복습을 만들어냅니다."
+  </div>
+</div>
+
+<!-- ===== 15. 학부모 소통 체계 ===== -->
+<h2 id="sec-15">15. 학부모 소통 체계</h2>
+<div class="card fade-in">
+  <p style="font-size:14px;margin-bottom:12px;">
+    과사람의 학부모 소통은 <b>"데이터로 말하고, 정기적으로 연결하고, 즉시 대응한다"</b>는 3원칙으로 운영됩니다. 에듀테크 시스템(13·14번)에서 생성되는 학습 데이터가 소통의 핵심 콘텐츠가 됩니다.
+  </p>
+
+  <h3>정기 소통 스케줄</h3>
+  <table>
+    <tr><th style="width:18%;">주기</th><th style="width:22%;">소통 채널</th><th>내용</th><th style="width:18%;">담당</th></tr>
+    <tr>
+      <td rowspan="2"><b>매일</b></td>
+      <td>매쓰홀릭 앱 자동발송</td>
+      <td class="td-left" style="font-weight:normal;">일일 학습리포트 — 당일 진도, 복습테스트·일일테스트 결과, 정오답 현황</td>
+      <td>시스템 자동</td>
+    </tr>
+    <tr>
+      <td>위드아카 일일 리포트</td>
+      <td class="td-left" style="font-weight:normal;">위드아카 앱을 통한 일일 학습 리포트 발송 — 출결·수업 내용·과제 현황을 학부모에게 실시간 전달</td>
+      <td>담당강사 입력 / 자동 발송</td>
+    </tr>
+    <tr>
+      <td><b>매주</b>
+      <td>ClassIn 리포트 발송</td>
+      <td class="td-left" style="font-weight:normal;">주간 학습 리포트 — 판서 시각화 + AI 성취도 분석 + 주간 약점 요약</td>
+      <td>시스템 자동 + 담당강사 코멘트</td>
+    </tr>
+    <tr>
+      <td><b>2~3주</b></td>
+      <td>문자 / 전화</td>
+      <td class="td-left" style="font-weight:normal;">누적테스트 결과 안내 — 성적 추이, 약점 단원, 클리닉 처방 내용 공유</td>
+      <td>담당강사(메인 or 서브)</td>
+    </tr>
+    <tr>
+      <td><b>매월 1회</b></td>
+      <td>정기 대면상담</td>
+      <td class="td-left" style="font-weight:normal;">월간 종합 상담 — 매쓰홀릭 단원분석 히트맵 + 월간 테스트 추이를 근거 자료로 제시하며 학습 진도 점검, 다음 달 목표 설정, 학부모 질의 응대. 학생의 태도·집중도·교우관계 등 학습 외적 요인도 함께 공유</td>
+      <td>원장 또는 메인강사</td>
+    </tr>
+    <tr>
+      <td><b>과정 종료 시</b></td>
+      <td>제로테스트 결과 리포트</td>
+      <td class="td-left" style="font-weight:normal;">과정 종합 평가 결과 + 재원생 석차 + 다음 과정 진입 여부 안내 + 3개년 로드맵 내 현재 위치</td>
+      <td>원장</td>
+    </tr>
+    <tr>
+      <td><b>분기(연 4회)</b></td>
+      <td>학력 진단 모의고사 결과</td>
+      <td class="td-left" style="font-weight:normal;">전체 재원생 대비 석차, 과정별·단원별 분석, 연간 성장 그래프</td>
+      <td>원장</td>
+    </tr>
+    <tr>
+      <td><b>분기(연 4회)</b></td>
+      <td>커리큘럼 상담 (대면)</td>
+      <td class="td-left" style="font-weight:normal;">분기별 커리큘럼 점검 상담 — 3개년 로드맵 내 현재 위치 확인, 다음 분기 과정 배치·트랙(표준/속성/최상위) 조정 논의, 내신 시험 시기에 따른 특강·클리닉 병행 여부 결정. 학력 진단 모의고사 결과를 근거 자료로 활용</td>
+      <td>원장</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card fade-in">
+  <h3>학부모 소통 데이터 흐름</h3>
+  <div class="path-arrow" style="justify-content:center;font-size:12px;">
+    <span class="step">매일<br><b>일일 리포트</b></span>
+    <span class="arrow">→</span>
+    <span class="step">매주<br><b>ClassIn 리포트</b></span>
+    <span class="arrow">→</span>
+    <span class="step">2~3주<br><b>누적테스트 안내</b></span>
+    <span class="arrow">→</span>
+    <span class="step">매월<br><b>대면 상담</b></span>
+    <span class="arrow">→</span>
+    <span class="step">분기<br><b>커리큘럼 상담</b></span>
+    <span class="arrow">→</span>
+    <span class="step active">과정 종료<br><b>제로테스트 리포트</b></span>
+  </div>
+
+  <div class="insight fade-in" style="margin-top:12px;">
+    <b>핵심:</b> 학부모가 "우리 아이가 지금 어디쯤인지"를 물어볼 필요가 없는 구조. 데이터가 먼저 찾아가고, 상담은 데이터를 기반으로 깊이 있게 진행됩니다.
+  </div>
+</div>
+
+<div class="card fade-in">
+  <h3>수시 소통 채널</h3>
+  <table>
+    <tr><th style="width:22%;">채널</th><th>내용</th><th style="width:18%;">주기</th></tr>
+    <tr>
+      <td><b>카카오톡 오픈채팅방</b></td>
+      <td class="td-left" style="font-weight:normal;">입시 자료 공유(주 3회 업로드) + 주요 공지사항 안내. 학부모가 실시간으로 학원 소식을 접하는 커뮤니티 채널</td>
+      <td>주 3회 + 수시 공지</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card fade-in">
+  <h3>비정기 · 긴급 소통</h3>
+  <div class="flex-row">
+    <div>
+      <div class="highlight fade-in">
+        <b>성적 급변 시 즉시 연락</b><br>
+        누적테스트에서 이전 대비 큰 폭 하락 시, 결과 발송 전 담당강사가 먼저 학부모에게 유선 연락. 원인 분석 + 보완 계획을 함께 안내합니다.
+      </div>
+    </div>
+    <div>
+      <div class="highlight fade-in">
+        <b>학습 태도 · 출결 이슈</b><br>
+        결석·지각 반복, 과제 미제출, 수업 집중도 저하 등 학습 태도 이슈 발생 시 당일 내 학부모 공유. 조기 개입으로 이탈을 방지합니다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 16. 입학 · 배치 프로세스 ===== -->
+<h2 id="sec-16">16. 입학 · 배치 프로세스</h2>
+<div class="card fade-in">
+  <p style="font-size:14px;margin-bottom:12px;">
+    과사람은 <b>학년이 아닌 과정 기준</b>으로 반을 편성하므로, 신규 학생의 정확한 실력 진단과 적정 과정 배치가 특히 중요합니다.
+  </p>
+
+  <h3>입학 프로세스 5단계</h3>
+  <div class="path-arrow" style="justify-content:center;font-size:13px;margin-bottom:16px;">
+    <span class="step">① 상담 신청</span>
+    <span class="arrow">→</span>
+    <span class="step">② 레벨테스트</span>
+    <span class="arrow">→</span>
+    <span class="step">③ 결과 분석</span>
+    <span class="arrow">→</span>
+    <span class="step">④ 과정 배치</span>
+    <span class="arrow">→</span>
+    <span class="step active">⑤ 첫 주 적응</span>
+  </div>
+
+  <table>
+    <tr><th style="width:8%;">단계</th><th style="width:18%;">내용</th><th>상세</th><th style="width:15%;">담당</th></tr>
+    <tr>
+      <td><span class="badge b-main">①</span></td>
+      <td><b>학부모 상담</b></td>
+      <td class="td-left" style="font-weight:normal;">학생 현재 학년·학교 진도·선행 이력·목표(일반고/자사고) 파악. 과사람의 과정별 시스템과 3개년 로드맵을 안내하여 학부모 이해도 확보</td>
+      <td>원장</td>
+    </tr>
+    <tr>
+      <td><span class="badge b-main">②</span></td>
+      <td><b>레벨테스트</b></td>
+      <td class="td-left" style="font-weight:normal;">매쓰홀릭 진단평가 활용. 현행 학년 범위 + 선행 범위까지 출제. 단원별·유형별 성취도를 히트맵으로 자동 분석</td>
+      <td>메인강사 출제 / 시스템 채점</td>
+    </tr>
+    <tr>
+      <td><span class="badge b-sub">③</span></td>
+      <td><b>결과 분석·과정 결정</b></td>
+      <td class="td-left" style="font-weight:normal;">단원분석 히트맵 기반으로 적정 시작 과정을 결정. 예: 중2 학생이지만 중3-1까지 양호 → 공통수학1 배치. 반대로 중2인데 중1-2 결손 → 중1-2부터 시작</td>
+      <td>원장 + 메인강사 협의</td>
+    </tr>
+    <tr>
+      <td><span class="badge b-sub">④</span></td>
+      <td><b>과정 배치 · 시간표 확정</b></td>
+      <td class="td-left" style="font-weight:normal;">해당 과정 반의 현재 진도 확인 → 합류 시점 결정. 진도 차이가 크면 첫 1~2주 개별클리닉으로 보완 후 합류</td>
+      <td>원장</td>
+    </tr>
+    <tr>
+      <td><span class="badge b-ms">⑤</span></td>
+      <td><b>첫 주 적응 관리</b></td>
+      <td class="td-left" style="font-weight:normal;">첫 주는 서브강사가 집중 케어. 복습테스트·일일테스트 결과를 면밀히 모니터링하고, 1주 후 학부모에게 적응 상황 리포트 발송</td>
+      <td>서브강사 + 원장 확인</td>
+    </tr>
+  </table>
+
+  <div class="highlight fade-in">
+    <b>배치 기준 핵심 원칙:</b> "학년이 아니라 실력이 기준입니다." 중1이 공통수학1에 앉을 수도, 중3이 중2-2부터 시작할 수도 있습니다. 레벨테스트 데이터가 유일한 판단 근거이며, 학부모에게 히트맵을 직접 보여주며 설명합니다.
+  </div>
+</div>
+
+<!-- ===== 17. 내신 대비 운영 ===== -->
+<h2 id="sec-17">17. 내신 대비 운영</h2>
+<div class="card fade-in">
+  <p style="font-size:14px;margin-bottom:12px;">
+    과사람은 선행 중심 학원이지만, <b>시험 기간에는 내신 대비를 병행</b>합니다. 정규 선행 진도를 완전히 멈추지 않으면서, 내신 범위를 집중 대비하는 하이브리드 방식입니다.
+  </p>
+
+  <h3>내신 대비 운영 타임라인</h3>
+  <table style="font-size:12px;">
+    <tr><th style="width:18%;">시기</th><th style="width:18%;">구분</th><th>운영 방식</th><th style="width:20%;">활용 도구</th></tr>
+    <tr>
+      <td><b>시험 4주 전</b></td>
+      <td><span class="badge b-tag">사전 준비</span></td>
+      <td class="td-left" style="font-weight:normal;">내신 해당 학생 파악 + 학교별 시험 범위 확인 + 매쓰홀릭에서 학교별·교과서별 기출 자료 준비</td>
+      <td>매쓰홀릭 교재연동</td>
+    </tr>
+    <tr>
+      <td><b>시험 3주 전</b></td>
+      <td><span class="badge b-sub">내신반 편성</span></td>
+      <td class="td-left" style="font-weight:normal;">내신 대비가 필요한 학생들을 별도 내신 특강반으로 편성. 정규 시간표의 특강·클리닉 슬롯(8:30~10:00)을 내신 대비 시간으로 전환</td>
+      <td>클래스인 그룹 분리</td>
+    </tr>
+    <tr>
+      <td><b>시험 2주 전</b></td>
+      <td><span class="badge b-main">집중 대비</span></td>
+      <td class="td-left" style="font-weight:normal;">내신 학생: 정규 개념수업(5:30~7:00)은 유지 + 유형학습·클리닉 시간을 내신 범위 집중 풀이로 전환. 비내신 학생: 정규 진도 정상 운영</td>
+      <td>매쓰홀릭 시험지 제작</td>
+    </tr>
+    <tr>
+      <td><b>시험 1주 전</b></td>
+      <td><span class="badge b-ms">최종 점검</span></td>
+      <td class="td-left" style="font-weight:normal;">학교별 기출 변형 모의고사 실시(매쓰홀릭 쌍둥이 문제). 오답 클리어존 집중 운영. 서술형 대비 풀이 점검</td>
+      <td>매쓰홀릭 + 클래스인</td>
+    </tr>
+    <tr>
+      <td><b>시험 종료 후</b></td>
+      <td><span class="badge b-tag">복귀</span></td>
+      <td class="td-left" style="font-weight:normal;">시험 결과 분석 → 학부모 리포트 발송. 정규 선행 진도로 즉시 복귀. 내신 결과 데이터는 매쓰홀릭에 축적</td>
+      <td>매쓰홀릭 분석보고서</td>
+    </tr>
+  </table>
+
+  <div class="insight fade-in">
+    <b>운영 원칙:</b> "선행을 멈추지 않으면서 내신도 잡는다." 정규 개념수업(5:30~7:00)은 선행 진도를 유지하고, 유형학습·클리닉 시간(7:00~10:00)을 내신 집중 시간으로 유연하게 전환합니다. 내신이 없는 학생은 정규 진도를 그대로 진행하므로 시간 낭비가 없습니다.
+  </div>
+</div>
+
+<div class="card fade-in">
+  <h3>내신 대비 × 매쓰홀릭 연동</h3>
+  <div class="flex-row">
+    <div>
+      <div class="course-section cs-middle">
+        <b style="color:#2d6a4f;">시험 전</b><br>
+        <span style="font-size:12px;">교과서별 기출 → 학교 맞춤 시험지 자동 생성<br>
+        단원분석 히트맵으로 약점 단원 집중 배정<br>
+        쌍둥이 유사 문제로 변형 대비</span>
+      </div>
+    </div>
+    <div>
+      <div class="course-section cs-high-core">
+        <b style="color:#457b9d;">시험 후</b><br>
+        <span style="font-size:12px;">실제 내신 점수 입력 → 예측 점수 대비 분석<br>
+        오답 유형 데이터 → 다음 시험 대비 자료 축적<br>
+        학부모에게 분석 리포트 자동 발송</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 18. 강사 채용 · 육성 기준 ===== -->
+<h2 id="sec-18">18. 강사 채용 · 육성 기준</h2>
+<div class="card fade-in">
+  <p style="font-size:14px;margin-bottom:12px;">
+    과사람의 하이브리드 수업모델은 <b>메인강사(강의력)</b>와 <b>서브강사(밀착 관리력)</b>의 역할이 명확히 분리되어 있습니다. 따라서 채용 기준도 역할별로 다르게 설계합니다.
+  </p>
+
+  <h3>역할별 채용 기준</h3>
+  <div class="flex-row">
+    <div>
+      <div class="course-section cs-high-core" style="height:100%;">
+        <b style="color:#457b9d;">메인강사 — 강의력 중심</b>
+        <table style="margin-top:8px;font-size:12px;">
+          <tr><th style="width:30%;">항목</th><th>기준</th></tr>
+          <tr><td><b>핵심 역량</b></td><td>체계적 개념 전달력, 자체 커리큘럼 운영 능력, 판서 구조화 역량</td></tr>
+          <tr><td><b>경력</b></td><td>중등·고등 수학 강의 경력 3년 이상 또는 이에 준하는 실력 검증</td></tr>
+          <tr><td><b>교재 역량</b></td><td>개념쎈·일품·마플시너지 등 시중 교재 숙지 + 과정별 커리큘럼 설계 가능</td></tr>
+          <tr><td><b>에듀테크</b></td><td>클래스인 전자칠판 활용 능력 (입사 후 교육 가능하나, 디지털 수업 친화력 필수)</td></tr>
+          <tr><td><b>채용 절차</b></td><td>이력서 → 시범강의(30분) → 원장 심층면접 → 2주 수업 시범 운영</td></tr>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="course-section cs-middle" style="height:100%;">
+        <b style="color:#2d6a4f;">서브강사 — 밀착 관리력 중심</b>
+        <table style="margin-top:8px;font-size:12px;">
+          <tr><th style="width:30%;">항목</th><th>기준</th></tr>
+          <tr><td><b>핵심 역량</b></td><td>학생 개별 약점 파악력, 꼼꼼한 오답 관리, 인내심과 소통 능력</td></tr>
+          <tr><td><b>자격</b></td><td>수학 관련 전공 또는 수학 과외·학원 보조 경험. 신입도 가능(육성형 채용)</td></tr>
+          <tr><td><b>관리 역량</b></td><td>매쓰홀릭 학습관리 시스템 운영, 클리닉 자료 제작, 학부모 소통</td></tr>
+          <tr><td><b>에듀테크</b></td><td>매쓰홀릭·위드아카 시스템 운영 능력 (입사 후 집중 교육)</td></tr>
+          <tr><td><b>채용 절차</b></td><td>이력서 → 1:1 학생 지도 시연(20분) → 원장 면접 → 1주 현장 OJT</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card fade-in">
+  <h3>강사 온보딩 · 교육 프로그램</h3>
+  <table>
+    <tr><th style="width:12%;">시기</th><th style="width:15%;">구분</th><th>메인강사</th><th>서브강사</th></tr>
+    <tr>
+      <td><b>입사 1주</b></td>
+      <td><span class="badge b-tag">OJT</span></td>
+      <td class="td-left" style="font-weight:normal;">과사람 수업모델·시간표 구조 이해, 클래스인 전자칠판 실습, 기존 메인강사 수업 참관</td>
+      <td class="td-left" style="font-weight:normal;">매쓰홀릭·위드아카 시스템 교육, 오답 클리어존 운영법, 기존 서브강사 클리닉 참관</td>
+    </tr>
+    <tr>
+      <td><b>입사 2~4주</b></td>
+      <td><span class="badge b-sub">시범 운영</span></td>
+      <td class="td-left" style="font-weight:normal;">실제 반 배정 후 수업 진행, 원장이 수업 모니터링 및 피드백. 판서 구조화·개념맵 노트 지도법 코칭</td>
+      <td class="td-left" style="font-weight:normal;">실제 학생 클리닉 담당, 일일 리포트 작성 실습, 학부모 소통 롤플레이</td>
+    </tr>
+    <tr>
+      <td><b>입사 1개월~</b></td>
+      <td><span class="badge b-main">정식 배치</span></td>
+      <td class="td-left" style="font-weight:normal;">담당 과정·반 확정. 교재 라인업(8번)에 따른 커리큘럼 운영 시작</td>
+      <td class="td-left" style="font-weight:normal;">담당 반·학생 확정. 매쓰홀릭 주간 클리닉 생성 + 학부모 정기 소통 시작</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card fade-in">
+  <h3>강사 평가 · 유지 시스템</h3>
+  <table>
+    <tr><th style="width:22%;">평가 항목</th><th>내용</th><th style="width:15%;">주기</th></tr>
+    <tr>
+      <td><b>학부모 만족도 조사</b></td>
+      <td class="td-left" style="font-weight:normal;">수업 만족도, 소통 만족도, 자녀 성적 변화 체감도를 학부모 설문으로 조사. 결과는 강사별로 정리하여 피드백</td>
+      <td>분기별 (연 4회)</td>
+    </tr>
+    <tr>
+      <td><b>학생 성적 데이터 추적</b></td>
+      <td class="td-left" style="font-weight:normal;">담당 반 학생들의 누적테스트·제로테스트 평균 점수 추이, 오답률 감소 추이를 매쓰홀릭 데이터로 객관 평가</td>
+      <td>과정 종료 시마다</td>
+    </tr>
+    <tr>
+      <td><b>수업 모니터링</b></td>
+      <td class="td-left" style="font-weight:normal;">원장이 클래스인 녹화 영상 또는 실시간 참관으로 수업 품질 점검. 판서 구조화, 학생 참여 유도, 시간 배분 확인</td>
+      <td>월 1회 이상</td>
+    </tr>
+    <tr>
+      <td><b>원장 1:1 피드백</b></td>
+      <td class="td-left" style="font-weight:normal;">만족도 조사 + 성적 데이터 + 수업 모니터링 결과를 종합하여 원장이 강사별 1:1 면담 진행. 강점 유지 + 개선점 코칭</td>
+      <td>분기별</td>
+    </tr>
+  </table>
+
+  <div class="flex-row" style="margin-top:12px;">
+    <div>
+      <div class="highlight fade-in">
+        <b>대우 원칙</b><br>
+        유능한 강사가 오래 머물 수 있도록 업계 경쟁력 있는 급여 + 커리큘럼 자율권을 보장합니다. 메인강사는 자신의 교수법과 교재 선택에 자율성을 가지되, 과사람의 시간표 구조와 평가 체계 안에서 운영합니다.
+      </div>
+    </div>
+    <div>
+      <div class="highlight fade-in">
+        <b>성장 경로</b><br>
+        서브강사 → 메인강사 전환 경로를 열어두어, 서브로 입사한 강사가 역량을 키워 메인강사로 성장할 수 있습니다. 전환 기준: 1년 이상 근무 + 시범 강의 통과 + 원장 추천.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 19. 졸업 후 연결 경로 ===== -->
+<h2 id="sec-19">19. 졸업 후 연결 경로</h2>
+
+<div class="card fade-in">
+  <h3>과사람 졸업 → 3가지 경로</h3>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin:12px 0;">
+    <!-- 경로 1 -->
+    <div style="background:#f0f7f4;border:1px solid #b7e4c7;border-radius:10px;padding:16px;">
+      <div style="font-size:14px;font-weight:700;color:#2d6a4f;margin-bottom:8px;">경로 ① 과사람 특목관 고등부 이관</div>
+      <div style="font-size:12px;line-height:1.8;">
+        <b>대상:</b> 일반고 진학 학생 대부분<br>
+        <b>내용:</b> 과사람 특목관 고등부로 자연스럽게 이관. 중등부에서 쌓은 학습 데이터와 진단 기록이 그대로 연결되어 끊김 없는 관리 지속.<br>
+        <b>장점:</b> 동일 시스템 내 연속성 확보
+      </div>
+    </div>
+    <!-- 경로 2 -->
+    <div style="background:#e8f0fe;border:1px solid #a2c4e0;border-radius:10px;padding:16px;">
+      <div style="font-size:14px;font-weight:700;color:#457b9d;margin-bottom:8px;">경로 ② 온라인 수업 연결</div>
+      <div style="font-size:12px;line-height:1.8;">
+        <b>대상:</b> 청운고·자사고·특목고 진학 학생<br>
+        <b>내용:</b> 과사람 온라인 수업 프로그램으로 연결. 현재 청운고·자사고 재학 중인 졸업생이 온라인으로 과사람 수업을 이어가고 있으며, 과사람의 관리 시스템 안에서 고등 수학 학습을 지속.<br>
+        <b>장점:</b> 전국 어디서든 학습 연속성 유지 (검증된 모델)
+      </div>
+    </div>
+    <!-- 경로 3 -->
+    <div style="background:#fdf2e9;border:1px solid #f4a261;border-radius:10px;padding:16px;">
+      <div style="font-size:14px;font-weight:700;color:#e76f51;margin-bottom:8px;">경로 ③ 외부 고등 학원 이동</div>
+      <div style="font-size:12px;line-height:1.8;">
+        <b>대상:</b> 개별 선택에 따라<br>
+        <b>내용:</b> 과사람에서 고등 수학을 완성한 상태이므로, 어떤 고등 학원을 가더라도 인강만으로도 1~2등급 커리를 소화할 수 있는 실력이 갖춰져 있음.<br>
+        <b>장점:</b> 고등부 학원 선택의 자유
+      </div>
+    </div>
+  </div>
+
+  <div class="insight fade-in">
+    <b>브랜딩 메시지:</b> "과사람을 거친 학생은 어디를 가든 수학에서 앞서간다." 일반고에서는 최상위권, 자사고에서는 온라인으로 연결, 어떤 환경에서든 고등 수학의 기초가 완성된 상태로 출발합니다.
+  </div>
+</div>
+
+</div><!-- container -->
+
+<script>
+/* ── Tab Switcher ── */
+function sw(e, id) {
+  const w = e.target.closest('.tab-wrap');
+  w.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  w.querySelectorAll('.tc').forEach(c => c.classList.remove('active'));
+  e.target.classList.add('active');
+  w.querySelector('#'+id).classList.add('active');
+}
+
+/* ── Scroll to Section ── */
+function scrollToSec(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const navH = document.getElementById('topNav').offsetHeight + 20;
+  const y = el.getBoundingClientRect().top + window.pageYOffset - navH;
+  window.scrollTo({ top: y, behavior: 'smooth' });
+}
+
+/* ── IntersectionObserver: Fade-in Reveal ── */
+(function() {
+  const faders = document.querySelectorAll('.fade-in');
+  if (!faders.length) return;
+  const obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  faders.forEach(function(el) { obs.observe(el); });
+})();
+
+/* ── Nav: Active State on Scroll ── */
+(function() {
+  const topNav = document.getElementById('topNav');
+  const navBtns = topNav.querySelectorAll('.nav-btn');
+  const secIds = [];
+  navBtns.forEach(function(btn) {
+    var m = btn.getAttribute('onclick');
+    if (m) {
+      var id = m.replace("scrollToSec('","").replace("')","");
+      secIds.push(id);
+    }
+  });
+
+  function updateActive() {
+    var navH = topNav.offsetHeight + 30;
+    var currentId = secIds[0];
+    secIds.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= navH) {
+        currentId = id;
+      }
+    });
+    navBtns.forEach(function(btn) {
+      var m = btn.getAttribute('onclick') || '';
+      if (m.indexOf(currentId) > -1) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  function updateNavBg() {
+    if (window.scrollY > 40) {
+      topNav.classList.add('scrolled');
+    } else {
+      topNav.classList.remove('scrolled');
+    }
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      window.requestAnimationFrame(function() {
+        updateActive();
+        updateNavBg();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  updateActive();
+  updateNavBg();
+})();
+</script>
+</body>
+</html>
