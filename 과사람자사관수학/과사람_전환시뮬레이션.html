@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>과사람 수학학원 | 학년별→과정별 전환 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif; background: #f7f7f3; color: #1a1a2e; line-height: 1.75; word-break: keep-all; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 1000px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #1a3a3a 100%);
+    color: #fff; padding: 48px 40px 40px; border-radius: 24px; margin-bottom: 32px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before { content: ''; position: absolute; top: -40%; right: -15%; width: 480px; height: 480px; background: radial-gradient(circle, rgba(45,106,79,0.18), transparent 70%); pointer-events: none; }
+  .hero-badge { display: inline-block; padding: 5px 14px; border-radius: 20px; background: rgba(230,126,34,0.3); border: 1px solid rgba(230,126,34,0.4); font-size: 12px; font-weight: 600; color: #f4a261; letter-spacing: 0.04em; margin-bottom: 14px; position: relative; }
+  .hero h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.35; margin-bottom: 10px; position: relative; }
+  .hero h1 em { font-style: normal; color: #95d5b2; }
+  .hero .sub { font-size: 14px; color: #a0b4d0; font-weight: 400; line-height: 1.7; position: relative; max-width: 620px; }
+
+  /* ── Section Label ── */
+  .section-label { font-size: 11px; font-weight: 700; color: #2d6a4f; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; margin-top: 32px; }
+
+  /* ── Cards ── */
+  .card { background: #fff; border-radius: 16px; padding: 28px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.04); transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .card:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.05); transform: translateY(-1px); }
+  .card h2 { font-size: 18px; font-weight: 800; color: #1a1a2e; margin-bottom: 16px; letter-spacing: -0.01em; padding-left: 14px; border-left: 4px solid #2d6a4f; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 12px; }
+  th { background: #2d6a4f; color: #fff; padding: 10px 8px; text-align: center; font-weight: 600; font-size: 11px; }
+  th:first-child { border-radius: 8px 0 0 0; }
+  th:last-child { border-radius: 0 8px 0 0; }
+  td { padding: 10px 8px; text-align: center; border-bottom: 1px solid #f0f0ec; font-size: 12px; }
+  tr:hover td { background: #f8faf8; }
+  .td-left { text-align: left; font-weight: 600; background: #fafaf8; }
+
+  /* ── Highlight / Insight ── */
+  .highlight { background: #fffbeb; padding: 16px 20px; border-radius: 14px; border: 1px solid #f0d060; margin: 14px 0; font-size: 13px; }
+  .insight { background: #f0f7f4; padding: 16px 20px; border-radius: 14px; border: 1px solid #b7e4c7; margin: 14px 0; font-size: 13px; }
+  .warning { background: #fff0f0; padding: 16px 20px; border-radius: 14px; border: 1px solid #ffa0a0; margin: 14px 0; font-size: 13px; }
+
+  /* ── Badges ── */
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+  .b-main { background: #2d6a4f; color: #fff; }
+  .b-sub { background: #457b9d; color: #fff; }
+  .b-orange { background: #e76f51; color: #fff; }
+  .b-tag { background: #f0f0ec; color: #555; }
+  .b-high { background: #d4380d; color: #fff; }
+  .b-mid { background: #d48806; color: #fff; }
+
+  /* ── Grids ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+
+  /* ── Stat ── */
+  .stat { background: #fff; border-radius: 14px; padding: 22px 18px; text-align: center; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 1px 3px rgba(0,0,0,0.03); transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .stat:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .stat-num { font-size: 32px; font-weight: 800; letter-spacing: -0.03em; }
+  .stat-label { font-size: 12px; color: #888; margin-top: 4px; font-weight: 500; }
+  .stat-desc { font-size: 11px; color: #aaa; margin-top: 2px; }
+
+  /* ── Flow ── */
+  .flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 14px 0; justify-content: center; }
+  .flow-step { background: #fff; border: 1px solid #d8d8d0; border-radius: 10px; padding: 12px 18px; font-size: 13px; font-weight: 600; text-align: center; min-width: 100px; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .flow-step:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .flow-arrow { color: #2d6a4f; font-size: 20px; font-weight: bold; }
+  .flow-step.active { background: #2d6a4f; color: #fff; border-color: #2d6a4f; }
+
+  /* ── Before/After Compare ── */
+  .compare-box {
+    display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0; align-items: stretch; margin: 16px 0;
+  }
+  .compare-side { border-radius: 14px; padding: 20px; }
+  .compare-before { background: #fafaf8; border: 1px solid #e0e0dc; }
+  .compare-after { background: #f0f7f4; border: 2px solid #2d6a4f; }
+  .compare-arrow { display: flex; align-items: center; justify-content: center; font-size: 28px; color: #2d6a4f; font-weight: 800; }
+  .compare-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; text-align: center; }
+  .compare-before .compare-title { color: #888; }
+  .compare-after .compare-title { color: #2d6a4f; }
+
+  /* ── Nav Link ── */
+  .nav-link { display: inline-block; margin-top: 16px; padding: 10px 24px; background: #2d6a4f; color: #fff; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); cursor: pointer; border: none; font-family: inherit; }
+  .nav-link:hover { background: #3a8a66; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(45,106,79,0.3); }
+  .nav-link-outline { background: transparent; border: 1.5px solid #2d6a4f; color: #2d6a4f; }
+  .nav-link-outline:hover { background: #2d6a4f; color: #fff; }
+
+  /* ── Scroll Animation ── */
+  .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── Footer ── */
+  .footer { text-align: center; padding: 24px; font-size: 11px; color: #aaa; }
+
+  @media (max-width: 700px) {
+    .page { padding: 20px 16px 60px; }
+    .hero { padding: 32px 20px 28px; border-radius: 18px; }
+    .hero h1 { font-size: 22px; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .compare-box { grid-template-columns: 1fr; gap: 8px; }
+    .compare-arrow { transform: rotate(90deg); padding: 4px 0; }
+  }
+  @media print {
+    body { background: #fff; }
+    .card, .stat { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+    .fade-in { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<!-- ── Hero ── -->
+<div class="hero fade-in">
+  <div class="hero-badge">TRANSITION SIMULATION</div>
+  <h1>현행 시간표 → <em>A/B 2트랙 과정별 전환</em><br>시뮬레이션</h1>
+  <div class="sub">
+    현재 학원의 학년별 14반 / 6강사 체제를 과사람 A/B 2트랙 과정별 모델로 전환했을 때의 반 수 · 강사 수 · 운영 효율을 시뮬레이션합니다.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- STEP 1: 현행 분석 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label fade-in">STEP 1 — 현행 시간표 분석</div>
+
+<div class="card fade-in">
+  <h2>현재 운영 현황 (학년별 편성)</h2>
+  <p style="font-size:13px;color:#666;margin-bottom:14px;">
+    현재는 학년별로 반을 나누고, 강사 6명이 14개 반을 운영하고 있습니다. 같은 과정(예: 대수)을 듣는 학생이 학년별로 분산되어 반이 쪼개지는 비효율이 있습니다.
+  </p>
+
+  <table>
+    <tr>
+      <th>반 이름</th>
+      <th>실제 과정</th>
+      <th>요일</th>
+      <th>비고</th>
+    </tr>
+    <tr><td class="td-left">중1 A반</td><td>중1-2 과정</td><td>월·수</td><td>중등 현행</td></tr>
+    <tr><td class="td-left">중1 B반</td><td>중1-2 과정</td><td>화·목</td><td>중등 현행</td></tr>
+    <tr><td class="td-left">중1 h1반</td><td>공통수학1 (고등선행)</td><td>월·수</td><td>h = 고등과정</td></tr>
+    <tr><td class="td-left">중1 al반</td><td>대수 (고등선행)</td><td>화·목</td><td>al = 대수</td></tr>
+    <tr><td class="td-left">중2 m1반</td><td>중2-1 과정</td><td>월·수</td><td>중등 현행</td></tr>
+    <tr><td class="td-left">중2 h1반</td><td>공통수학1 (고등선행)</td><td>화·목</td><td>h = 고등과정</td></tr>
+    <tr><td class="td-left">중2 al반</td><td>대수 (고등선행)</td><td>월·수</td><td>al = 대수</td></tr>
+    <tr><td class="td-left">중3 A반</td><td>중3-1 과정</td><td>월·수</td><td>중등 현행</td></tr>
+    <tr><td class="td-left">중3 B반</td><td>공통수학1 (고등선행)</td><td>화·목</td><td></td></tr>
+    <tr><td class="td-left">중3 h1반</td><td>공통수학1 (고등선행)</td><td>월·수</td><td>h = 고등과정</td></tr>
+    <tr><td class="td-left">중3 h2반</td><td>공통수학2 (고등선행)</td><td>화·목</td><td></td></tr>
+    <tr><td class="td-left">중3 al반</td><td>대수 (고등선행)</td><td>화·목</td><td>al = 대수</td></tr>
+    <tr><td class="td-left">실전 A반</td><td>최상위 실전 (미적분 수준)</td><td>월·수</td><td>최상위 중3</td></tr>
+    <tr><td class="td-left">실전 B반</td><td>최상위 실전 (미적분 수준)</td><td>화·목</td><td>최상위 중3</td></tr>
+  </table>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;">
+    <div class="stat">
+      <div class="stat-num" style="color:#888;">14</div>
+      <div class="stat-label">총 반 수</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" style="color:#888;">6</div>
+      <div class="stat-label">총 강사 수</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" style="color:#888;">3</div>
+      <div class="stat-label">학년 그룹</div>
+      <div class="stat-desc">중1·중2·중3 별도</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" style="color:#d4380d;">중복</div>
+      <div class="stat-label">같은 과정 분산</div>
+      <div class="stat-desc">대수 3반, 공수1 4반</div>
+    </div>
+  </div>
+</div>
+
+<div class="card fade-in">
+  <h2>현행의 핵심 문제 — 같은 과정이 학년별로 쪼개진다</h2>
+
+  <div class="grid-2">
+    <div style="background:#fff0f0;border:1px solid #ffa0a0;border-radius:12px;padding:16px;">
+      <div style="font-weight:700;color:#d4380d;font-size:14px;margin-bottom:8px;">대수(al) — 3개 반으로 분산</div>
+      <div style="font-size:12px;color:#666;line-height:1.8;">
+        중1 al반 · 중2 al반 · 중3 al반<br>
+        <b>모두 같은 대수 과정</b>인데 학년이 다르다는 이유로 반이 3개<br>
+        → 반당 인원 적어 비효율
+      </div>
+    </div>
+    <div style="background:#fff0f0;border:1px solid #ffa0a0;border-radius:12px;padding:16px;">
+      <div style="font-weight:700;color:#d4380d;font-size:14px;margin-bottom:8px;">공통수학1(h1) — 4개 반으로 분산</div>
+      <div style="font-size:12px;color:#666;line-height:1.8;">
+        중1 h1 · 중2 h1 · 중3 B · 중3 h1<br>
+        <b>모두 같은 공통수학1 과정</b>인데 학년별로 분산<br>
+        → 강사 4명이 같은 내용 중복 강의
+      </div>
+    </div>
+  </div>
+
+  <div class="warning">
+    <b>결과:</b> 강사 6명이 14반을 운영하지만, 실제 <b>다루는 과정은 7~8개</b>뿐입니다. 같은 과정의 반복 강의가 발생하고, 반당 인원이 분산되어 강사 1인당 효율이 떨어집니다.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- STEP 2: 과정별 통합 시뮬레이션 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label fade-in">STEP 2 — 과정별 통합 시뮬레이션</div>
+
+<div class="card fade-in">
+  <h2>학년별 → 과정별 통합 결과</h2>
+  <p style="font-size:14px;color:#1a1a2e;font-weight:600;margin-bottom:6px;">
+    학년 구분을 없애고, 같은 과정이면 한 반으로 통합합니다.
+  </p>
+  <p style="font-size:13px;color:#666;margin-bottom:16px;">
+    대수는 수요가 많아 <b>2반 확정</b>으로 운영합니다.
+  </p>
+
+  <table>
+    <tr>
+      <th>과정</th>
+      <th>통합 전 (학년별)</th>
+      <th>통합 후 (과정별)</th>
+      <th>통합 근거</th>
+    </tr>
+    <tr>
+      <td class="td-left" style="color:#2d6a4f;">중1-2 과정</td>
+      <td>중1 A반 + 중1 B반 = <b>2반</b></td>
+      <td style="font-weight:700;color:#2d6a4f;">2반</td>
+      <td style="font-size:11px;text-align:left;">신규 입학 수요 → 유지</td>
+    </tr>
+    <tr>
+      <td class="td-left" style="color:#2d6a4f;">중2-1 과정</td>
+      <td>중2 m1반 = <b>1반</b></td>
+      <td style="font-weight:700;color:#2d6a4f;">1반</td>
+      <td style="font-size:11px;text-align:left;">현행 유지</td>
+    </tr>
+    <tr>
+      <td class="td-left" style="color:#2d6a4f;">중3 과정</td>
+      <td>중3 A반 = <b>1반</b></td>
+      <td style="font-weight:700;color:#2d6a4f;">1~2반</td>
+      <td style="font-size:11px;text-align:left;">인원에 따라 1~2반</td>
+    </tr>
+    <tr style="background:#f0f7f4;">
+      <td class="td-left" style="color:#457b9d;font-weight:800;">공통수학1</td>
+      <td>중1h1 + 중2h1 + 중3B + 중3h1 = <b>4반</b></td>
+      <td style="font-weight:800;color:#2d6a4f;font-size:14px;">1~2반</td>
+      <td style="font-size:11px;text-align:left;color:#d4380d;"><b>4반→1~2반</b> 학년 무관 통합</td>
+    </tr>
+    <tr style="background:#f0f7f4;">
+      <td class="td-left" style="color:#457b9d;">공통수학2</td>
+      <td>중3 h2반 = <b>1반</b></td>
+      <td style="font-weight:700;color:#2d6a4f;">1~2반</td>
+      <td style="font-size:11px;text-align:left;">공수1 이수자 유입 → 확대 가능</td>
+    </tr>
+    <tr style="background:#fffbeb;">
+      <td class="td-left" style="color:#e76f51;font-weight:800;">대수 (확정 2반)</td>
+      <td>중1al + 중2al + 중3al = <b>3반</b></td>
+      <td style="font-weight:800;color:#e76f51;font-size:14px;">2반 (확정)</td>
+      <td style="font-size:11px;text-align:left;"><b>3반→2반</b> 수요 높아 2반 유지</td>
+    </tr>
+    <tr>
+      <td class="td-left" style="color:#7c5cbf;">실전반</td>
+      <td>실전 A + 실전 B = <b>2반</b></td>
+      <td style="font-weight:700;color:#2d6a4f;">2반</td>
+      <td style="font-size:11px;text-align:left;">최상위 수요 → 유지</td>
+    </tr>
+  </table>
+
+  <div style="display:grid;grid-template-columns:1fr 60px 1fr;gap:0;align-items:stretch;margin:20px 0;">
+    <div style="background:#fafaf8;border:1px solid #e0e0dc;border-radius:14px;padding:20px;text-align:center;">
+      <div style="font-size:12px;font-weight:700;color:#888;letter-spacing:0.06em;margin-bottom:8px;">BEFORE</div>
+      <div style="font-size:40px;font-weight:800;color:#888;">14<span style="font-size:16px;">반</span></div>
+      <div style="font-size:12px;color:#aaa;margin-top:4px;">학년별 편성 · 강사 6명</div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;font-size:28px;color:#2d6a4f;font-weight:800;">→</div>
+    <div style="background:#f0f7f4;border:2px solid #2d6a4f;border-radius:14px;padding:20px;text-align:center;">
+      <div style="font-size:12px;font-weight:700;color:#2d6a4f;letter-spacing:0.06em;margin-bottom:8px;">AFTER</div>
+      <div style="font-size:40px;font-weight:800;color:#2d6a4f;">10~12<span style="font-size:16px;">반</span></div>
+      <div style="font-size:12px;color:#3a7d5c;margin-top:4px;">과정별 편성 · 강사 4~6명</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <b>핵심:</b> 14반 → 10~12반. 반은 2~4개 줄지만 <b>커버하는 과정 수는 동일</b>(7~8개). 학생은 한 명도 빠지지 않고, 같은 과정끼리 통합되어 오히려 반당 인원 밀도가 올라갑니다.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- STEP 3: A/B 2트랙 적용 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label fade-in">STEP 3 — A/B 2트랙 적용 시 강사 배치</div>
+
+<div class="card fade-in">
+  <h2>강사 수 계산 — 메인 + 서브 세트 단위</h2>
+  <p style="font-size:13px;color:#666;margin-bottom:16px;">
+    과사람 A/B 2트랙 모델에서는 <b>강사 1세트(메인1 + 서브1) = 하루 2반</b>을 운영합니다. 주5일 중 각 반은 주2일 수업이므로, 1세트가 주간 최대 5반을 커버합니다.
+  </p>
+
+  <table>
+    <tr>
+      <th>구분</th>
+      <th style="background:#2d6a4f;">최소 구성<br><span style="font-weight:400;font-size:10px;">2세트</span></th>
+      <th style="background:#457b9d;">권장 구성<br><span style="font-weight:400;font-size:10px;">2.5세트</span></th>
+      <th style="background:#e76f51;">여유 구성<br><span style="font-weight:400;font-size:10px;">3세트</span></th>
+    </tr>
+    <tr><td class="td-left">메인강사</td><td>2명</td><td>2~3명</td><td>3명</td></tr>
+    <tr><td class="td-left">서브강사</td><td>2명</td><td>2~3명</td><td>3명</td></tr>
+    <tr><td class="td-left">총 강사</td><td><b>4명</b></td><td><b>5명</b></td><td><b>6명</b></td></tr>
+    <tr><td class="td-left">하루 운영 반</td><td>4반</td><td>5반</td><td>6반</td></tr>
+    <tr><td class="td-left">주간 운영 반</td><td><b>10반</b></td><td><b>12~13반</b></td><td><b>15반</b></td></tr>
+    <tr><td class="td-left">10~12반 커버</td><td style="font-weight:700;color:#2d6a4f;">✓ 가능</td><td style="font-weight:700;color:#2d6a4f;">✓ 여유</td><td style="font-weight:700;color:#2d6a4f;">✓ 확장 가능</td></tr>
+  </table>
+
+  <div class="highlight" style="margin-top:14px;">
+    <b>현재 6명 → 최소 4명으로 같은 학생 수를 커버할 수 있습니다.</b><br>
+    현행 유지(6명)하면 3세트로 15반까지 여유 있게 운영 가능. 학생 추가 모집 여력이 생깁니다.
+  </div>
+</div>
+
+<div class="card fade-in">
+  <h2>핵심 비교 — 현행 vs 전환 후</h2>
+
+  <table>
+    <tr>
+      <th style="width:30%;">항목</th>
+      <th style="width:35%;background:#888;">현행 (학년별)</th>
+      <th style="width:35%;background:#2d6a4f;">전환 후 (과정별 A/B)</th>
+    </tr>
+    <tr>
+      <td class="td-left">반 편성 기준</td>
+      <td>학년별 (중1/중2/중3)</td>
+      <td style="font-weight:600;color:#2d6a4f;">과정별 (학년 무관)</td>
+    </tr>
+    <tr>
+      <td class="td-left">총 반 수</td>
+      <td>14반</td>
+      <td style="font-weight:700;color:#2d6a4f;">10~12반 <span style="color:#d4380d;font-size:11px;">▼2~4반</span></td>
+    </tr>
+    <tr>
+      <td class="td-left">총 강사 수</td>
+      <td>6명</td>
+      <td style="font-weight:700;color:#2d6a4f;">4~6명 <span style="color:#d4380d;font-size:11px;">▼0~2명</span></td>
+    </tr>
+    <tr>
+      <td class="td-left">강사 역할</td>
+      <td>전원 동일 역할</td>
+      <td style="font-weight:600;color:#2d6a4f;">메인(강의) / 서브(관리) 분리</td>
+    </tr>
+    <tr>
+      <td class="td-left">같은 과정 중복 강의</td>
+      <td style="color:#d4380d;">대수 3회, 공수1 4회</td>
+      <td style="font-weight:600;color:#2d6a4f;">대수 1~2회, 공수1 1회</td>
+    </tr>
+    <tr>
+      <td class="td-left">반당 인원 밀도</td>
+      <td>분산 (일부 반 소수)</td>
+      <td style="font-weight:600;color:#2d6a4f;">통합으로 적정 인원 확보</td>
+    </tr>
+    <tr>
+      <td class="td-left">수업 품질</td>
+      <td>강사 역량에 의존</td>
+      <td style="font-weight:600;color:#2d6a4f;">메인 강의 + 서브 클리닉 보장</td>
+    </tr>
+    <tr>
+      <td class="td-left">강사 공백 시간</td>
+      <td>있음</td>
+      <td style="font-weight:600;color:#2d6a4f;">0 (A/B 교차 가동)</td>
+    </tr>
+    <tr>
+      <td class="td-left">개별 클리닉</td>
+      <td>별도 시간 필요</td>
+      <td style="font-weight:600;color:#2d6a4f;">시간표 내 자동 편성</td>
+    </tr>
+    <tr>
+      <td class="td-left">확장성</td>
+      <td>강사 추가 필요</td>
+      <td style="font-weight:600;color:#2d6a4f;">세트 추가로 선형 확장</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- STEP 4: 실제 주간 배치 예시 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label fade-in">STEP 4 — 전환 후 주간 배치 예시</div>
+
+<div class="card fade-in">
+  <h2>2세트(4명) 기준 — 10~12반 배치</h2>
+  <p style="font-size:13px;color:#666;margin-bottom:14px;">
+    세트1(메인M1 + 서브S1)과 세트2(메인M2 + 서브S2)가 각각 A/B반을 교차 운영합니다.
+  </p>
+
+  <div style="overflow-x:auto;">
+  <table style="font-size:11px;">
+    <tr>
+      <th style="width:90px;"></th>
+      <th style="width:auto;">월</th>
+      <th style="width:auto;">화</th>
+      <th style="width:auto;">수</th>
+      <th style="width:auto;">목</th>
+      <th style="width:auto;">금</th>
+    </tr>
+    <tr>
+      <td class="td-left" style="font-size:10px;">세트1 A반</td>
+      <td style="background:#d8f3dc;border:1px solid #95d5b2;font-size:11px;">중1-2 (1)</td>
+      <td style="background:#d4e4f7;border:1px solid #a2c4e0;font-size:11px;">공수1</td>
+      <td style="background:#d8f3dc;border:1px solid #95d5b2;font-size:11px;">중1-2 (1)</td>
+      <td style="background:#d4e4f7;border:1px solid #a2c4e0;font-size:11px;">공수1</td>
+      <td style="background:#f3eeff;border:1px solid #c9b1ff;font-size:11px;" rowspan="2">보강 /<br>특강</td>
+    </tr>
+    <tr>
+      <td class="td-left" style="font-size:10px;">세트1 B반</td>
+      <td style="background:#d8f3dc;border:1px solid #95d5b2;font-size:11px;">중2-1</td>
+      <td style="background:#d4e4f7;border:1px solid #a2c4e0;font-size:11px;">공수2</td>
+      <td style="background:#d8f3dc;border:1px solid #95d5b2;font-size:11px;">중2-1</td>
+      <td style="background:#d4e4f7;border:1px solid #a2c4e0;font-size:11px;">공수2</td>
+    </tr>
+    <tr>
+      <td class="td-left" style="font-size:10px;">세트2 A반</td>
+      <td style="background:#d8f3dc;border:1px solid #95d5b2;font-size:11px;">중3</td>
+      <td style="background:#fde8d0;border:1px solid #f4a261;font-size:11px;">대수 (1)</td>
+      <td style="background:#d8f3dc;border:1px solid #95d5b2;font-size:11px;">중3</td>
+      <td style="background:#fde8d0;border:1px solid #f4a261;font-size:11px;">대수 (1)</td>
+      <td style="background:#f3eeff;border:1px solid #c9b1ff;font-size:11px;" rowspan="2">보강 /<br>특강</td>
+    </tr>
+    <tr>
+      <td class="td-left" style="font-size:10px;">세트2 B반</td>
+      <td style="background:#d8f3dc;border:1px solid #95d5b2;font-size:11px;">중1-2 (2)</td>
+      <td style="background:#fde8d0;border:1px solid #f4a261;font-size:11px;">대수 (2)</td>
+      <td style="background:#d8f3dc;border:1px solid #95d5b2;font-size:11px;">중1-2 (2)</td>
+      <td style="background:#fde8d0;border:1px solid #f4a261;font-size:11px;">대수 (2)</td>
+    </tr>
+  </table>
+  </div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin:12px 0;font-size:11px;">
+    <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;border-radius:3px;background:#d8f3dc;border:1px solid #95d5b2;"></span> 중등</span>
+    <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;border-radius:3px;background:#d4e4f7;border:1px solid #a2c4e0;"></span> 고등 기본</span>
+    <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;border-radius:3px;background:#fde8d0;border:1px solid #f4a261;"></span> 대수 (2반 확정)</span>
+    <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;border-radius:3px;background:#f3eeff;border:1px solid #c9b1ff;"></span> 보강/특강</span>
+  </div>
+
+  <div class="insight">
+    <b>배치 결과:</b> 중1-2(2반) · 중2-1(1반) · 중3(1반) · 공수1(1반) · 공수2(1반) · 대수(2반) = <b>주 8반 + 금요일 실전·보강 2~4반</b> = 총 10~12반. 강사 4명(2세트)으로 현행 14반의 모든 학생을 소화합니다.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- STEP 5: 실전반 + 여유 시뮬 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label fade-in">STEP 5 — 현행 강사 유지(6명) 시 여유 분석</div>
+
+<div class="card fade-in">
+  <h2>6명 유지 = 3세트 → 15반 운영 가능</h2>
+
+  <div class="grid-3">
+    <div class="stat" style="border:2px solid #2d6a4f;">
+      <div class="stat-num" style="color:#2d6a4f;">10~12</div>
+      <div class="stat-label">전환 후 필요 반</div>
+    </div>
+    <div class="stat" style="border:2px solid #457b9d;">
+      <div class="stat-num" style="color:#457b9d;">15</div>
+      <div class="stat-label">3세트 최대 반</div>
+    </div>
+    <div class="stat" style="border:2px solid #e76f51;">
+      <div class="stat-num" style="color:#e76f51;">3~5</div>
+      <div class="stat-label">여유 반</div>
+      <div class="stat-desc">신규 모집 여력</div>
+    </div>
+  </div>
+
+  <p style="font-size:13px;color:#666;margin:14px 0;">
+    현재 강사 6명을 그대로 유지하면 3세트 체제로 주간 최대 15반까지 운영 가능합니다. 현재 학생으로 10~12반만 필요하므로, <b>3~5반의 여유</b>가 생기며 이를 활용할 수 있습니다.
+  </p>
+
+  <div class="grid-2">
+    <div style="background:#f0f7f4;border:1px solid #b7e4c7;border-radius:12px;padding:16px;">
+      <div style="font-weight:700;color:#2d6a4f;margin-bottom:6px;">여유 반 활용 방안</div>
+      <div style="font-size:12px;color:#555;line-height:1.9;">
+        <b>1.</b> 실전반 확대 (미적분Ⅰ~Ⅱ 수준)<br>
+        <b>2.</b> 신규 학생 모집 → 기존 과정 반 분할<br>
+        <b>3.</b> 특강반 상설화 (확통·기하·내신대비)<br>
+        <b>4.</b> 소수 정예 심화 클리닉반 운영
+      </div>
+    </div>
+    <div style="background:#fffbeb;border:1px solid #f0d060;border-radius:12px;padding:16px;">
+      <div style="font-weight:700;color:#1a1a2e;margin-bottom:6px;">강사 효율 비교</div>
+      <div style="font-size:12px;color:#555;line-height:1.9;">
+        <b>현행:</b> 강사 1인당 2.3반 (14÷6)<br>
+        <b>전환:</b> 강사 1인당 2.5반 (10÷4) <span style="color:#2d6a4f;font-weight:700;">↑ 효율 상승</span><br>
+        <b>6명 유지:</b> 강사 1인당 1.7~2.0반 → <b>여유</b><br>
+        여유분은 수업 품질 향상 + 모집 확대에 투입
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- 결론 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label fade-in">결론</div>
+
+<div class="card fade-in" style="border-left:4px solid #2d6a4f;">
+  <h2 style="border-left:none;padding-left:0;">전환 시뮬레이션 요약</h2>
+
+  <div class="flow" style="margin:20px 0;">
+    <div class="flow-step">학년별 14반<br><span style="font-size:11px;color:#888;">강사 6명</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">과정별 통합<br><span style="font-size:11px;color:#888;">같은 과정 합침</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step active">A/B 2트랙<br><span style="font-size:11px;">10~12반 / 4~6명</span></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:40px 1fr;gap:8px 14px;font-size:14px;line-height:1.8;margin:16px 0;">
+    <div style="background:#2d6a4f;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;margin-top:4px;">1</div>
+    <div><b>반 수 감소:</b> 14반 → 10~12반. 같은 과정이 학년별로 쪼개지던 비효율 해소.</div>
+
+    <div style="background:#2d6a4f;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;margin-top:4px;">2</div>
+    <div><b>강사 절감 가능:</b> 최소 4명(2세트)으로 모든 학생 커버. 현행 6명 유지 시 3~5반 여유.</div>
+
+    <div style="background:#2d6a4f;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;margin-top:4px;">3</div>
+    <div><b>수업 품질 상승:</b> 메인(강의) / 서브(관리) 역할 분리 + 개별클리닉 시간표 내 보장.</div>
+
+    <div style="background:#2d6a4f;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;margin-top:4px;">4</div>
+    <div><b>확장 구조:</b> 학생 증가 시 세트만 추가하면 구조 그대로 확장. 수업 품질 유지.</div>
+  </div>
+
+  <div class="insight" style="font-size:15px;padding:20px 24px;">
+    <b>결론:</b> 현재 시간표를 과사람 A/B 2트랙 과정별 모델로 전환하면, <b>같은 학생 수를 더 적은 강사로, 더 높은 품질로 운영</b>할 수 있습니다. 현행 강사를 유지하면 <b>추가 모집 여력까지 확보</b>됩니다.
+  </div>
+</div>
+
+<!-- ── 네비게이션 ── -->
+<div style="text-align:center;margin-top:24px;" class="fade-in">
+  <button class="nav-link" onclick="window.open('과사람_브랜드요약.html','_blank')">브랜드 요약 보기 →</button>
+  <button class="nav-link nav-link-outline" onclick="window.open('과사람_운영가이드.html','_blank')" style="margin-left:8px;">운영 가이드 전체 보기 →</button>
+</div>
+
+<div class="footer">
+  과사람 수학학원 · 현행→과정별 전환 시뮬레이션 · 2026
+</div>
+
+</div><!-- page -->
+
+<script>
+/* ── IntersectionObserver: Fade-in Reveal ── */
+(function() {
+  var faders = document.querySelectorAll('.fade-in');
+  if (!faders.length) return;
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  faders.forEach(function(el) { obs.observe(el); });
+})();
+</script>
+</body>
+</html>
