@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>과사람 수학학원 | Brand Summary</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif; background: #f7f7f3; color: #1a1a2e; line-height: 1.75; word-break: keep-all; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 1000px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #1a3a3a 100%);
+    color: #fff; padding: 56px 48px 48px; border-radius: 24px; margin-bottom: 36px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before { content: ''; position: absolute; top: -40%; right: -15%; width: 480px; height: 480px; background: radial-gradient(circle, rgba(45,106,79,0.18), transparent 70%); pointer-events: none; }
+  .hero::after { content: ''; position: absolute; bottom: -30%; left: -10%; width: 350px; height: 350px; background: radial-gradient(circle, rgba(69,123,157,0.12), transparent 70%); pointer-events: none; }
+  .hero-badge { display: inline-block; padding: 5px 14px; border-radius: 20px; background: rgba(45,106,79,0.3); border: 1px solid rgba(45,106,79,0.4); font-size: 12px; font-weight: 600; color: #95d5b2; letter-spacing: 0.04em; margin-bottom: 16px; position: relative; }
+  .hero h1 { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.3; margin-bottom: 10px; position: relative; }
+  .hero h1 em { font-style: normal; color: #95d5b2; }
+  .hero .sub { font-size: 15px; color: #a0b4d0; font-weight: 400; line-height: 1.7; position: relative; max-width: 600px; }
+
+  /* ── Slogan ── */
+  .slogan {
+    text-align: center; padding: 32px 24px; margin-bottom: 32px;
+    background: linear-gradient(135deg, #f0f7f4, #e8f0fe); border-radius: 20px;
+    border: 1px solid rgba(45,106,79,0.1);
+  }
+  .slogan-text { font-size: 22px; font-weight: 800; color: #1a1a2e; letter-spacing: -0.02em; line-height: 1.5; }
+  .slogan-text em { font-style: normal; color: #2d6a4f; }
+  .slogan-sub { font-size: 13px; color: #888; margin-top: 8px; }
+
+  /* ── Section ── */
+  .section-label { font-size: 11px; font-weight: 700; color: #2d6a4f; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+
+  /* ── Cards ── */
+  .card { background: #fff; border-radius: 16px; padding: 28px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.04); transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .card:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.05); transform: translateY(-1px); }
+  .card h2 { font-size: 18px; font-weight: 800; color: #1a1a2e; margin-bottom: 16px; letter-spacing: -0.01em; padding-left: 14px; border-left: 4px solid #2d6a4f; }
+
+  /* ── Grid Layouts ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+
+  /* ── Stat Cards ── */
+  .stat { background: #fff; border-radius: 14px; padding: 22px 18px; text-align: center; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 1px 3px rgba(0,0,0,0.03); transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .stat:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .stat-num { font-size: 32px; font-weight: 800; color: #2d6a4f; letter-spacing: -0.03em; }
+  .stat-label { font-size: 12px; color: #888; margin-top: 4px; font-weight: 500; }
+  .stat-desc { font-size: 11px; color: #aaa; margin-top: 2px; }
+
+  /* ── Pillar Cards ── */
+  .pillar { border-radius: 14px; padding: 22px 20px; border: 1px solid; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .pillar:hover { transform: translateY(-1px); }
+  .pillar-icon { font-size: 28px; margin-bottom: 8px; }
+  .pillar h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .pillar p { font-size: 12px; line-height: 1.7; }
+  .p-green { background: #f0f7f4; border-color: #b7e4c7; }
+  .p-green h3 { color: #2d6a4f; }
+  .p-green p { color: #3a7d5c; }
+  .p-blue { background: #e8f0fe; border-color: #a2c4e0; }
+  .p-blue h3 { color: #457b9d; }
+  .p-blue p { color: #3a6d8a; }
+  .p-orange { background: #fdf2e9; border-color: #f4a261; }
+  .p-orange h3 { color: #e76f51; }
+  .p-orange p { color: #9a5a3a; }
+  .p-purple { background: #f3eeff; border-color: #c9b1ff; }
+  .p-purple h3 { color: #7c5cbf; }
+  .p-purple p { color: #6a4fa0; }
+
+  /* ── Flow ── */
+  .flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 14px 0; }
+  .flow-step { background: #fff; border: 1px solid #d8d8d0; border-radius: 10px; padding: 10px 16px; font-size: 12px; font-weight: 600; text-align: center; min-width: 90px; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .flow-step:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .flow-arrow { color: #ccc; font-size: 16px; font-weight: bold; }
+  .flow-step.active { background: #2d6a4f; color: #fff; border-color: #2d6a4f; }
+
+  /* ── Highlight Box ── */
+  .highlight { background: #fffbeb; padding: 16px 20px; border-radius: 14px; border: 1px solid #f0d060; margin: 14px 0; font-size: 13px; }
+  .insight { background: #f0f7f4; padding: 16px 20px; border-radius: 14px; border: 1px solid #b7e4c7; margin: 14px 0; font-size: 13px; }
+
+  /* ── Table ── */
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 12px; }
+  th { background: #2d6a4f; color: #fff; padding: 10px 8px; text-align: center; font-weight: 600; font-size: 11px; }
+  th:first-child { border-radius: 8px 0 0 0; }
+  th:last-child { border-radius: 0 8px 0 0; }
+  td { padding: 10px 8px; text-align: center; border-bottom: 1px solid #f0f0ec; font-size: 12px; }
+  tr:hover td { background: #f8faf8; }
+  .td-left { text-align: left; font-weight: 600; background: #fafaf8; }
+
+  /* ── CTA ── */
+  .cta {
+    text-align: center; padding: 40px 24px; margin-top: 32px;
+    background: linear-gradient(135deg, #1a1a2e, #1a3a3a); border-radius: 20px;
+    color: #fff; position: relative; overflow: hidden;
+  }
+  .cta::before { content: ''; position: absolute; top: -50%; right: -20%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(45,106,79,0.2), transparent 70%); pointer-events: none; }
+  .cta h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; position: relative; border: none; padding: 0; color: #fff; }
+  .cta p { font-size: 14px; color: #a0b4d0; position: relative; max-width: 500px; margin: 0 auto; }
+  .cta-btn { display: inline-block; margin-top: 20px; padding: 12px 32px; background: #2d6a4f; color: #fff; border-radius: 12px; font-size: 14px; font-weight: 700; text-decoration: none; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); position: relative; cursor: pointer; border: none; font-family: inherit; }
+  .cta-btn:hover { background: #3a8a66; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(45,106,79,0.35); }
+
+  /* ── Scroll Animation ── */
+  .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── Badge ── */
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+  .b-main { background: #2d6a4f; color: #fff; }
+  .b-sub { background: #457b9d; color: #fff; }
+
+  /* ── Footer ── */
+  .footer { text-align: center; padding: 24px; font-size: 11px; color: #aaa; }
+
+  @media (max-width: 700px) {
+    .page { padding: 20px 16px 60px; }
+    .hero { padding: 36px 24px 32px; border-radius: 18px; }
+    .hero h1 { font-size: 24px; }
+    .slogan-text { font-size: 17px; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .flow { justify-content: center; }
+  }
+
+  @media print {
+    body { background: #fff; }
+    .card, .stat, .pillar { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+    .fade-in { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<!-- ── Hero ── -->
+<div class="hero fade-in">
+  <div class="hero-badge">BRAND SUMMARY 2026</div>
+  <h1>과사람 수학학원<br><em>중등에서 고등 수학의 전 과정을 완성한다</em></h1>
+  <div class="sub">
+    중등 대상 프리미엄 수학학원 | 일반고 최상위권 · 전국단위 자사고 진학 목표<br>
+    체계적 개념 전달 + 데이터 기반 1:1 맞춤 관리 하이브리드 수업모델
+  </div>
+</div>
+
+<!-- ── Slogan ── -->
+<div class="slogan fade-in">
+  <div class="slogan-text">"과사람을 졸업하면 고등 수학은 <em>이미 끝나있다</em>"</div>
+  <div class="slogan-sub">과사람 자사관 커리를 완성하면 고1 진학부터 고3 상위권의 실력, 실제 고3이 되면 N수생과 같은 실력을 목표로 합니다.</div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- ── 우리의 방향 ── -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label fade-in">우리의 방향</div>
+
+<div class="card fade-in" style="border-left: 4px solid #2d6a4f;">
+  <h2 style="border-left:none;padding-left:0;">최상위 개념수업 + 1:1 개별클리닉, 하나의 시간표에서</h2>
+  <p style="font-size:15px;color:#1a1a2e;line-height:1.9;margin-bottom:16px;">
+    수학학원은 보통 세 가지 중 하나를 선택합니다.
+  </p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;font-size:12px;">
+    <div style="background:#fafaf8;border:1px solid #e0e0dc;border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-weight:700;color:#1a1a2e;margin-bottom:4px;">강의식 학원</div>
+      <div style="color:#888;line-height:1.6;">체계적 커리큘럼<br>개념 전달력은 좋지만<br><span style="color:#d4380d;">개별 케어가 부족</span></div>
+    </div>
+    <div style="background:#fafaf8;border:1px solid #e0e0dc;border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-weight:700;color:#1a1a2e;margin-bottom:4px;">과외식 학원</div>
+      <div style="color:#888;line-height:1.6;">1:1 맞춤 지도<br>약점 보완에 강하지만<br><span style="color:#d4380d;">진도·체계가 약함</span></div>
+    </div>
+    <div style="background:#fafaf8;border:1px solid #e0e0dc;border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-weight:700;color:#1a1a2e;margin-bottom:4px;">관리형 학원</div>
+      <div style="color:#888;line-height:1.6;">출결·테스트·보고 철저<br>밀착 관리는 좋지만<br><span style="color:#d4380d;">수업 자체의 질이 변수</span></div>
+    </div>
+  </div>
+
+  <p style="font-size:15px;color:#1a1a2e;line-height:1.9;margin-bottom:16px;">
+    과사람은 <b>세 가지를 다 합니다.</b> 최상위 수준의 개념수업으로 진도를 끌어올리고, 같은 시간표 안에서 1:1 개별클리닉으로 빈틈을 잡고, 매일 테스트 · 일일 리포트 · AI 학습 분석으로 관리형의 밀도까지 갖춥니다. 이것이 가능한 이유는 <b>강사의 역할을 나눴기 때문</b>입니다.
+  </p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+    <div style="background:#f0f7f4;border:1px solid #b7e4c7;border-radius:14px;padding:20px;text-align:center;">
+      <div style="font-size:11px;font-weight:700;color:#2d6a4f;letter-spacing:0.06em;margin-bottom:4px;">MAIN</div>
+      <div style="font-size:20px;font-weight:800;color:#1a1a2e;margin-bottom:6px;">메인강사</div>
+      <div style="font-size:13px;color:#555;line-height:1.8;">
+        <b>강의력</b>에 집중<br>
+        개념 진도 수업 · 심화 특강<br>
+        커리큘럼 설계 · 교재 선정
+      </div>
+    </div>
+    <div style="background:#e8f0fe;border:1px solid #a2c4e0;border-radius:14px;padding:20px;text-align:center;">
+      <div style="font-size:11px;font-weight:700;color:#457b9d;letter-spacing:0.06em;margin-bottom:4px;">SUB</div>
+      <div style="font-size:20px;font-weight:800;color:#1a1a2e;margin-bottom:6px;">서브강사</div>
+      <div style="font-size:13px;color:#555;line-height:1.8;">
+        <b>관리력</b>에 집중<br>
+        유형학습 · 개별클리닉 · 오답관리<br>
+        학생별 약점 추적 · 데이터 코칭
+      </div>
+    </div>
+  </div>
+
+  <div class="insight" style="font-size:14px;">
+    <b>한 사람에게 강의력과 관리력을 모두 요구하지 않습니다.</b> 잘 가르치는 사람은 가르치는 데 집중하고, 꼼꼼한 사람은 관리에 집중합니다. 여기에 에듀테크(매쓰홀릭 AI · 클래스인 전자칠판)가 관리형의 밀도를 시스템으로 보장합니다. 이 역할 분리 + 기술 기반 관리가 A/B 2트랙 교차 시간표의 출발점입니다.
+  </div>
+
+  <h3 style="margin-top:20px;font-size:15px;font-weight:700;color:#457b9d;">1:1 개별클리닉 — 부족한 부분을 찾고, 그 자리에서 메꾼다</h3>
+  <p style="font-size:13px;color:#666;margin-bottom:12px;">
+    개별클리닉은 단순 질의응답이 아닙니다. <b>데이터로 약점을 찾고, 유사문제로 완전히 메꾸는 시스템</b>입니다.
+  </p>
+
+  <div style="display:grid;grid-template-columns:40px 1fr;gap:8px 14px;font-size:13px;line-height:1.7;margin-bottom:16px;">
+    <div style="background:#457b9d;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;margin-top:2px;">1</div>
+    <div><b style="color:#1a1a2e;">약점 식별</b> — 매쓰홀릭 단원분석 히트맵이 소단원별 성취도를 색상으로 시각화. 어떤 유형에서 틀리는지, 반복적으로 막히는 지점이 어디인지 <b>데이터로 정확히 파악</b>합니다.</div>
+
+    <div style="background:#457b9d;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;margin-top:2px;">2</div>
+    <div><b style="color:#1a1a2e;">유사문제 즉시 매칭</b> — 틀린 문제와 같은 유형의 유사문제를 매쓰홀릭이 자동으로 생성. 쌍둥이 문제로 같은 유형을 다시 풀면서 <b>"우연히 맞춘 것"과 "진짜 이해한 것"을 구분</b>합니다.</div>
+
+    <div style="background:#457b9d;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;margin-top:2px;">3</div>
+    <div><b style="color:#1a1a2e;">당일 완전 습득</b> — 서브강사가 해당 학생 옆에서 1:1로 풀이 과정을 점검하고, 오답의 원인(개념 미숙 / 계산 실수 / 풀이 전략 오류)까지 짚어줍니다. <b>틀린 문제를 다음 날로 넘기지 않습니다.</b></div>
+
+    <div style="background:#457b9d;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;margin-top:2px;">4</div>
+    <div><b style="color:#1a1a2e;">이력 누적 → 재확인</b> — 매쓰홀릭 유형이력 추적으로 과거에 틀렸던 유형이 이후 테스트에서 맞는지 자동 추적. 한 번 메꾼 약점이 <b>진짜 메꿔졌는지 시간차를 두고 검증</b>합니다.</div>
+  </div>
+
+  <div class="highlight">
+    <b>결과:</b> 학생마다 부족한 부분이 다르지만, 데이터가 그 차이를 정확히 보여주고, 서브강사가 그 자리에서 1:1로 해결합니다. 개념수업에서 90점을 받은 학생이든 60점을 받은 학생이든, 클리닉을 거치면 <b>각자의 빈틈이 채워진 상태</b>로 그날 수업을 마칩니다.
+  </div>
+</div>
+
+<!-- ── Key Numbers ── -->
+<div class="grid-4 fade-in">
+  <div class="stat">
+    <div class="stat-num">12</div>
+    <div class="stat-label">과정 라인업</div>
+    <div class="stat-desc">중등 6 + 고등 6</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">5h</div>
+    <div class="stat-label">1일 수업 시간</div>
+    <div class="stat-desc">5:00~10:00 PM</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">4단계</div>
+    <div class="stat-label">평가 체계</div>
+    <div class="stat-desc">복습→일일→누적→제로</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">3년</div>
+    <div class="stat-label">완성 로드맵</div>
+    <div class="stat-desc">중1 입학 → 고등 전과정</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- ── 핵심 1: 그래서 이런 시간표가 나온다 ── -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label fade-in">그래서 이런 시간표가 나온다</div>
+
+<div class="card fade-in">
+  <h2>A/B 2트랙 교차 시간표 — 1일 5시간</h2>
+  <p style="font-size:14px;color:#1a1a2e;margin-bottom:6px;font-weight:600;">
+    메인강사 1인 + 서브강사 1인으로 2개 반이 개념수업 · 유형학습 · 클리닉을 하루에 모두 소화합니다.
+  </p>
+  <p style="font-size:13px;color:#666;margin-bottom:16px;">
+    메인강사가 A반에서 개념수업을 하는 동안, 서브강사는 B반에서 클리닉을. 다음 시간에 서로 교차. 강사 공백 시간 0, 학생 대기 시간 0.
+  </p>
+
+  <div style="display:grid;grid-template-columns:80px 1fr 1fr;gap:3px;font-size:12px;">
+    <div style="background:#1a1a2e;color:#fff;font-weight:600;padding:10px;border-radius:8px;text-align:center;">시간</div>
+    <div style="background:#1a1a2e;color:#fff;font-weight:600;padding:10px;border-radius:8px;text-align:center;">A반</div>
+    <div style="background:#1a1a2e;color:#fff;font-weight:600;padding:10px;border-radius:8px;text-align:center;">B반</div>
+
+    <div style="background:#fafaf8;padding:10px;border-radius:8px;text-align:center;font-weight:600;">5:00~5:30</div>
+    <div style="background:#f0f0ec;border:1px solid #d8d8d0;padding:10px;border-radius:8px;text-align:center;">복습테스트</div>
+    <div style="background:#f0f0ec;border:1px solid #d8d8d0;padding:10px;border-radius:8px;text-align:center;">복습테스트</div>
+
+    <div style="background:#fafaf8;padding:10px;border-radius:8px;text-align:center;font-weight:600;">5:30~7:00</div>
+    <div style="background:#d8f3dc;border:1px solid #95d5b2;padding:10px;border-radius:8px;text-align:center;">개념 진도 <span class="badge b-main" style="font-size:9px;">메인강사</span></div>
+    <div style="background:#fde8d0;border:1px solid #f4a261;padding:10px;border-radius:8px;text-align:center;">특강 / 개별클리닉 <span class="badge" style="font-size:9px;background:#e76f51;color:#fff;">메인or서브</span></div>
+
+    <div style="background:#fafaf8;padding:10px;border-radius:8px;text-align:center;font-weight:600;">7:00~8:30</div>
+    <div style="background:#d4e4f7;border:1px solid #a2c4e0;padding:10px;border-radius:8px;text-align:center;">유형학습 & 일일테스트 <span class="badge b-sub" style="font-size:9px;">서브강사</span></div>
+    <div style="background:#d8f3dc;border:1px solid #95d5b2;padding:10px;border-radius:8px;text-align:center;">개념 진도 <span class="badge b-main" style="font-size:9px;">메인강사</span></div>
+
+    <div style="background:#fafaf8;padding:10px;border-radius:8px;text-align:center;font-weight:600;">8:30~10:00</div>
+    <div style="background:#fde8d0;border:1px solid #f4a261;padding:10px;border-radius:8px;text-align:center;">특강 / 개별클리닉 <span class="badge" style="font-size:9px;background:#e76f51;color:#fff;">메인or서브</span></div>
+    <div style="background:#d4e4f7;border:1px solid #a2c4e0;padding:10px;border-radius:8px;text-align:center;">유형학습 & 일일테스트 <span class="badge b-sub" style="font-size:9px;">서브강사</span></div>
+  </div>
+
+  <div class="highlight" style="margin-top:14px;">
+    <b>포인트:</b> 메인강사는 A→B반을 이동하며 <b>같은 개념수업을 2회</b> 진행하므로 수업 완성도가 높고, 서브강사는 유형학습 중 <b>학생별 약점을 1:1로 잡아줍니다.</b> 강사 공백 시간이 0 — 5시간 내내 가동합니다.
+  </div>
+</div>
+
+<!-- ── 규모별 시뮬레이션 ── -->
+<div class="card fade-in">
+  <h2>강사 수에 따른 규모 시뮬레이션</h2>
+  <p style="font-size:13px;color:#666;margin-bottom:14px;">A/B 세트를 늘리면 그대로 확장됩니다. 강사 1세트(2명) = 반 2개/일 = 주2일 기준 <b>5반</b> 운영.</p>
+
+  <table>
+    <tr>
+      <th>구분</th>
+      <th style="background:#2d6a4f;">런칭기<br><span style="font-weight:400;font-size:10px;">1세트</span></th>
+      <th style="background:#457b9d;">안정기<br><span style="font-weight:400;font-size:10px;">2세트</span></th>
+      <th style="background:#e76f51;">확장기<br><span style="font-weight:400;font-size:10px;">3~4세트</span></th>
+    </tr>
+    <tr><td class="td-left">메인 + 서브 강사</td><td><b>1 + 1 = 2명</b></td><td><b>2 + 2 = 4명</b></td><td><b>3~4 + 3~4 = 6~8명</b></td></tr>
+    <tr><td class="td-left">하루 운영 반</td><td>2반</td><td>4반</td><td>6~8반</td></tr>
+    <tr><td class="td-left">총 반 수 (주2일)</td><td><b>5반</b></td><td><b>10반</b></td><td><b>15~20반</b></td></tr>
+    <tr><td class="td-left">반당 학생 수</td><td>8~12명</td><td>10~15명</td><td>10~15명</td></tr>
+    <tr><td class="td-left">총 학생 수</td><td>40~60명</td><td>100~150명</td><td>150~300명</td></tr>
+    <tr><td class="td-left">필요 강의실</td><td>2개</td><td>4개</td><td>6~8개</td></tr>
+  </table>
+
+  <div class="insight" style="margin-top:12px;">
+    <b>공식:</b> 강사 수 = A/B 세트 수 × 2 · 하루 반 = 세트 × 2 · 총 반 = 하루 반 × 운영일 ÷ 주당 수업일(2일)<br>
+    <b>런칭은 강사 2명에서 시작,</b> 학생 수요에 따라 세트 단위로 확장합니다. 구조가 같으므로 수업 품질이 규모와 상관없이 유지됩니다.
+  </div>
+</div>
+
+<!-- ── 현행 전환 시뮬레이션 요약 ── -->
+<div class="card fade-in" style="background:linear-gradient(135deg,#fffbeb,#f0f7f4);border:1.5px solid #e76f51;">
+  <h2 style="border-left-color:#e76f51;">현행 시간표 전환 시뮬레이션</h2>
+  <p style="font-size:13px;color:#666;margin-bottom:12px;">
+    현재 학년별 14반(강사 6명) 체제를 과사람 A/B 2트랙 과정별 모델로 전환하면:
+  </p>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
+    <div style="background:#fff;border-radius:12px;padding:14px;text-align:center;border:1px solid rgba(0,0,0,0.06);">
+      <div style="font-size:28px;font-weight:800;color:#2d6a4f;">10~12</div>
+      <div style="font-size:11px;color:#888;">반으로 축소 (▼2~4)</div>
+    </div>
+    <div style="background:#fff;border-radius:12px;padding:14px;text-align:center;border:1px solid rgba(0,0,0,0.06);">
+      <div style="font-size:28px;font-weight:800;color:#457b9d;">4~6</div>
+      <div style="font-size:11px;color:#888;">명 강사로 충분</div>
+    </div>
+    <div style="background:#fff;border-radius:12px;padding:14px;text-align:center;border:1px solid rgba(0,0,0,0.06);">
+      <div style="font-size:28px;font-weight:800;color:#e76f51;">3~5</div>
+      <div style="font-size:11px;color:#888;">반 여유 (6명 유지 시)</div>
+    </div>
+  </div>
+  <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:12px;">
+    같은 과정(대수 3반→2반, 공수1 4반→1~2반)이 학년별로 쪼개지던 비효율을 통합. 학생은 한 명도 빠지지 않고, 강사 효율은 올라갑니다.
+  </div>
+  <button onclick="window.open('과사람_전환시뮬레이션.html','_blank')" style="display:inline-block;padding:9px 22px;background:#e76f51;color:#fff;border-radius:10px;font-size:12px;font-weight:600;border:none;cursor:pointer;font-family:inherit;transition:all 0.4s;">전환 시뮬레이션 상세 보기 →</button>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- ── 핵심 2: 과정 중심 반 편성 ── -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label fade-in">핵심 2 — "학년"이 아니라 "과정"으로 반을 짠다</div>
+
+<div class="card fade-in">
+  <h2>과정별 라인업 — 12개 과정 체계</h2>
+  <p style="font-size:14px;color:#1a1a2e;margin-bottom:6px;font-weight:600;">
+    같은 중2라도 실력이 다르면 다른 반. 과정이 반을 결정합니다.
+  </p>
+  <p style="font-size:13px;color:#666;margin-bottom:16px;">
+    학년별 반 편성의 한계(빠른 아이는 지루하고, 느린 아이는 못 따라가는)를 과정별 편성으로 해결합니다. 중1이어도 실력이 되면 중3 과정에, 중3이어도 기초가 부족하면 중2 과정에서 시작합니다.
+  </p>
+
+  <div class="grid-3">
+    <div style="background:#f0f7f4;border:1px solid #b7e4c7;border-radius:12px;padding:16px;">
+      <div style="font-weight:700;color:#2d6a4f;margin-bottom:8px;font-size:14px;">중등 과정 (6개)</div>
+      <div style="font-size:12px;color:#555;line-height:2;">
+        중1-1 · 중1-2 · 중2-1<br>중2-2 · 중3-1 · 중3-2
+      </div>
+      <div style="font-size:11px;color:#888;margin-top:6px;">각 3개월(12주) / 주2일</div>
+    </div>
+    <div style="background:#e8f0fe;border:1px solid #a2c4e0;border-radius:12px;padding:16px;">
+      <div style="font-weight:700;color:#457b9d;margin-bottom:8px;font-size:14px;">고등 기본 (3개)</div>
+      <div style="font-size:12px;color:#555;line-height:2;">
+        공통수학1 · 공통수학2<br>대수(구 수Ⅰ)
+      </div>
+      <div style="font-size:11px;color:#888;margin-top:6px;">각 4개월(16주) / 주2일</div>
+    </div>
+    <div style="background:#fdf2e9;border:1px solid #f4a261;border-radius:12px;padding:16px;">
+      <div style="font-weight:700;color:#e76f51;margin-bottom:8px;font-size:14px;">고등 심화 (3개)</div>
+      <div style="font-size:12px;color:#555;line-height:2;">
+        미적분Ⅰ(구 수Ⅱ)<br>미적분Ⅱ(구 미적분)<br>확통 · 기하(특강)
+      </div>
+      <div style="font-size:11px;color:#888;margin-top:6px;">각 4개월 / 특강 병행</div>
+    </div>
+  </div>
+
+  <div class="highlight" style="margin-top:12px;">
+    <b>운영 효과:</b> 입학 시점·학년이 달라도 같은 과정이면 한 반에서 수업 → 소수 정원이어도 반 구성이 가능. 수요에 따라 개설 과정을 유연하게 조절할 수 있어, <b>런칭 초기 소규모에서도 12개 과정 중 5~6개를 바로 운영</b>할 수 있습니다.
+  </div>
+</div>
+
+<!-- ── 3개년 로드맵 ── -->
+<div class="card fade-in">
+  <h2>3개년 로드맵 — 중1 입학 → 고등 전과정 완성</h2>
+
+  <div style="overflow-x:auto;">
+  <table style="font-size:11px;min-width:700px;">
+    <tr>
+      <th style="width:100px;">트랙</th>
+      <th style="background:#1a6b3c;" colspan="2">중1</th>
+      <th style="background:#0d5e8a;" colspan="2">중2</th>
+      <th style="background:#8b3a0e;" colspan="2">중3</th>
+      <th style="width:120px;">졸업 시점</th>
+    </tr>
+    <tr>
+      <td class="td-left">표준</td>
+      <td style="background:#d8f3dc;">중1-2</td>
+      <td style="background:#d8f3dc;">중2-1~2</td>
+      <td style="background:#d8f3dc;">중3-1~2</td>
+      <td style="background:#d4e4f7;">공통1~2</td>
+      <td style="background:#fde8d0;">대수~미적분Ⅰ</td>
+      <td style="background:#f0e6ff;">미적분Ⅱ·확통·기하</td>
+      <td style="background:#2d6a4f;color:#fff;font-weight:700;">고등 전과정 완성</td>
+    </tr>
+    <tr>
+      <td class="td-left">속성</td>
+      <td style="background:#d8f3dc;">중2-1~2</td>
+      <td style="background:#d8f3dc;">중3-1~2</td>
+      <td style="background:#d4e4f7;" colspan="2">공통1~2 → 대수</td>
+      <td style="background:#fde8d0;" colspan="2">미적분Ⅰ~Ⅱ + 심화특강</td>
+      <td style="background:#2d6a4f;color:#fff;font-weight:700;">조기 완성 + 심화</td>
+    </tr>
+    <tr>
+      <td class="td-left" style="background:#fff3e0;">최상위</td>
+      <td style="background:#d4e4f7;" colspan="2">공통1~2</td>
+      <td style="background:#fde8d0;" colspan="2">대수 → 미적분Ⅰ</td>
+      <td style="background:#fde8d0;">미적분Ⅱ</td>
+      <td style="background:#f0e6ff;">확통·기하 + 심화</td>
+      <td style="background:#2d6a4f;color:#fff;font-weight:700;">중3부터 여유</td>
+    </tr>
+  </table>
+  </div>
+
+  <div class="highlight" style="margin-top:12px;">
+    <b>어떤 트랙이든</b> 중3 졸업 시점에 고등 수학 전 과정(미적분Ⅱ + 확통·기하)을 완성하는 것이 목표입니다. 중등은 3개월 속도감, 고등은 4개월 깊이.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- ── 핵심 3: 관리 시스템 ── -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label fade-in">핵심 3 — 에듀테크 · 평가 · 소통으로 관리의 밀도를 높인다</div>
+
+<div class="card fade-in">
+  <h2>에듀테크 시스템</h2>
+  <div class="grid-2">
+    <div style="background:#f0f7f4;border:1px solid #b7e4c7;border-radius:12px;padding:18px;">
+      <div style="font-weight:700;color:#2d6a4f;font-size:14px;margin-bottom:8px;">클래스인(ClassIn) 전자칠판</div>
+      <div style="font-size:12px;color:#555;line-height:1.8;">
+        50페이지 블랙보드 판서 + EDB 저장<br>
+        작은 칠판 — 학생별 답안 실시간 확인<br>
+        학생 판서 권한 → 풀이 과정 즉시 점검<br>
+        그룹 토론 + 화상 수업 내장<br>
+        <b>자체 개발:</b> ClassIn 리포트(AI 판서분석 → 학부모 발송)<br>
+        <b>자체 개발:</b> ClassIn 아카이브(학생 복습 DB)
+      </div>
+    </div>
+    <div style="background:#e8f0fe;border:1px solid #a2c4e0;border-radius:12px;padding:18px;">
+      <div style="font-weight:700;color:#457b9d;font-size:14px;margin-bottom:8px;">매쓰홀릭(MathHolic) AI 학습관리</div>
+      <div style="font-size:12px;color:#555;line-height:1.8;">
+        교재 연동 커리큘럼 매핑<br>
+        단원분석 히트맵 — 소단원별 성취도 색상 시각화<br>
+        유형이력 추적 — 날짜별 풀이 데이터 도트<br>
+        시험지 자동 제작(유사문제 매칭)
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 평가 체계 ── -->
+<div class="card fade-in">
+  <h2>4단계 평가 체계</h2>
+  <div class="flow" style="justify-content:center;">
+    <div class="flow-step" style="background:#d8f3dc;border-color:#95d5b2;">
+      <div style="font-size:14px;font-weight:800;color:#2d6a4f;">1단계</div>
+      <div style="font-size:11px;color:#666;">복습테스트</div>
+      <div style="font-size:10px;color:#999;">매 수업 시작</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="background:#d4e4f7;border-color:#a2c4e0;">
+      <div style="font-size:14px;font-weight:800;color:#457b9d;">2단계</div>
+      <div style="font-size:11px;color:#666;">일일테스트</div>
+      <div style="font-size:10px;color:#999;">수업 종료 시</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="background:#fde8d0;border-color:#f4a261;">
+      <div style="font-size:14px;font-weight:800;color:#e76f51;">3단계</div>
+      <div style="font-size:11px;color:#666;">누적테스트</div>
+      <div style="font-size:10px;color:#999;">4주 단위</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="background:#f3eeff;border-color:#c9b1ff;">
+      <div style="font-size:14px;font-weight:800;color:#7c5cbf;">4단계</div>
+      <div style="font-size:11px;color:#666;">제로테스트</div>
+      <div style="font-size:10px;color:#999;">과정 종료(G·H형)</div>
+    </div>
+  </div>
+  <div style="text-align:center;font-size:12px;color:#888;margin-top:8px;">+ 분기별 학력 진단 모의고사 (연 4회)</div>
+</div>
+
+<!-- ── 학부모 소통 ── -->
+<div class="card fade-in">
+  <h2>학부모 소통 체계 — 4단계 레이어</h2>
+  <p style="font-size:13px;color:#666;margin-bottom:14px;">
+    일반 학원은 월 1회 전화나 분기 1회 대면이 전부입니다. 과사람은 <b>일일 → 주간 → 월간 → 분기</b>, 4겹으로 소통을 쌓습니다. 학부모가 "우리 아이 지금 어디쯤이야?"를 물어볼 필요가 없는 구조입니다.
+  </p>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;">
+    <div style="background:#d8f3dc;border:1px solid #95d5b2;border-radius:12px;padding:14px;text-align:center;">
+      <div style="font-size:11px;font-weight:700;color:#2d6a4f;letter-spacing:0.04em;margin-bottom:4px;">매일</div>
+      <div style="font-weight:700;font-size:13px;color:#1a1a2e;margin-bottom:4px;">일일 리포트</div>
+      <div style="font-size:11px;color:#555;line-height:1.6;">매쓰홀릭 학습현황<br>위드아카 출결·과제<br>테스트 결과 자동 발송</div>
+    </div>
+    <div style="background:#d4e4f7;border:1px solid #a2c4e0;border-radius:12px;padding:14px;text-align:center;">
+      <div style="font-size:11px;font-weight:700;color:#457b9d;letter-spacing:0.04em;margin-bottom:4px;">매주</div>
+      <div style="font-weight:700;font-size:13px;color:#1a1a2e;margin-bottom:4px;">AI 주간 리포트</div>
+      <div style="font-size:11px;color:#555;line-height:1.6;">ClassIn 판서분석<br>수업 참여도·이해도<br>주간 약점 요약</div>
+    </div>
+    <div style="background:#fde8d0;border:1px solid #f4a261;border-radius:12px;padding:14px;text-align:center;">
+      <div style="font-size:11px;font-weight:700;color:#e76f51;letter-spacing:0.04em;margin-bottom:4px;">매월</div>
+      <div style="font-weight:700;font-size:13px;color:#1a1a2e;margin-bottom:4px;">정기 대면상담</div>
+      <div style="font-size:11px;color:#555;line-height:1.6;">히트맵 기반 진도 점검<br>다음 달 목표 설정<br>학습 태도·외적 요인 공유</div>
+    </div>
+    <div style="background:#f3eeff;border:1px solid #c9b1ff;border-radius:12px;padding:14px;text-align:center;">
+      <div style="font-size:11px;font-weight:700;color:#7c5cbf;letter-spacing:0.04em;margin-bottom:4px;">분기</div>
+      <div style="font-weight:700;font-size:13px;color:#1a1a2e;margin-bottom:4px;">커리큘럼 상담</div>
+      <div style="font-size:11px;color:#555;line-height:1.6;">3개년 로드맵 점검<br>트랙·과정 배치 조정<br>모의고사 결과 기반</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+    <div style="background:#fafaf8;border:1px solid #e0e0dc;border-radius:10px;padding:12px;text-align:center;font-size:12px;">
+      <div style="font-weight:700;color:#1a1a2e;margin-bottom:2px;">카카오톡 오픈채팅방</div>
+      <div style="color:#888;">입시자료 주3회 업로드 + 주요 공지</div>
+    </div>
+    <div style="background:#fafaf8;border:1px solid #e0e0dc;border-radius:10px;padding:12px;text-align:center;font-size:12px;">
+      <div style="font-weight:700;color:#1a1a2e;margin-bottom:2px;">긴급 즉시 연락</div>
+      <div style="color:#888;">성적 급변·태도 이슈 시 당일 유선 연락</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label fade-in">강사 채용 — 역할이 다르니 뽑는 기준도 다르다</div>
+
+<div class="card fade-in">
+  <h2>채용 기준</h2>
+  <table>
+    <tr>
+      <th style="width:28%;">기준</th>
+      <th style="width:36%;background:#2d6a4f;">메인강사</th>
+      <th style="width:36%;background:#457b9d;">서브강사</th>
+    </tr>
+    <tr><td class="td-left">핵심 역량</td><td>강의력 · 전달력</td><td>꼼꼼함 · 관리력</td></tr>
+    <tr><td class="td-left">전공</td><td>수학 전공 필수</td><td>수학 관련 전공 우대</td></tr>
+    <tr><td class="td-left">채용 프로세스</td><td>3시간 심층면접 + 시범강의</td><td>데이터 활용 역량 평가</td></tr>
+    <tr><td class="td-left">평가</td><td>학부모 설문 기반 월간 피드백</td><td>학생 성취도 데이터 기반 평가</td></tr>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label fade-in">한눈에 비교</div>
+
+<div class="card fade-in">
+  <h2>과사람만의 차별점</h2>
+  <table>
+    <tr>
+      <th style="width:30%;">항목</th>
+      <th style="width:35%;">일반 선행학원</th>
+      <th style="width:35%;background:#1a6b3c;">과사람</th>
+    </tr>
+    <tr>
+      <td class="td-left">수업 방식</td>
+      <td>강의식 or 과외식 택1</td>
+      <td style="font-weight:600;color:#2d6a4f;">하이브리드 (강의+과외 결합)</td>
+    </tr>
+    <tr>
+      <td class="td-left">반 편성</td>
+      <td>학년별 고정</td>
+      <td style="font-weight:600;color:#2d6a4f;">과정별 (실력 기반 12개 과정)</td>
+    </tr>
+    <tr>
+      <td class="td-left">수업 도구</td>
+      <td>일반 칠판 / PPT</td>
+      <td style="font-weight:600;color:#2d6a4f;">ClassIn 전자칠판 양방향 수업</td>
+    </tr>
+    <tr>
+      <td class="td-left">학습 관리</td>
+      <td>수기 / 경험 기반</td>
+      <td style="font-weight:600;color:#2d6a4f;">매쓰홀릭 AI + 데이터 기반</td>
+    </tr>
+    <tr>
+      <td class="td-left">학부모 소통</td>
+      <td>월1회 전화 / 간헐적</td>
+      <td style="font-weight:600;color:#2d6a4f;">일일 + 주간 자동 리포트</td>
+    </tr>
+    <tr>
+      <td class="td-left">평가</td>
+      <td>중간·기말 위주</td>
+      <td style="font-weight:600;color:#2d6a4f;">4단계 + 분기 모의고사</td>
+    </tr>
+    <tr>
+      <td class="td-left">졸업 목표</td>
+      <td>선행 진도만 빠르게</td>
+      <td style="font-weight:600;color:#2d6a4f;">고등 전과정 완성 + 실전 실력</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ── CTA ── -->
+<div class="cta fade-in">
+  <h2>상세 운영 가이드</h2>
+  <p>시간표, 교재, 커리큘럼, 내신대비, 입학 프로세스 등<br>19개 섹션 전체 운영 매뉴얼</p>
+  <button class="cta-btn" onclick="window.open('과사람_운영가이드.html','_blank')">운영 가이드 전체 보기 →</button>
+</div>
+
+<div class="footer">
+  과사람 수학학원 Brand Summary · 2026
+</div>
+
+</div><!-- page -->
+
+<script>
+/* ── IntersectionObserver: Fade-in Reveal ── */
+(function() {
+  var faders = document.querySelectorAll('.fade-in');
+  if (!faders.length) return;
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  faders.forEach(function(el) { obs.observe(el); });
+})();
+</script>
+</body>
+</html>
