@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClassIn 리포트 × 오르조 연동 가이드</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF8F5;
+    --surface: #FFFFFF;
+    --gold: #B8963E;
+    --gold-light: #D4B96A;
+    --gold-bg: #F5EFE0;
+    --text: #2C2C2C;
+    --text-sub: #6B6B6B;
+    --border: #E8E2D8;
+    --accent: #3D6B4F;
+    --accent-bg: #EDF5F0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-badge {
+    display: inline-block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: var(--gold-bg);
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  .header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  .header h1 span { color: var(--gold); }
+
+  .header p {
+    font-size: 14px;
+    color: var(--text-sub);
+    font-weight: 300;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .intro-box {
+    background: linear-gradient(135deg, var(--gold-bg) 0%, #FBF7EE 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .intro-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--gold);
+    border-radius: 4px 0 0 4px;
+  }
+
+  .intro-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .intro-box p { font-size: 13.5px; color: var(--text-sub); line-height: 1.8; }
+  .intro-box strong { color: var(--gold); font-weight: 700; }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 36px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .step-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .step-card:hover { box-shadow: 0 4px 20px rgba(184,150,62,0.08); }
+  .step-card.result {
+    background: linear-gradient(135deg, var(--accent-bg) 0%, #F5FAF7 100%);
+    border-color: #C8DDD0;
+  }
+  .step-card.result .step-number { background: var(--accent); }
+  .step-card.result .step-tag { color: var(--accent); }
+
+  .step-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+
+  .step-number {
+    flex-shrink: 0; width: 40px; height: 40px;
+    background: var(--gold); color: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 700;
+  }
+
+  .step-title-group { flex: 1; }
+  .step-tag {
+    display: inline-block; font-size: 10px; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 4px;
+  }
+  .step-title { font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.4; }
+
+  .step-body { margin-left: 56px; }
+  .step-body p { font-size: 13.5px; color: var(--text-sub); line-height: 1.85; margin-bottom: 12px; }
+  .step-body p:last-child { margin-bottom: 0; }
+
+  .highlight {
+    background: var(--gold-bg); padding: 2px 8px; border-radius: 4px;
+    font-weight: 500; color: var(--text); font-size: 12.5px;
+  }
+
+  .url-box {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #F0EDE6; border: 1px solid var(--border); border-radius: 6px;
+    padding: 6px 14px; font-size: 12px; color: var(--text-sub); margin: 8px 0; word-break: break-all;
+  }
+  .url-box::before { content: '🔗'; font-size: 13px; }
+
+  .step-detail-list { list-style: none; margin: 12px 0 0 0; padding: 0; }
+  .step-detail-list li {
+    font-size: 13px; color: var(--text-sub); padding: 6px 0 6px 20px;
+    position: relative; line-height: 1.7;
+  }
+  .step-detail-list li::before {
+    content: ''; position: absolute; left: 0; top: 13px;
+    width: 6px; height: 6px; background: var(--gold-light); border-radius: 50%;
+  }
+
+  .step-screenshot {
+    margin: 20px 0 0 56px;
+    border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .step-screenshot img { width: 100%; display: block; }
+  .step-screenshot-caption {
+    padding: 10px 16px; font-size: 11px; color: var(--text-sub);
+    background: #FAFAF8; border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .step-screenshot-caption::before { content: '▲'; font-size: 8px; color: var(--gold); }
+
+  .step-screenshots-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0 0 56px;
+  }
+  .step-screenshots-row .step-screenshot { margin: 0; }
+
+  .step-connector {
+    display: flex; justify-content: center; margin: -8px 0; position: relative; z-index: 1;
+  }
+  .step-connector svg { width: 20px; height: 32px; color: var(--gold-light); }
+
+  .footer {
+    text-align: center; margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--border);
+  }
+  .footer .brand {
+    font-family: 'Cormorant Garamond', serif; font-size: 14px;
+    font-weight: 600; color: var(--gold); margin-bottom: 4px;
+  }
+  .footer p { font-size: 12px; color: var(--text-sub); font-weight: 300; }
+
+  @media (max-width: 600px) {
+    .container { padding: 40px 16px 60px; }
+    .header h1 { font-size: 26px; }
+    .step-card { padding: 24px 20px; }
+    .step-body { margin-left: 0; margin-top: 12px; }
+    .step-screenshot { margin-left: 0; }
+    .step-screenshots-row { margin-left: 0; grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="header-badge">Teacher's Guide</div>
+    <h1>ClassIn 리포트 × <span>오르조</span> 연동 가이드</h1>
+    <p>오르조 학습 풀이 데이터를 ClassIn 리포트에 연동하여<br>학생별 AI 분석 보고서를 자동 생성하는 프로세스 안내</p>
+  </div>
+
+  <div class="intro-box">
+    <h3>이런 게 가능해집니다</h3>
+    <p>
+      오르조에서 학생이 푼 문제 데이터(정오답, 풀이시간, 판서 이미지)를 
+      <strong>ClassIn 리포트</strong>에 자동으로 가져와서, 
+      AI가 학습 진단 · 강점 분석 · 학부모 메시지까지 자동 생성합니다.
+      선생님은 오르조 공유 URL만 붙여넣으면 됩니다.
+    </p>
+  </div>
+
+  <div class="steps-section">
+    <h2 class="section-title">진행 프로세스</h2>
+
+    <!-- Step 1 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">1</div>
+        <div class="step-title-group">
+          <div class="step-tag">오르조</div>
+          <div class="step-title">오르조에서 학생 학습 현황 페이지 열기</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <p>
+          오르조 <span class="highlight">학생 학습 현황</span> 페이지에서 해당 학생의 풀이 결과를 확인합니다.
+          상단에 점수 · 정답 수 · 풀이시간 · 복습시간이 요약되어 있고, 
+          아래 테이블에서 문제별 쓴 답 · 정답 · 풀이시간 · 점수를 볼 수 있습니다.
+        </p>
+      </div>
+      <div class="step-screenshot">
+        <img src="img_step2.png" alt="오르조 학생 학습 현황 화면">
+        <div class="step-screenshot-caption">오르조 학생 학습 현황 — 문제별 풀이 데이터 및 우측 상단 '페이지 공유' 버튼</div>
+      </div>
+    </div>
+
+    <div class="step-connector"><svg viewBox="0 0 20 32" fill="none"><path d="M10 0v28M4 22l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <!-- Step 2 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">2</div>
+        <div class="step-title-group">
+          <div class="step-tag">오르조</div>
+          <div class="step-title">공유 URL 복사하기</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <p>
+          오르조 학습 현황 페이지 우측 상단의 <span class="highlight">🔗 페이지 공유</span> 버튼을 클릭하여 
+          공유 URL을 복사합니다.
+        </p>
+        <div class="url-box">https://class.orzo.kr/public-reports/...</div>
+        <p>
+          이 URL에 학생의 전체 풀이 데이터(정오답, 시간, 판서 이미지)가 포함되어 있습니다.
+        </p>
+      </div>
+    </div>
+
+    <div class="step-connector"><svg viewBox="0 0 20 32" fill="none"><path d="M10 0v28M4 22l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <!-- Step 3 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">3</div>
+        <div class="step-title-group">
+          <div class="step-tag">ClassIn 리포트</div>
+          <div class="step-title">분석 시작 — URL 붙여넣기 &amp; 자동 캡처</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <p>
+          ClassIn 리포트의 <span class="highlight">START ANALYSIS</span> 화면에서:
+        </p>
+        <ul class="step-detail-list">
+          <li><strong>학생 이름(Student Name)</strong>을 입력합니다.</li>
+          <li><strong>클래스명 · 과정명</strong>을 입력합니다.</li>
+          <li><strong>URL AUTO CAPTURE</strong> 영역에 복사한 오르조 URL을 붙여넣고 <span class="highlight">자동 캡처</span> 버튼을 누릅니다.</li>
+        </ul>
+        <p style="margin-top: 12px;">
+          자동 캡처가 완료되면 오르조 풀이 페이지의 판서 이미지가 자동 추출됩니다.
+        </p>
+      </div>
+      <div class="step-screenshots-row">
+        <div class="step-screenshot">
+          <img src="img_step1.png" alt="ClassIn 리포트 START ANALYSIS 화면">
+          <div class="step-screenshot-caption">URL 붙여넣기 화면</div>
+        </div>
+        <div class="step-screenshot">
+          <img src="img_step3.png" alt="자동 캡처 완료 화면">
+          <div class="step-screenshot-caption">캡처 완료 — 판서 이미지 자동 추출</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-connector"><svg viewBox="0 0 20 32" fill="none"><path d="M10 0v28M4 22l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <!-- Step 4 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">4</div>
+        <div class="step-title-group">
+          <div class="step-tag">AI 자동 생성</div>
+          <div class="step-title">AI 분석 보고서 자동 생성</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <p>
+          분석이 완료되면 AI가 오르조 풀이 데이터 + 판서 이미지를 기반으로 
+          학생별 맞춤 보고서를 자동 생성합니다.
+        </p>
+        <ul class="step-detail-list">
+          <li><strong>Learning Progress</strong> — 학습 진행 상황 및 이해도 종합 평가</li>
+          <li><strong>Key Strengths</strong> — 잘한 문제의 근거(Evidence)와 함께 강점 분석</li>
+          <li><strong>Professional Advice</strong> — 선생님 시점의 전문 학습 조언</li>
+          <li><strong>Message for Parents</strong> — 학부모님께 보내는 메시지 + Home Coaching Tips</li>
+          <li><strong>Board Analytics</strong> — 전체 판서 이미지 갤러리</li>
+        </ul>
+      </div>
+      <div class="step-screenshot">
+        <img src="img_step4.png" alt="AI 분석 보고서 예시">
+        <div class="step-screenshot-caption">자동 생성된 AI 분석 보고서 — Learning Progress, Key Strengths, 학부모 메시지</div>
+      </div>
+    </div>
+
+    <div class="step-connector"><svg viewBox="0 0 20 32" fill="none"><path d="M10 0v28M4 22l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <!-- Step 5 -->
+    <div class="step-card result">
+      <div class="step-header">
+        <div class="step-number">5</div>
+        <div class="step-title-group">
+          <div class="step-tag">학부모 공유</div>
+          <div class="step-title">학부모 페이지에서 판서 상세 확인</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <p>
+          생성된 보고서를 학부모님께 공유하면, 보고서 하단의 
+          <span class="highlight">Board Analytics</span> 영역에서 
+          판서 이미지를 <strong>하나하나 클릭하여 확대</strong> 확인할 수 있습니다.
+        </p>
+        <p>
+          학부모님이 직접 자녀의 풀이 과정을 문제별로 살펴볼 수 있어,
+          어떤 문제에서 어떻게 풀었는지 구체적으로 파악할 수 있습니다.
+        </p>
+      </div>
+      <div class="step-screenshots-row">
+        <div class="step-screenshot">
+          <img src="img_step5.png" alt="Board Analytics 판서 갤러리">
+          <div class="step-screenshot-caption">Board Analytics — 판서 이미지 목록</div>
+        </div>
+        <div class="step-screenshot">
+          <img src="img_step6.png" alt="판서 확대 보기">
+          <div class="step-screenshot-caption">클릭 시 판서 확대 — 풀이 과정 상세 확인</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="brand">과사람 · 다사람수학</div>
+    <p>과사람 동래센터 · ClassIn 리포트 × 오르조 연동 프로세스 안내</p>
+  </div>
+
+</div>
+
+</body>
+</html>
