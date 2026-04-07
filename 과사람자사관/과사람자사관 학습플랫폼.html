@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>과사람 자사관 | 학습 플랫폼</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --bg: #08080a;
+      --surface: #111114;
+      --surface2: #18181c;
+      --border: rgba(255,255,255,0.06);
+      --text: #f0f0f3;
+      --text2: #a0a0ae;
+      --text3: #606070;
+      --purple: #a855f7;
+      --purple-glow: rgba(168,85,247,0.15);
+      --emerald: #34d399;
+      --emerald-glow: rgba(52,211,153,0.12);
+      --violet: #8b5cf6;
+      --violet-glow: rgba(139,92,246,0.12);
+    }
+    html { scroll-behavior:smooth; }
+    body {
+      font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',system-ui,sans-serif;
+      background:var(--bg); color:var(--text);
+      line-height:1.6; -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+
+    /* ── Layout ── */
+    .container { max-width:1100px; margin:0 auto; padding:0 24px; }
+
+    /* ── Hero ── */
+    .hero {
+      min-height:100dvh; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; text-align:center;
+      position:relative; padding:60px 24px;
+    }
+    .hero::before {
+      content:''; position:absolute; width:600px; height:600px;
+      border-radius:50%; top:-10%; left:50%; transform:translateX(-50%);
+      background:radial-gradient(circle, var(--purple-glow) 0%, transparent 70%);
+      pointer-events:none; z-index:0;
+    }
+    .hero > * { position:relative; z-index:1; }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 18px; border-radius:100px;
+      background:var(--purple-glow); border:1px solid rgba(168,85,247,0.2);
+      font-size:12px; font-weight:600; color:var(--purple);
+      letter-spacing:0.05em; margin-bottom:32px;
+    }
+    .hero-badge .dot {
+      width:6px; height:6px; border-radius:50%;
+      background:var(--purple); animation:pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+    .hero h1 {
+      font-size:clamp(32px,6vw,64px); font-weight:800;
+      line-height:1.2; letter-spacing:-0.03em;
+      word-break:keep-all; margin-bottom:20px;
+    }
+    .hero h1 span { color:var(--purple); }
+    .hero p {
+      font-size:clamp(15px,2vw,18px); color:var(--text2);
+      max-width:520px; word-break:keep-all; margin-bottom:48px;
+    }
+
+    /* ── Platform Cards ── */
+    .platforms {
+      display:grid; grid-template-columns:1fr 1fr; gap:20px;
+      width:100%; max-width:680px;
+    }
+    @media (max-width:600px) {
+      .platforms { grid-template-columns:1fr; max-width:400px; }
+    }
+    .platform-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:20px; padding:36px 28px;
+      text-decoration:none; color:var(--text);
+      transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
+      position:relative; overflow:hidden;
+      display:flex; flex-direction:column; gap:16px;
+    }
+    .platform-card::before {
+      content:''; position:absolute; top:0; left:0; right:0;
+      height:3px; opacity:0; transition:opacity 0.4s ease;
+    }
+    .platform-card:hover {
+      transform:translateY(-6px);
+      border-color:rgba(255,255,255,0.1);
+      box-shadow:0 24px 80px -16px rgba(0,0,0,0.6);
+    }
+    .platform-card:hover::before { opacity:1; }
+    .card-archive::before { background:linear-gradient(90deg,var(--purple),var(--violet)); }
+    .card-orzo::before { background:linear-gradient(90deg,var(--emerald),#10b981); }
+
+    .card-icon {
+      width:52px; height:52px; border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:24px;
+    }
+    .card-archive .card-icon {
+      background:var(--purple-glow); border:1px solid rgba(168,85,247,0.2);
+    }
+    .card-orzo .card-icon {
+      background:var(--emerald-glow); border:1px solid rgba(52,211,153,0.2);
+    }
+    .card-num {
+      font-size:11px; font-weight:700; letter-spacing:0.1em;
+      text-transform:uppercase;
+    }
+    .card-archive .card-num { color:var(--purple); }
+    .card-orzo .card-num { color:var(--emerald); }
+    .card-title {
+      font-size:20px; font-weight:700; letter-spacing:-0.02em;
+      word-break:keep-all;
+    }
+    .card-desc {
+      font-size:13px; color:var(--text2); line-height:1.7;
+      word-break:keep-all;
+    }
+    .card-features {
+      display:flex; flex-direction:column; gap:8px;
+      margin-top:4px;
+    }
+    .card-feature {
+      display:flex; align-items:center; gap:8px;
+      font-size:12px; color:var(--text3);
+    }
+    .card-feature .check {
+      width:16px; height:16px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:9px; flex-shrink:0;
+    }
+    .card-archive .check { background:rgba(168,85,247,0.12); color:var(--purple); }
+    .card-orzo .check { background:rgba(52,211,153,0.12); color:var(--emerald); }
+    .card-btn {
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:8px; margin-top:12px; padding:14px 0;
+      border-radius:12px; font-size:14px; font-weight:600;
+      transition:all 0.3s ease; letter-spacing:-0.01em;
+    }
+    .card-archive .card-btn {
+      background:linear-gradient(135deg,var(--purple),var(--violet));
+      color:#fff;
+    }
+    .card-archive .card-btn:hover { box-shadow:0 8px 32px rgba(168,85,247,0.3); }
+    .card-orzo .card-btn {
+      background:linear-gradient(135deg,var(--emerald),#10b981);
+      color:#fff;
+    }
+    .card-orzo .card-btn:hover { box-shadow:0 8px 32px rgba(52,211,153,0.3); }
+    .card-btn .arrow { transition:transform 0.3s ease; }
+    .platform-card:hover .card-btn .arrow { transform:translateX(4px); }
+
+    /* ── Info Section ── */
+    .info-section {
+      padding:80px 24px; border-top:1px solid var(--border);
+    }
+    .info-header {
+      text-align:center; margin-bottom:48px;
+    }
+    .info-header .label {
+      font-size:11px; font-weight:700; color:var(--purple);
+      letter-spacing:0.1em; text-transform:uppercase; margin-bottom:12px;
+    }
+    .info-header h2 {
+      font-size:clamp(24px,4vw,40px); font-weight:800;
+      letter-spacing:-0.03em; word-break:keep-all;
+    }
+    .info-header p {
+      margin-top:12px; font-size:15px; color:var(--text2);
+      max-width:480px; margin-left:auto; margin-right:auto;
+      word-break:keep-all;
+    }
+
+    /* ── Feature Grid ── */
+    .feature-grid {
+      display:grid; grid-template-columns:repeat(2,1fr); gap:16px;
+      max-width:760px; margin:0 auto;
+    }
+    @media (max-width:600px) { .feature-grid { grid-template-columns:1fr; } }
+    .feature-item {
+      padding:28px 24px; border-radius:16px;
+      background:var(--surface); border:1px solid var(--border);
+    }
+    .feature-item .num {
+      font-size:28px; font-weight:800; color:rgba(168,85,247,0.2);
+      margin-bottom:12px; font-variant-numeric:tabular-nums;
+    }
+    .feature-item h3 {
+      font-size:16px; font-weight:700; margin-bottom:8px;
+      word-break:keep-all;
+    }
+    .feature-item p {
+      font-size:13px; color:var(--text2); line-height:1.7;
+      word-break:keep-all;
+    }
+
+    /* ── How to Use ── */
+    .steps-grid {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:16px;
+      max-width:760px; margin:0 auto;
+    }
+    @media (max-width:600px) { .steps-grid { grid-template-columns:1fr; } }
+    .step-card {
+      text-align:center; padding:32px 20px; border-radius:16px;
+      background:var(--surface); border:1px solid var(--border);
+    }
+    .step-num {
+      width:40px; height:40px; border-radius:50%;
+      background:var(--purple-glow); border:1px solid rgba(168,85,247,0.2);
+      color:var(--purple); font-size:16px; font-weight:700;
+      display:inline-flex; align-items:center; justify-content:center;
+      margin-bottom:16px;
+    }
+    .step-card h3 {
+      font-size:15px; font-weight:700; margin-bottom:8px;
+      word-break:keep-all;
+    }
+    .step-card p {
+      font-size:12px; color:var(--text3); line-height:1.6;
+      word-break:keep-all;
+    }
+
+    /* ── Notice Box ── */
+    .notice-section { padding:0 24px 80px; }
+    .notice-box {
+      max-width:760px; margin:0 auto; padding:32px;
+      border-radius:20px;
+      background:linear-gradient(135deg, rgba(168,85,247,0.06) 0%, rgba(52,211,153,0.04) 100%);
+      border:1px solid rgba(168,85,247,0.12);
+      text-align:center;
+    }
+    .notice-box h3 {
+      font-size:18px; font-weight:700; margin-bottom:12px;
+      word-break:keep-all;
+    }
+    .notice-box p {
+      font-size:14px; color:var(--text2); line-height:1.8;
+      word-break:keep-all; max-width:500px; margin:0 auto;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top:1px solid var(--border);
+      padding:24px; text-align:center;
+    }
+    footer .brand {
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:12px; color:var(--text3);
+    }
+    footer .brand .dot {
+      width:5px; height:5px; border-radius:50%; background:var(--purple);
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(30px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+    .anim { opacity:0; }
+    .anim.visible { animation:fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards; }
+    .d1 { animation-delay:100ms; }
+    .d2 { animation-delay:200ms; }
+    .d3 { animation-delay:300ms; }
+    .d4 { animation-delay:400ms; }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════ HERO ══════════ -->
+  <section class="hero">
+    <div class="hero-badge anim">
+      <span class="dot"></span>
+      과사람 자사관 학습 플랫폼
+    </div>
+    <h1 class="anim d1">
+      학습의 모든 기록을<br><span>한 곳에서</span> 확인하세요
+    </h1>
+    <p class="anim d2">
+      수업 기록 확인부터 학습 데이터 분석까지,<br>
+      학생과 학부모 모두를 위한 학습 플랫폼입니다.
+    </p>
+
+    <!-- Platform Cards -->
+    <div class="platforms">
+      <a href="https://classin-archive.web.app/" target="_blank" rel="noopener" class="platform-card card-archive anim d2">
+        <div class="card-icon">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" stroke="#a855f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 14l2 2 4-4" stroke="#a855f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="card-num">Platform 01</div>
+        <div class="card-title">클래스인 아카이브</div>
+        <div class="card-desc">수업 판서, 선생님 판서, 복습 영상을 체계적으로 아카이빙하고 언제든 다시 확인할 수 있습니다.</div>
+        <div class="card-features">
+          <div class="card-feature"><span class="check">&#10003;</span>학생 판서 기록 확인</div>
+          <div class="card-feature"><span class="check">&#10003;</span>선생님 판서 확인</div>
+          <div class="card-feature"><span class="check">&#10003;</span>수업 영상 다시보기</div>
+          <div class="card-feature"><span class="check">&#10003;</span>과목·날짜별 검색</div>
+        </div>
+        <div class="card-btn">
+          아카이브 바로가기
+          <span class="arrow">&rarr;</span>
+        </div>
+      </a>
+
+      <a href="https://orzo-analysis.web.app/" target="_blank" rel="noopener" class="platform-card card-orzo anim d3">
+        <div class="card-icon">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="8" rx="1" stroke="#34d399" stroke-width="1.8"/><rect x="10" y="8" width="4" height="12" rx="1" stroke="#34d399" stroke-width="1.8"/><rect x="17" y="4" width="4" height="16" rx="1" stroke="#34d399" stroke-width="1.8"/></svg>
+        </div>
+        <div class="card-num">Platform 02</div>
+        <div class="card-title">오르조 학습분석</div>
+        <div class="card-desc">과제 완료율, 정답률, 학습량을 데이터로 분석하여 학생의 학습 현황을 한눈에 파악합니다.</div>
+        <div class="card-features">
+          <div class="card-feature"><span class="check">&#10003;</span>개인별 과제 분석</div>
+          <div class="card-feature"><span class="check">&#10003;</span>학습량 측정</div>
+          <div class="card-feature"><span class="check">&#10003;</span>취약 단원 파악</div>
+          <div class="card-feature"><span class="check">&#10003;</span>성취도 추적</div>
+        </div>
+        <div class="card-btn">
+          학습분석 바로가기
+          <span class="arrow">&rarr;</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ══════════ BENEFITS ══════════ -->
+  <section class="info-section">
+    <div class="container">
+      <div class="info-header anim">
+        <div class="label">For Parents &amp; Students</div>
+        <h2>이렇게 활용하실 수 있습니다</h2>
+        <p>각 플랫폼에 로그인하시면 아래 기능들을 바로 사용하실 수 있습니다.</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-item anim d1">
+          <div class="num">01</div>
+          <h3>수업 내용을 직접 확인</h3>
+          <p>아이가 수업에서 무엇을 배웠는지 판서와 영상으로 바로 확인할 수 있습니다.</p>
+        </div>
+        <div class="feature-item anim d2">
+          <div class="num">02</div>
+          <h3>학습 데이터 리포트 확인</h3>
+          <p>과제 완료율, 시험 성적, 학습량 등을 정리된 데이터로 확인하실 수 있습니다.</p>
+        </div>
+        <div class="feature-item anim d3">
+          <div class="num">03</div>
+          <h3>학습 패턴 파악</h3>
+          <p>어떤 과목이 취약한지, 학습량이 충분한지 데이터로 확인할 수 있습니다.</p>
+        </div>
+        <div class="feature-item anim d4">
+          <div class="num">04</div>
+          <h3>언제 어디서든 복습</h3>
+          <p>수업 영상과 판서를 아카이브에서 언제든 다시 확인하며 복습할 수 있습니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ HOW TO USE ══════════ -->
+  <section class="info-section">
+    <div class="container">
+      <div class="info-header anim">
+        <div class="label">How to Use</div>
+        <h2>이용 방법</h2>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card anim d1">
+          <div class="step-num">1</div>
+          <h3>플랫폼 선택</h3>
+          <p>위 카드에서 사용하실 플랫폼을 선택하세요.</p>
+        </div>
+        <div class="step-card anim d2">
+          <div class="step-num">2</div>
+          <h3>로그인</h3>
+          <p>안내받으신 계정으로 로그인하세요.</p>
+        </div>
+        <div class="step-card anim d3">
+          <div class="step-num">3</div>
+          <h3>학습 확인</h3>
+          <p>수업 기록과 학습 분석 데이터를 확인하세요.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ NOTICE ══════════ -->
+  <section class="notice-section">
+    <div class="notice-box anim">
+      <h3>문의사항이 있으시면 언제든 연락해 주세요</h3>
+      <p>로그인 계정은 학원에서 개별 안내드립니다. 접속이 어려우시면 학원으로 문의해 주세요.</p>
+    </div>
+  </section>
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <footer>
+    <div class="brand">
+      <span class="dot"></span>
+      과사람 자사관 &nbsp;|&nbsp; 2026
+    </div>
+  </footer>
+
+  <script>
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, { threshold:0.15 });
+    document.querySelectorAll('.anim').forEach(el => io.observe(el));
+  </script>
+</body>
+</html>
