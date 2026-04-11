@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>과사람 자사관 | 학부모 이용안내</title>
+  <meta name="theme-color" content="#a855f7">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --bg: #08080a;
+      --surface: #111114;
+      --surface2: #18181c;
+      --border: rgba(255,255,255,0.06);
+      --text: #f0f0f3;
+      --text2: #a0a0ae;
+      --text3: #606070;
+      --purple: #a855f7;
+      --purple-glow: rgba(168,85,247,0.15);
+      --emerald: #34d399;
+      --emerald-glow: rgba(52,211,153,0.12);
+      --violet: #8b5cf6;
+      --amber: #fbbf24;
+      --amber-glow: rgba(251,191,36,0.12);
+    }
+    html { scroll-behavior:smooth; overflow-x:hidden; }
+    body {
+      font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',system-ui,sans-serif;
+      background:var(--bg); color:var(--text);
+      line-height:1.6; -webkit-font-smoothing:antialiased;
+      overflow-x:hidden; width:100%; -webkit-text-size-adjust:100%;
+    }
+    .container { max-width:680px; margin:0 auto; padding:0 20px; width:100%; }
+
+    /* ── Back link ── */
+    .back-link {
+      display:inline-flex; align-items:center; gap:6px;
+      color:var(--text3); font-size:13px; text-decoration:none;
+      padding:20px 20px 0; transition:color 0.3s;
+    }
+    .back-link:hover { color:var(--purple); }
+
+    /* ── Hero ── */
+    .hero {
+      text-align:center; padding:48px 20px 40px; position:relative;
+    }
+    .hero::before {
+      content:''; position:absolute; width:min(500px,100vw); height:min(500px,100vw);
+      border-radius:50%; top:-15%; left:50%; transform:translateX(-50%);
+      background:radial-gradient(circle, var(--purple-glow) 0%, transparent 70%);
+      pointer-events:none; z-index:0;
+    }
+    .hero > * { position:relative; z-index:1; }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:7px 16px; border-radius:100px;
+      background:var(--purple-glow); border:1px solid rgba(168,85,247,0.2);
+      font-size:11px; font-weight:600; color:var(--purple);
+      letter-spacing:0.04em; margin-bottom:20px;
+    }
+    .hero-badge .dot {
+      width:6px; height:6px; border-radius:50%;
+      background:var(--purple); animation:pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+    .hero h1 {
+      font-size:clamp(24px,5vw,40px); font-weight:800;
+      line-height:1.3; letter-spacing:-0.03em; word-break:keep-all;
+      margin-bottom:12px;
+    }
+    .hero h1 span { color:var(--purple); }
+    .hero > p {
+      font-size:clamp(13px,2vw,16px); color:var(--text2);
+      max-width:440px; margin:0 auto; word-break:keep-all; line-height:1.7;
+    }
+
+    /* ── Section ── */
+    .section {
+      padding:0 20px 48px;
+    }
+    .section-label {
+      font-size:11px; font-weight:700; color:var(--purple);
+      letter-spacing:0.1em; text-transform:uppercase; margin-bottom:10px;
+    }
+    .section-title {
+      font-size:clamp(20px,3.5vw,28px); font-weight:800;
+      letter-spacing:-0.03em; word-break:keep-all; margin-bottom:8px;
+    }
+    .section-desc {
+      font-size:14px; color:var(--text2); word-break:keep-all;
+      line-height:1.7; margin-bottom:24px;
+    }
+    .divider {
+      border:none; border-top:1px solid var(--border); margin:0 20px 48px;
+    }
+
+    /* ── Login Info Cards ── */
+    .login-cards { display:flex; flex-direction:column; gap:16px; }
+    .login-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:18px; padding:24px 22px; position:relative; overflow:hidden;
+    }
+    .login-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    }
+    .login-card.archive::before { background:linear-gradient(90deg,var(--purple),var(--violet)); }
+    .login-card.orzo::before { background:linear-gradient(90deg,var(--emerald),#10b981); }
+
+    .login-card-header {
+      display:flex; align-items:center; gap:12px; margin-bottom:16px;
+    }
+    .login-card-icon {
+      width:42px; height:42px; border-radius:12px;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .archive .login-card-icon { background:var(--purple-glow); border:1px solid rgba(168,85,247,0.2); }
+    .orzo .login-card-icon { background:var(--emerald-glow); border:1px solid rgba(52,211,153,0.2); }
+    .login-card-name { font-size:17px; font-weight:700; }
+
+    .login-table {
+      width:100%; border-collapse:collapse;
+    }
+    .login-table tr { border-bottom:1px solid var(--border); }
+    .login-table tr:last-child { border-bottom:none; }
+    .login-table td {
+      padding:12px 0; font-size:14px; vertical-align:middle;
+    }
+    .login-table .label-td {
+      color:var(--text3); font-size:12px; font-weight:600;
+      width:80px; white-space:nowrap;
+    }
+    .login-table .value-td {
+      font-weight:600; color:var(--text);
+    }
+    .login-table .value-td .mono {
+      font-family:'SF Mono','Fira Code',monospace;
+      background:rgba(168,85,247,0.08); padding:3px 10px;
+      border-radius:6px; font-size:14px; letter-spacing:0.05em;
+      display:inline-block;
+    }
+    .orzo .login-table .value-td .mono {
+      background:rgba(52,211,153,0.08);
+    }
+    .login-note {
+      margin-top:12px; font-size:12px; color:var(--text3); line-height:1.6;
+      padding:10px 14px; background:rgba(255,255,255,0.02);
+      border-radius:10px; border:1px solid var(--border);
+    }
+    .login-note strong { color:var(--amber); font-weight:600; }
+
+    /* ── Steps (홈화면 추가 가이드) ── */
+    .guide-tabs {
+      display:flex; gap:8px; margin-bottom:20px;
+    }
+    .guide-tab {
+      padding:10px 20px; border-radius:10px; font-size:14px; font-weight:600;
+      border:1px solid var(--border); background:var(--surface);
+      color:var(--text3); cursor:pointer; transition:all 0.3s;
+    }
+    .guide-tab.active {
+      background:var(--purple-glow); border-color:rgba(168,85,247,0.3);
+      color:var(--purple);
+    }
+    .guide-tab:hover:not(.active) {
+      border-color:rgba(255,255,255,0.12); color:var(--text2);
+    }
+    .guide-content { display:none; }
+    .guide-content.active { display:block; }
+
+    .step-list { display:flex; flex-direction:column; gap:14px; }
+    .step-item {
+      display:flex; gap:14px; align-items:flex-start;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:16px; padding:20px 18px;
+    }
+    .step-num-badge {
+      width:36px; height:36px; border-radius:50%; flex-shrink:0;
+      background:var(--purple-glow); border:1px solid rgba(168,85,247,0.2);
+      color:var(--purple); font-size:14px; font-weight:700;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .step-content h3 {
+      font-size:15px; font-weight:700; margin-bottom:4px; word-break:keep-all;
+    }
+    .step-content p {
+      font-size:13px; color:var(--text2); line-height:1.7; word-break:keep-all;
+    }
+    .step-content .highlight {
+      color:var(--purple); font-weight:600;
+    }
+    .step-content .code-inline {
+      font-family:'SF Mono','Fira Code',monospace;
+      background:rgba(168,85,247,0.08); padding:2px 8px;
+      border-radius:5px; font-size:12px; white-space:nowrap;
+    }
+
+    /* ── Tip box ── */
+    .tip-box {
+      background:linear-gradient(135deg, rgba(251,191,36,0.06) 0%, rgba(168,85,247,0.04) 100%);
+      border:1px solid rgba(251,191,36,0.15); border-radius:16px;
+      padding:20px 20px; margin-top:20px;
+    }
+    .tip-box-title {
+      font-size:13px; font-weight:700; color:var(--amber); margin-bottom:8px;
+      display:flex; align-items:center; gap:6px;
+    }
+    .tip-box p {
+      font-size:13px; color:var(--text2); line-height:1.7; word-break:keep-all;
+    }
+
+    /* ── 사용 방법 카드 ── */
+    .usage-cards { display:flex; flex-direction:column; gap:16px; }
+    .usage-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:18px; padding:24px 22px; overflow:hidden; position:relative;
+    }
+    .usage-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    }
+    .usage-card.archive-usage::before { background:linear-gradient(90deg,var(--purple),var(--violet)); }
+    .usage-card.orzo-usage::before { background:linear-gradient(90deg,var(--emerald),#10b981); }
+
+    .usage-card-header {
+      display:flex; align-items:center; gap:10px; margin-bottom:16px;
+    }
+    .usage-card-header .icon-wrap {
+      width:36px; height:36px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .archive-usage .icon-wrap { background:var(--purple-glow); }
+    .orzo-usage .icon-wrap { background:var(--emerald-glow); }
+    .usage-card-header h3 { font-size:16px; font-weight:700; }
+
+    .usage-list {
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .usage-item {
+      display:flex; align-items:flex-start; gap:10px;
+      font-size:13px; color:var(--text2); line-height:1.6;
+    }
+    .usage-item .check {
+      width:20px; height:20px; border-radius:50%; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      font-size:10px; margin-top:1px;
+    }
+    .archive-usage .check { background:rgba(168,85,247,0.12); color:var(--purple); }
+    .orzo-usage .check { background:rgba(52,211,153,0.12); color:var(--emerald); }
+
+    /* ── CTA ── */
+    .cta-section { padding:0 20px 48px; }
+    .cta-box {
+      max-width:680px; margin:0 auto; text-align:center;
+      padding:32px 24px; border-radius:18px;
+      background:linear-gradient(135deg, rgba(168,85,247,0.08) 0%, rgba(52,211,153,0.05) 100%);
+      border:1px solid rgba(168,85,247,0.15);
+    }
+    .cta-box h3 {
+      font-size:18px; font-weight:700; margin-bottom:10px; word-break:keep-all;
+    }
+    .cta-box p {
+      font-size:13px; color:var(--text2); line-height:1.7;
+      margin-bottom:20px; word-break:keep-all;
+    }
+    .cta-btn {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:14px 32px; border-radius:12px;
+      background:linear-gradient(135deg,var(--purple),var(--violet));
+      color:#fff; font-size:15px; font-weight:700;
+      text-decoration:none; transition:all 0.3s;
+    }
+    .cta-btn:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(168,85,247,0.3); }
+    .cta-btn .arrow { transition:transform 0.3s; }
+    .cta-btn:hover .arrow { transform:translateX(4px); }
+
+    /* ── Footer ── */
+    footer {
+      border-top:1px solid var(--border);
+      padding:20px; text-align:center;
+    }
+    footer .brand {
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:11px; color:var(--text3);
+    }
+    footer .brand .dot {
+      width:5px; height:5px; border-radius:50%; background:var(--purple);
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(24px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+    .anim { opacity:0; }
+    .anim.visible { animation:fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) forwards; }
+    .d1 { animation-delay:80ms; }
+    .d2 { animation-delay:160ms; }
+    .d3 { animation-delay:240ms; }
+    .d4 { animation-delay:320ms; }
+    .d5 { animation-delay:400ms; }
+
+    /* ── Mobile ── */
+    @media (max-width:600px) {
+      .hero { padding:40px 16px 32px; }
+      .hero h1 { margin-bottom:10px; }
+      .section { padding:0 16px 40px; }
+      .divider { margin:0 16px 40px; }
+      .login-card { padding:20px 18px; border-radius:16px; }
+      .login-card-name { font-size:16px; }
+      .login-table .label-td { font-size:11px; width:70px; }
+      .login-table .value-td { font-size:13px; }
+      .step-item { padding:16px 14px; border-radius:14px; }
+      .step-num-badge { width:32px; height:32px; font-size:13px; }
+      .step-content h3 { font-size:14px; }
+      .step-content p { font-size:12px; }
+      .guide-tab { padding:8px 16px; font-size:13px; }
+      .usage-card { padding:20px 18px; border-radius:16px; }
+      .cta-box { padding:28px 20px; border-radius:16px; }
+      .cta-box h3 { font-size:16px; }
+      .cta-btn { padding:12px 28px; font-size:14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="과사람자사관 학습플랫폼.html" class="back-link">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    학습 플랫폼으로 돌아가기
+  </a>
+
+  <!-- ══════════ HERO ══════════ -->
+  <section class="hero">
+    <div class="hero-badge anim">
+      <span class="dot"></span>
+      이용 안내 가이드
+    </div>
+    <h1 class="anim d1"><span>학부모·학생</span> 이용안내</h1>
+    <p class="anim d2">
+      홈 화면에 추가하는 방법부터 로그인, 사용법까지<br>
+      처음 이용하시는 분을 위한 상세 안내입니다.
+    </p>
+  </section>
+
+  <!-- ══════════ 로그인 정보 ══════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-label anim">Login Info</div>
+      <div class="section-title anim d1">로그인 정보</div>
+      <div class="section-desc anim d2">각 플랫폼마다 로그인 계정이 다릅니다. 아래 정보를 확인해 주세요.</div>
+
+      <div class="login-cards">
+        <div class="login-card archive anim d2">
+          <div class="login-card-header">
+            <div class="login-card-icon">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" stroke="#a855f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 14l2 2 4-4" stroke="#a855f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="login-card-name">클래스인 아카이브</div>
+          </div>
+          <table class="login-table">
+            <tr>
+              <td class="label-td">아이디</td>
+              <td class="value-td">학부모 전화번호</td>
+            </tr>
+            <tr>
+              <td class="label-td">비밀번호</td>
+              <td class="value-td"><span class="mono">123456</span></td>
+            </tr>
+          </table>
+          <div class="login-note">
+            <strong>⚠ 참고</strong>&nbsp; 초기 비밀번호입니다. 로그인 후 반드시 비밀번호를 변경해 주세요.
+          </div>
+        </div>
+
+        <div class="login-card orzo anim d3">
+          <div class="login-card-header">
+            <div class="login-card-icon">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="8" rx="1" stroke="#34d399" stroke-width="1.8"/><rect x="10" y="8" width="4" height="12" rx="1" stroke="#34d399" stroke-width="1.8"/><rect x="17" y="4" width="4" height="16" rx="1" stroke="#34d399" stroke-width="1.8"/></svg>
+            </div>
+            <div class="login-card-name">오르조 학습분석</div>
+          </div>
+          <table class="login-table">
+            <tr>
+              <td class="label-td">아이디</td>
+              <td class="value-td">학생 이름</td>
+            </tr>
+            <tr>
+              <td class="label-td">비밀번호</td>
+              <td class="value-td"><span class="mono">123456</span></td>
+            </tr>
+          </table>
+          <div class="login-note">
+            <strong>⚠ 참고</strong>&nbsp; 초기 비밀번호입니다. 로그인 후 반드시 비밀번호를 변경해 주세요.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══════════ 홈 화면 추가 방법 ══════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-label anim">Add to Home Screen</div>
+      <div class="section-title anim d1">홈 화면에 추가하기</div>
+      <div class="section-desc anim d2">
+        앱처럼 홈 화면에서 바로 접속할 수 있습니다.<br>
+        사용하시는 브라우저를 선택해 주세요.
+      </div>
+
+      <div class="guide-tabs anim d2">
+        <div class="guide-tab active" data-tab="android">Android (크롬)</div>
+        <div class="guide-tab" data-tab="iphone">iPhone (사파리)</div>
+      </div>
+
+      <!-- Android Chrome -->
+      <div class="guide-content active" id="guide-android">
+        <div class="step-list">
+          <div class="step-item anim d2">
+            <div class="step-num-badge">1</div>
+            <div class="step-content">
+              <h3>크롬(Chrome) 브라우저로 접속</h3>
+              <p>학원에서 안내받은 링크를 <span class="highlight">크롬 브라우저</span>로 열어주세요. 카카오톡 등 인앱 브라우저에서는 홈 화면 추가가 안 됩니다.</p>
+            </div>
+          </div>
+          <div class="step-item anim d3">
+            <div class="step-num-badge">2</div>
+            <div class="step-content">
+              <h3>오른쪽 위 메뉴(⋮) 터치</h3>
+              <p>크롬 화면 오른쪽 위에 있는 <span class="highlight">점 3개(⋮) 메뉴</span>를 터치해 주세요.</p>
+            </div>
+          </div>
+          <div class="step-item anim d4">
+            <div class="step-num-badge">3</div>
+            <div class="step-content">
+              <h3>"홈 화면에 추가" 선택</h3>
+              <p>메뉴 목록에서 <span class="highlight">"홈 화면에 추가"</span> 또는 <span class="highlight">"앱 설치"</span>를 터치하세요.</p>
+            </div>
+          </div>
+          <div class="step-item anim d5">
+            <div class="step-num-badge">4</div>
+            <div class="step-content">
+              <h3>"추가" 확인</h3>
+              <p>팝업이 나타나면 <span class="highlight">"추가"</span>를 터치하세요. 홈 화면에 <span class="highlight">과사람자사관</span> 아이콘이 생성됩니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- iPhone Safari -->
+      <div class="guide-content" id="guide-iphone">
+        <div class="step-list">
+          <div class="step-item anim d2">
+            <div class="step-num-badge">1</div>
+            <div class="step-content">
+              <h3>사파리(Safari) 브라우저로 접속</h3>
+              <p>학원에서 안내받은 링크를 <span class="highlight">사파리 브라우저</span>로 열어주세요. 카카오톡이나 크롬에서는 홈 화면 추가가 안 됩니다.</p>
+            </div>
+          </div>
+          <div class="step-item anim d2">
+            <div class="step-num-badge">2</div>
+            <div class="step-content">
+              <h3>하단 공유 버튼(↑) 터치</h3>
+              <p>사파리 화면 아래쪽 가운데에 있는 <span class="highlight">공유 아이콘(↑ 모양)</span>을 터치해 주세요.</p>
+            </div>
+          </div>
+          <div class="step-item anim d3">
+            <div class="step-num-badge">3</div>
+            <div class="step-content">
+              <h3>"홈 화면에 추가" 선택</h3>
+              <p>공유 메뉴를 위로 스크롤하면 <span class="highlight">"홈 화면에 추가"</span> 항목이 보입니다. 터치해 주세요.</p>
+            </div>
+          </div>
+          <div class="step-item anim d4">
+            <div class="step-num-badge">4</div>
+            <div class="step-content">
+              <h3>오른쪽 위 "추가" 터치</h3>
+              <p>이름을 확인하고 오른쪽 위 <span class="highlight">"추가"</span>를 터치하세요. 홈 화면에 <span class="highlight">과사람자사관</span> 아이콘이 생성됩니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip-box anim d3">
+        <div class="tip-box-title">💡 알아두세요</div>
+        <p>
+          홈 화면에 추가하면 앱처럼 전체 화면으로 열립니다. 매번 주소를 입력하거나 검색할 필요 없이 아이콘 한 번 터치로 바로 접속할 수 있어요.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══════════ 사용 방법 ══════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-label anim">How to Use</div>
+      <div class="section-title anim d1">플랫폼 사용 방법</div>
+      <div class="section-desc anim d2">로그인 후 각 플랫폼에서 확인할 수 있는 내용입니다.</div>
+
+      <div class="usage-cards">
+        <div class="usage-card archive-usage anim d2">
+          <div class="usage-card-header">
+            <div class="icon-wrap">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" stroke="#a855f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 14l2 2 4-4" stroke="#a855f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>클래스인 아카이브</h3>
+          </div>
+          <div class="usage-list">
+            <div class="usage-item"><span class="check">✓</span><span><strong>수업 판서 확인</strong> — 학생이 수업 중 작성한 판서 기록을 날짜별로 볼 수 있습니다.</span></div>
+            <div class="usage-item"><span class="check">✓</span><span><strong>선생님 판서 확인</strong> — 선생님이 수업에서 설명한 판서 내용을 확인할 수 있습니다.</span></div>
+            <div class="usage-item"><span class="check">✓</span><span><strong>수업 영상 다시보기</strong> — 놓친 수업이나 복습이 필요한 수업을 영상으로 다시 볼 수 있습니다.</span></div>
+            <div class="usage-item"><span class="check">✓</span><span><strong>과목·날짜별 검색</strong> — 원하는 과목이나 날짜로 빠르게 검색할 수 있습니다.</span></div>
+          </div>
+        </div>
+
+        <div class="usage-card orzo-usage anim d3">
+          <div class="usage-card-header">
+            <div class="icon-wrap">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="8" rx="1" stroke="#34d399" stroke-width="1.8"/><rect x="10" y="8" width="4" height="12" rx="1" stroke="#34d399" stroke-width="1.8"/><rect x="17" y="4" width="4" height="16" rx="1" stroke="#34d399" stroke-width="1.8"/></svg>
+            </div>
+            <h3>오르조 학습분석</h3>
+          </div>
+          <div class="usage-list">
+            <div class="usage-item"><span class="check">✓</span><span><strong>과제 완료율 확인</strong> — 출제된 과제를 얼마나 풀었는지 완료율을 확인합니다.</span></div>
+            <div class="usage-item"><span class="check">✓</span><span><strong>정답률 분석</strong> — 과목별, 단원별 정답률을 데이터로 확인할 수 있습니다.</span></div>
+            <div class="usage-item"><span class="check">✓</span><span><strong>학습량 측정</strong> — 일일·주간 학습량을 시각화된 그래프로 확인합니다.</span></div>
+            <div class="usage-item"><span class="check">✓</span><span><strong>취약 단원 파악</strong> — 어떤 단원이 취약한지 데이터로 파악할 수 있습니다.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══════════ 자주 묻는 질문 ══════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-label anim">FAQ</div>
+      <div class="section-title anim d1">자주 묻는 질문</div>
+      <div class="section-desc anim d2"></div>
+
+      <div class="step-list">
+        <div class="step-item anim d2" style="flex-direction:column; gap:8px;">
+          <div style="font-size:14px; font-weight:700; color:var(--purple);">Q. 비밀번호를 잊어버렸어요</div>
+          <div style="font-size:13px; color:var(--text2); line-height:1.7;">학원으로 연락주시면 비밀번호를 초기화해 드립니다.</div>
+        </div>
+        <div class="step-item anim d3" style="flex-direction:column; gap:8px;">
+          <div style="font-size:14px; font-weight:700; color:var(--purple);">Q. 카카오톡에서 링크를 열었는데 홈 화면 추가가 안 돼요</div>
+          <div style="font-size:13px; color:var(--text2); line-height:1.7;">카카오톡 내부 브라우저에서는 홈 화면 추가가 지원되지 않습니다. 오른쪽 위 메뉴에서 <strong style="color:var(--text);">"다른 브라우저로 열기"</strong>를 선택하거나, 링크를 복사하여 크롬(Android) 또는 사파리(iPhone)에서 직접 열어주세요.</div>
+        </div>
+        <div class="step-item anim d4" style="flex-direction:column; gap:8px;">
+          <div style="font-size:14px; font-weight:700; color:var(--purple);">Q. 두 사이트의 로그인 계정이 다른가요?</div>
+          <div style="font-size:13px; color:var(--text2); line-height:1.7;">네, 각 플랫폼마다 계정이 다릅니다. 클래스인 아카이브는 <strong style="color:var(--text);">학부모 전화번호</strong>, 오르조 학습분석은 <strong style="color:var(--text);">학생 이름</strong>으로 로그인합니다.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ CTA ══════════ -->
+  <section class="cta-section">
+    <div class="cta-box anim">
+      <h3>지금 바로 학습 플랫폼에 접속해 보세요</h3>
+      <p>홈 화면에 추가하면 앱처럼 편리하게 이용하실 수 있습니다.</p>
+      <a href="과사람자사관 학습플랫폼.html" class="cta-btn">
+        학습 플랫폼 바로가기 <span class="arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <footer>
+    <div class="brand">
+      <span class="dot"></span>
+      과사람 자사관 &nbsp;|&nbsp; 2026
+    </div>
+  </footer>
+
+  <script>
+    // Scroll animations
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, { threshold:0.1 });
+    document.querySelectorAll('.anim').forEach(el => io.observe(el));
+
+    // Tab switching
+    document.querySelectorAll('.guide-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.guide-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.guide-content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('guide-' + tab.dataset.tab).classList.add('active');
+        // Re-trigger animations for newly visible content
+        const content = document.getElementById('guide-' + tab.dataset.tab);
+        content.querySelectorAll('.anim').forEach(el => {
+          el.classList.remove('visible');
+          void el.offsetWidth;
+          el.classList.add('visible');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
