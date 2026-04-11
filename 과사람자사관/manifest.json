@@ -2,7 +2,7 @@
   "name": "과사람 자사관 학습 플랫폼",
   "short_name": "과사람자사관",
   "description": "수업 기록 확인부터 학습 데이터 분석까지, 학생과 학부모를 위한 학습 플랫폼",
-  "start_url": "과사람자사관 학습플랫폼.html",
+  "start_url": ".",
   "scope": ".",
   "display": "standalone",
   "background_color": "#08080a",
