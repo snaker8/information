@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>과사람 · 문제은행 운영 비용 시뮬레이터</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #faf8f3;
+    --paper: #ffffff;
+    --ink: #1a1714;
+    --ink-2: #4a4239;
+    --ink-3: #7a6f63;
+    --ink-4: #a89f93;
+    --line: #e8e2d4;
+    --line-soft: #f0ebde;
+    --gold: #b8935a;
+    --gold-deep: #8d6f3f;
+    --gold-soft: #d4b888;
+    --gold-tint: #f5edd8;
+    --red-soft: #b85a52;
+    --green-soft: #6b8a5f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Pretendard', sans-serif;
+    font-feature-settings: 'tnum' 1, 'kern' 1;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  body {
+    background-image:
+      radial-gradient(circle at 20% 0%, rgba(184, 147, 90, 0.04), transparent 50%),
+      radial-gradient(circle at 80% 100%, rgba(184, 147, 90, 0.03), transparent 50%);
+  }
+
+  .shell {
+    max-width: 1380px;
+    margin: 0 auto;
+    padding: 56px 40px 80px;
+  }
+
+  /* ============ HEADER ============ */
+  .header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: end;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 48px;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    color: var(--gold-deep);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: clamp(40px, 5vw, 56px);
+    line-height: 1;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+
+  h1 em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gold-deep);
+  }
+
+  .subhead {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--ink-3);
+    letter-spacing: 0.01em;
+  }
+
+  .header-meta {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 32px;
+    align-items: end;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: right;
+  }
+
+  .meta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--ink-4);
+    text-transform: uppercase;
+  }
+
+  .meta-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  /* ============ MAIN GRID ============ */
+  .main {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 56px;
+  }
+
+  @media (max-width: 1100px) {
+    .main { grid-template-columns: 1fr; gap: 40px; }
+    .shell { padding: 32px 24px 56px; }
+  }
+
+  /* ============ LEFT — CONTROLS ============ */
+  .controls {
+    position: sticky;
+    top: 32px;
+    align-self: start;
+  }
+
+  .section {
+    padding-bottom: 28px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .section:last-child { border-bottom: none; }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 18px;
+    letter-spacing: -0.005em;
+  }
+
+  .section-title::after {
+    content: '';
+    display: block;
+    width: 16px;
+    height: 1px;
+    background: var(--gold);
+    margin-top: 6px;
+  }
+
+  .control { margin-bottom: 18px; }
+  .control:last-child { margin-bottom: 0; }
+
+  .ctrl-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .ctrl-label {
+    font-size: 12px;
+    color: var(--ink-2);
+    letter-spacing: -0.005em;
+  }
+
+  .ctrl-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gold-deep);
+  }
+
+  /* slider */
+  .slider {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 1px;
+    background: var(--line);
+    outline: none;
+    cursor: pointer;
+  }
+
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px; height: 12px;
+    background: var(--paper);
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+
+  .slider::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+    background: var(--gold);
+  }
+
+  .slider::-moz-range-thumb {
+    width: 10px; height: 10px;
+    background: var(--paper);
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  /* select */
+  .select {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    padding: 8px 16px 8px 0;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23b8935a' stroke-width='1.5'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0 center;
+    transition: border-color 0.2s ease;
+  }
+
+  .select:hover { border-bottom-color: var(--gold); }
+  .select:focus { outline: none; border-bottom-color: var(--gold); }
+  .select option { background: var(--paper); color: var(--ink); padding: 6px; }
+
+  /* toggle */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+  }
+
+  .toggle {
+    position: relative;
+    display: inline-block;
+    width: 36px; height: 18px;
+    cursor: pointer;
+  }
+
+  .toggle input { display: none; }
+
+  .toggle-track {
+    position: absolute;
+    inset: 0;
+    background: var(--line);
+    border-radius: 999px;
+    transition: background 0.2s ease;
+  }
+
+  .toggle-track::before {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 14px; height: 14px;
+    background: var(--paper);
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+
+  .toggle input:checked + .toggle-track {
+    background: var(--gold);
+  }
+
+  .toggle input:checked + .toggle-track::before {
+    transform: translateX(18px);
+  }
+
+  /* presets */
+  .presets {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .preset-btn {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-2);
+    padding: 9px 12px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 12px;
+    transition: all 0.18s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .preset-btn:hover {
+    border-color: var(--gold);
+    background: var(--gold-tint);
+    color: var(--ink);
+  }
+
+  .preset-delta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold-deep);
+  }
+
+  .reset-btn {
+    width: 100%;
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    color: var(--bg);
+    padding: 10px;
+    margin-top: 14px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+  }
+
+  .reset-btn:hover { background: var(--gold-deep); border-color: var(--gold-deep); }
+
+  /* ============ RIGHT — RESULTS ============ */
+  .results { display: flex; flex-direction: column; gap: 56px; }
+
+  /* HERO TOTAL */
+  .hero {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 32px;
+    align-items: end;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; gap: 24px; }
+  }
+
+  .hero-main { }
+
+  .hero-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .hero-amount {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(80px, 11vw, 140px);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .hero-currency {
+    font-size: 0.35em;
+    font-weight: 400;
+    color: var(--gold);
+    margin-top: 0.18em;
+  }
+
+  .hero-amount em {
+    font-style: italic;
+    color: var(--gold-deep);
+    font-weight: 300;
+  }
+
+  .hero-meta {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 13px;
+    color: var(--ink-3);
+  }
+
+  .hero-meta .krw {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--ink);
+  }
+
+  .hero-meta .delta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  .delta.up { color: var(--red-soft); }
+  .delta.down { color: var(--green-soft); }
+  .delta.equal { color: var(--ink-4); }
+
+  .hero-side {
+    padding-left: 24px;
+    border-left: 1px solid var(--line);
+  }
+
+  .hero-side-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .hero-side-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .hero-side-sub {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--ink-3);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* range bar (₩80만~₩110만 위치 표시) */
+  .range-track {
+    margin-top: 24px;
+    position: relative;
+    height: 38px;
+  }
+
+  .range-bar {
+    position: absolute;
+    top: 14px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .range-zone {
+    position: absolute;
+    top: 13px;
+    height: 3px;
+    background: var(--gold-tint);
+    border-top: 1px solid var(--gold);
+    border-bottom: 1px solid var(--gold);
+  }
+
+  .range-marker {
+    position: absolute;
+    top: 8px;
+    width: 1px;
+    height: 14px;
+    background: var(--ink);
+    transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .range-marker::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -3px;
+    width: 7px; height: 7px;
+    background: var(--ink);
+    border-radius: 50%;
+  }
+
+  .range-labels {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-4);
+  }
+
+  .range-marker-label {
+    position: absolute;
+    top: -16px;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink);
+    white-space: nowrap;
+    transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ============ CHARTS ============ */
+  .charts {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 56px;
+  }
+
+  @media (max-width: 1300px) { .charts { grid-template-columns: 1fr; } }
+
+  .chart-block { }
+
+  .chart-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 20px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .chart-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .chart-canvas-wrap {
+    position: relative;
+    height: 320px;
+  }
+
+  /* ============ ITEM TABLE ============ */
+  .table-block { }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    text-align: left;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--ink);
+    font-weight: 400;
+  }
+
+  .table th.num { text-align: right; }
+
+  .table td {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line-soft);
+    vertical-align: middle;
+  }
+
+  .table tr:last-child td { border-bottom: none; }
+
+  .table tr:hover td {
+    background: linear-gradient(90deg, var(--gold-tint), transparent 80%);
+  }
+
+  .item-bullet {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 12px;
+    vertical-align: middle;
+  }
+
+  .item-name {
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .item-desc {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.02em;
+  }
+
+  .item-cost {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 22px;
+    text-align: right;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .item-cost.dim { color: var(--ink-4); }
+  .item-cost .ccy { font-size: 0.5em; color: var(--gold); margin-right: 2px; }
+
+  .item-delta-cell {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .item-delta-cell.up { color: var(--red-soft); }
+  .item-delta-cell.down { color: var(--green-soft); }
+  .item-delta-cell.equal { color: var(--ink-4); }
+
+  .table tr.disabled td { opacity: 0.4; }
+
+  /* footnote */
+  .footnote {
+    margin-top: 32px;
+    padding: 20px 24px;
+    background: var(--paper);
+    border-left: 2px solid var(--gold);
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--ink-2);
+  }
+
+  .footnote-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gold-deep);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .footnote ul { margin-left: 16px; margin-top: 6px; }
+  .footnote li { margin-bottom: 2px; }
+
+  /* number flash */
+  @keyframes fade-in {
+    from { opacity: 0.4; }
+    to { opacity: 1; }
+  }
+  .flash { animation: fade-in 0.4s ease; }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div>
+      <div class="eyebrow">COST INTELLIGENCE · v2 (정정판)</div>
+      <h1>과사람 <em>문제은행 운영비</em></h1>
+      <div class="subhead">월 100 시험지 · 2,200 문항 기준 · 분류 / 풀이 / 검산 / 폴백 / 도형 / OCR / 인프라 — 실시간 시뮬레이션</div>
+    </div>
+    <div class="header-meta">
+      <div class="meta-item">
+        <span class="meta-label">EXCHANGE</span>
+        <span class="meta-value">$1 = ₩1,380</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">BASELINE</span>
+        <span class="meta-value">$641</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">RANGE</span>
+        <span class="meta-value">₩80만 — ₩110만</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- CONTROLS -->
+    <aside class="controls">
+
+      <div class="section">
+        <div class="section-title">규모</div>
+        <div class="control">
+          <div class="ctrl-row">
+            <span class="ctrl-label">시험지</span>
+            <span class="ctrl-val" id="papersValue">100</span>
+          </div>
+          <input type="range" min="20" max="500" value="100" step="10" class="slider" id="papers" />
+        </div>
+        <div class="control">
+          <div class="ctrl-row">
+            <span class="ctrl-label">문항</span>
+            <span class="ctrl-val" id="itemsValue">2,200</span>
+          </div>
+          <input type="range" min="500" max="10000" value="2200" step="100" class="slider" id="items" />
+        </div>
+        <div class="control">
+          <div class="ctrl-row">
+            <span class="ctrl-label">OCR 페이지</span>
+            <span class="ctrl-val" id="pagesValue">600</span>
+          </div>
+          <input type="range" min="100" max="3000" value="600" step="50" class="slider" id="pages" />
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">모델</div>
+        <div class="control">
+          <div class="ctrl-row"><span class="ctrl-label">해설 풀이</span></div>
+          <select class="select" id="modelExplain">
+            <option value="sonnet">Sonnet 4 (thinking 6K)</option>
+            <option value="opus">Opus 4 (thinking 6K)</option>
+            <option value="gemini25pro">Gemini 2.5 Pro</option>
+            <option value="gpt4o">GPT-4o</option>
+          </select>
+        </div>
+        <div class="control">
+          <div class="ctrl-row"><span class="ctrl-label">검산</span></div>
+          <select class="select" id="modelVerify">
+            <option value="sonnet">Sonnet 4</option>
+            <option value="haiku">Haiku 4</option>
+            <option value="gemini25flash">Gemini 2.5 Flash</option>
+            <option value="gpt4omini">GPT-4o-mini</option>
+          </select>
+        </div>
+        <div class="control">
+          <div class="ctrl-row"><span class="ctrl-label">분류</span></div>
+          <select class="select" id="modelClassify">
+            <option value="sonnet">Sonnet 4 (no thinking)</option>
+            <option value="haiku">Haiku 4</option>
+            <option value="gemini25flash">Gemini 2.5 Flash</option>
+            <option value="gpt4omini">GPT-4o-mini</option>
+          </select>
+        </div>
+        <div class="control">
+          <div class="ctrl-row"><span class="ctrl-label">도형 SVG 생성</span></div>
+          <select class="select" id="modelSvg">
+            <option value="sonnet">Sonnet 4 (thinking 4K)</option>
+            <option value="opus">Opus 4</option>
+            <option value="gemini25pro">Gemini 2.5 Pro</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">파라미터</div>
+
+        <div class="control">
+          <div class="toggle-row">
+            <span class="ctrl-label">검산 활성화</span>
+            <label class="toggle">
+              <input type="checkbox" id="verifyOn" checked />
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="control">
+          <div class="ctrl-row">
+            <span class="ctrl-label">검산 thinking budget</span>
+            <span class="ctrl-val" id="verifyBudgetValue">3K</span>
+          </div>
+          <input type="range" min="1" max="6" value="3" step="1" class="slider" id="verifyBudget" />
+        </div>
+
+        <div class="control">
+          <div class="ctrl-row">
+            <span class="ctrl-label">Opus 폴백</span>
+            <span class="ctrl-val" id="fallbackValue">5%</span>
+          </div>
+          <input type="range" min="0" max="30" value="5" step="1" class="slider" id="fallback" />
+        </div>
+
+        <div class="control">
+          <div class="ctrl-row">
+            <span class="ctrl-label">도형 비율</span>
+            <span class="ctrl-val" id="figureValue">30%</span>
+          </div>
+          <input type="range" min="0" max="100" value="30" step="5" class="slider" id="figure" />
+        </div>
+
+        <div class="control">
+          <div class="ctrl-row">
+            <span class="ctrl-label">캐시 적중률</span>
+            <span class="ctrl-val" id="cacheValue">80%</span>
+          </div>
+          <input type="range" min="0" max="95" value="80" step="5" class="slider" id="cache" />
+        </div>
+
+        <div class="control">
+          <div class="ctrl-row">
+            <span class="ctrl-label">Supabase 프로젝트</span>
+            <span class="ctrl-val" id="dbValue">3</span>
+          </div>
+          <input type="range" min="1" max="6" value="3" step="1" class="slider" id="db" />
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">변동 요소</div>
+        <div class="control">
+          <div class="ctrl-row">
+            <span class="ctrl-label">사용자 액션 (유사문제·재분석)</span>
+            <span class="ctrl-val" id="userActionsValue">$0</span>
+          </div>
+          <input type="range" min="0" max="50" value="0" step="5" class="slider" id="userActions" />
+        </div>
+        <div class="control">
+          <div class="ctrl-row">
+            <span class="ctrl-label">과학 시험지 (nanobanana / GPT Image)</span>
+            <span class="ctrl-val" id="scienceValue">$0</span>
+          </div>
+          <input type="range" min="0" max="50" value="0" step="5" class="slider" id="science" />
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">빠른 시나리오</div>
+        <div class="presets">
+          <button class="preset-btn" data-preset="baseline">현재 상태<span class="preset-delta">$641</span></button>
+          <button class="preset-btn" data-preset="verify-low">검산 budget 1K<span class="preset-delta">−$50</span></button>
+          <button class="preset-btn" data-preset="verify-off">검산 비활성화<span class="preset-delta">−$143</span></button>
+          <button class="preset-btn" data-preset="fallback-high">Opus 폴백 10%<span class="preset-delta">+$87</span></button>
+          <button class="preset-btn" data-preset="figure-high">도형 50%<span class="preset-delta">+$25</span></button>
+          <button class="preset-btn" data-preset="cache-low">캐시 70%<span class="preset-delta">+$30</span></button>
+          <button class="preset-btn" data-preset="full-load">최대 부하<span class="preset-delta">~$900</span></button>
+        </div>
+        <button class="reset-btn" id="resetBtn">⟲ 초기화</button>
+      </div>
+
+    </aside>
+
+    <!-- RESULTS -->
+    <main class="results">
+
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-main">
+          <div class="hero-label">총 월 비용 · TOTAL</div>
+          <div class="hero-amount">
+            <span class="hero-currency">$</span>
+            <span id="heroVal" class="flash">641</span>
+          </div>
+          <div class="hero-meta">
+            <span class="krw">≈ <span id="heroKrw">₩88만</span></span>
+            <span class="delta equal" id="heroDelta">기준값</span>
+          </div>
+
+          <!-- Range indicator: ₩80만 ~ ₩110만 현실적 범위 내 위치 -->
+          <div class="range-track">
+            <div class="range-bar"></div>
+            <div class="range-zone" id="rangeZone"></div>
+            <div class="range-marker" id="rangeMarker" style="left:38%">
+              <span class="range-marker-label" id="rangeLabel">₩88만</span>
+            </div>
+            <div class="range-labels">
+              <span>₩50만</span>
+              <span style="position:absolute;left:25%">₩80만</span>
+              <span style="position:absolute;left:75%">₩110만</span>
+              <span>₩140만</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="hero-side-label">/ 문항</div>
+          <div class="hero-side-value" id="perItem">$0.29</div>
+          <div class="hero-side-sub" id="perItemKrw">₩402</div>
+        </div>
+
+        <div class="hero-side">
+          <div class="hero-side-label">/ 시험지</div>
+          <div class="hero-side-value" id="perPaper">$6.41</div>
+          <div class="hero-side-sub" id="perPaperKrw">₩8,846</div>
+        </div>
+      </section>
+
+      <!-- CHARTS -->
+      <section class="charts">
+        <div class="chart-block">
+          <h3 class="chart-title">비중</h3>
+          <div class="chart-sub">Cost Breakdown</div>
+          <div class="chart-canvas-wrap"><canvas id="donut"></canvas></div>
+        </div>
+        <div class="chart-block">
+          <h3 class="chart-title">현재 vs 시뮬레이션</h3>
+          <div class="chart-sub">Baseline ↔ Simulated</div>
+          <div class="chart-canvas-wrap"><canvas id="bar"></canvas></div>
+        </div>
+      </section>
+
+      <!-- TABLE -->
+      <section class="table-block">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>항목</th>
+              <th class="num" style="width:140px">현재</th>
+              <th class="num" style="width:140px">시뮬</th>
+              <th class="num" style="width:90px">변화</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+
+        <div class="footnote">
+          <span class="footnote-label">검산이 비싼 이유</span>
+          검산은 1차 풀이의 약 절반 비용이 듦 (<b>$143 vs $275</b>). thinking budget을 6K → 3K로 절반 줄였지만 출력은 여전히 4K (text 1K + thinking 3K). 즉 해설 생성 = Sonnet 1.5번 호출 비용.
+          <ul>
+            <li>검산 budget 3K→1K: 약 −$50/월 (정확도 약간 ↓)</li>
+            <li>검산 비활성화 (난이도 6+만): 약 −$100/월</li>
+            <li>검산 비활성화 + Opus 폴백 강화: 별 차이 없거나 더 비쌀 수 있음</li>
+          </ul>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   다사람수학 운영 비용 시뮬레이터 v2
+   ============================================================ */
+
+const FX = 1380;
+
+// 모델별 단가 ($ per 1M tokens) — input, output
+const MODELS = {
+  sonnet:        { in: 3.00,  out: 15.00 },
+  opus:          { in: 15.00, out: 75.00 },
+  haiku:         { in: 1.00,  out: 5.00 },
+  gpt4o:         { in: 2.50,  out: 10.00 },
+  gpt4omini:     { in: 0.15,  out: 0.60 },
+  gemini25pro:   { in: 1.25,  out: 10.00 },
+  gemini25flash: { in: 0.075, out: 0.30 }
+};
+
+// 베이스라인 (정정판 기준)
+const BASE = {
+  papers: 100, items: 2200, pages: 600,
+  cache: 0.80, fallback: 0.05, figure: 0.30, db: 3,
+  verifyOn: true, verifyBudget: 3,
+  userActions: 0, science: 0,
+  modelExplain: 'sonnet', modelVerify: 'sonnet',
+  modelClassify: 'sonnet', modelSvg: 'sonnet'
+};
+
+// 베이스라인 비용 (이미지 기준)
+const BASELINE = {
+  classify: 28,   // Sonnet no thinking
+  explain:  275,  // Sonnet thinking 6K
+  verify:   143,  // Sonnet thinking 3K
+  fallback: 87,   // Opus thinking 8K @ 5%
+  svg:      40,   // Sonnet thinking 4K @ 30%
+  vision:   1,    // Gemini Flash Lite @ 30%
+  ocr:      3,    // Mathpix
+  vercel:   20,
+  supabase: 44,
+  total:    641
+};
+
+// 색상: 골드 톤 위주, 일부 차분한 그레이/세이지
+const COLORS = {
+  classify: '#a89f93',
+  explain:  '#b8935a', // 메인 골드 (가장 큰 비중)
+  verify:   '#d4b888',
+  fallback: '#8d6f3f',
+  svg:      '#c4a47a',
+  vision:   '#e0d4b8',
+  ocr:      '#9c9082',
+  vercel:   '#7a6f63',
+  supabase: '#4a4239'
+};
+
+const ITEMS = [
+  { key:'classify', label:'분류 Stage 1+2',  desc:'no thinking',     model:'modelClassify', mode:'flat-out',  budget:200,  inTok:5000 },
+  { key:'explain',  label:'해설 1차 풀이',     desc:'thinking 6K',     model:'modelExplain',  mode:'thinking',  budget:6000, inTok:3000, outText:2000 },
+  { key:'verify',   label:'해설 검산',         desc:'thinking 3K',     model:'modelVerify',   mode:'thinking',  budget:3000, inTok:3000, outText:1000, optional:true },
+  { key:'fallback', label:'Opus 폴백',         desc:'thinking 8K · 5%', model:null,          mode:'fallback' },
+  { key:'svg',      label:'도형 SVG 생성',     desc:'thinking 4K · 30%', model:'modelSvg',  mode:'figure',    budget:4000, inTok:2000, outText:1000 },
+  { key:'vision',   label:'도형 인식 1차',     desc:'Gemini Flash Lite', model:null,         mode:'vision-flat' },
+  { key:'ocr',      label:'OCR',              desc:'Mathpix · $0.005/page', model:null,    mode:'ocr' },
+  { key:'vercel',   label:'Vercel Pro',       desc:'함수 + 트래픽',    model:null,            mode:'infra-vercel' },
+  { key:'supabase', label:'Supabase',         desc:'Pro + 컴퓨트',     model:null,            mode:'infra-db' }
+];
+
+/* -------- 비용 계산 -------- */
+function calc(p) {
+  const itemsRatio = p.items / BASE.items;
+  const cacheImpact = 1 + (BASE.cache - p.cache) * 0.5; // 캐시 80→70%면 약 +5%
+
+  // 1) 분류
+  const classifyRatio = MODELS[p.modelClassify].out / MODELS.sonnet.out;
+  const classify = BASELINE.classify * itemsRatio * classifyRatio * cacheImpact;
+
+  // 2) 해설 풀이
+  const explainRatio = MODELS[p.modelExplain].out / MODELS.sonnet.out;
+  const explain = BASELINE.explain * itemsRatio * explainRatio * cacheImpact;
+
+  // 3) 검산
+  let verify = 0;
+  if (p.verifyOn) {
+    const verifyRatio = MODELS[p.modelVerify].out / MODELS.sonnet.out;
+    // budget 1K~6K, 베이스 3K
+    // 출력 = text(1K) + thinking(budget) → text는 고정, thinking만 변동
+    const baseOutTokens = 1000 + 3000; // 4K
+    const newOutTokens = 1000 + p.verifyBudget * 1000;
+    const budgetRatio = newOutTokens / baseOutTokens;
+    verify = BASELINE.verify * itemsRatio * verifyRatio * budgetRatio * cacheImpact;
+  }
+
+  // 4) Opus 폴백 (5% → 단순 비례)
+  const fallback = BASELINE.fallback * itemsRatio * (p.fallback / BASE.fallback) * cacheImpact;
+
+  // 5) 도형 SVG
+  const svgRatio = MODELS[p.modelSvg].out / MODELS.sonnet.out;
+  const svg = BASELINE.svg * itemsRatio * (p.figure / BASE.figure) * svgRatio * cacheImpact;
+
+  // 6) 도형 인식 1차 (Gemini Flash Lite, 매우 작음)
+  const vision = BASELINE.vision * itemsRatio * (p.figure / BASE.figure);
+
+  // 7) OCR
+  const ocr = BASELINE.ocr * (p.pages / BASE.pages);
+
+  // 8) Vercel: 베이스 + 트래픽 비례
+  const vercel = 20 * (0.7 + 0.3 * itemsRatio);
+
+  // 9) Supabase
+  const supabase = 25 + 6.33 * p.db;
+
+  // 변동 요소
+  const userActions = p.userActions;
+  const science = p.science;
+
+  const total = classify + explain + verify + fallback + svg + vision +
+                ocr + vercel + supabase + userActions + science;
+
+  return {
+    classify, explain, verify, fallback, svg, vision,
+    ocr, vercel, supabase, userActions, science, total
+  };
+}
+
+/* -------- DOM helpers -------- */
+const $ = id => document.getElementById(id);
+const inputs = {
+  papers:$('papers'), items:$('items'), pages:$('pages'),
+  cache:$('cache'), fallback:$('fallback'), figure:$('figure'), db:$('db'),
+  verifyOn:$('verifyOn'), verifyBudget:$('verifyBudget'),
+  userActions:$('userActions'), science:$('science'),
+  modelExplain:$('modelExplain'), modelVerify:$('modelVerify'),
+  modelClassify:$('modelClassify'), modelSvg:$('modelSvg')
+};
+
+function getParams() {
+  return {
+    papers: +inputs.papers.value,
+    items: +inputs.items.value,
+    pages: +inputs.pages.value,
+    cache: +inputs.cache.value / 100,
+    fallback: +inputs.fallback.value / 100,
+    figure: +inputs.figure.value / 100,
+    db: +inputs.db.value,
+    verifyOn: inputs.verifyOn.checked,
+    verifyBudget: +inputs.verifyBudget.value,
+    userActions: +inputs.userActions.value,
+    science: +inputs.science.value,
+    modelExplain: inputs.modelExplain.value,
+    modelVerify: inputs.modelVerify.value,
+    modelClassify: inputs.modelClassify.value,
+    modelSvg: inputs.modelSvg.value
+  };
+}
+
+/* -------- formatters -------- */
+function fmtUSD(v) {
+  if (v >= 1000) return Math.round(v).toLocaleString();
+  if (v >= 100) return Math.round(v).toString();
+  if (v >= 10) return v.toFixed(1);
+  return v.toFixed(2);
+}
+
+function fmtKRW(usd) {
+  const won = usd * FX;
+  if (won >= 10000) {
+    const man = won / 10000;
+    if (man >= 100) return Math.round(man) + '만';
+    return man.toFixed(1) + '만';
+  }
+  return Math.round(won).toLocaleString() + '원';
+}
+
+/* -------- charts -------- */
+Chart.defaults.color = '#7a6f63';
+Chart.defaults.font.family = "'Pretendard', sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.borderColor = '#e8e2d4';
+
+const itemsForChart = ITEMS.filter(i => true);
+
+const donut = new Chart($('donut').getContext('2d'), {
+  type: 'doughnut',
+  data: {
+    labels: itemsForChart.map(i => i.label),
+    datasets: [{
+      data: itemsForChart.map(i => BASELINE[i.key]),
+      backgroundColor: itemsForChart.map(i => COLORS[i.key]),
+      borderColor: '#faf8f3',
+      borderWidth: 2,
+      hoverOffset: 8
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '70%',
+    plugins: {
+      legend: {
+        position: 'right',
+        align: 'center',
+        labels: {
+          boxWidth: 8, boxHeight: 8, padding: 10,
+          font: { size: 11, family: "'Pretendard'" },
+          color: '#4a4239',
+          generateLabels: chart => {
+            const data = chart.data;
+            const total = data.datasets[0].data.reduce((a,b)=>a+b,0);
+            return data.labels.map((label, i) => {
+              const v = data.datasets[0].data[i];
+              const pct = total ? ((v/total)*100).toFixed(0) : 0;
+              return {
+                text: `${label}  ${pct}%`,
+                fillStyle: data.datasets[0].backgroundColor[i],
+                strokeStyle: data.datasets[0].backgroundColor[i],
+                lineWidth: 0, hidden: false, index: i
+              };
+            });
+          }
+        }
+      },
+      tooltip: {
+        backgroundColor: '#1a1714',
+        titleColor: '#faf8f3',
+        bodyColor: '#d4b888',
+        titleFont: { family: "'Cormorant Garamond'", size: 13, style:'italic' },
+        bodyFont: { family: "'JetBrains Mono'", size: 12 },
+        padding: 10, displayColors: false,
+        callbacks: { label: c => `$${c.parsed.toFixed(2)} / 월` }
+      }
+    }
+  }
+});
+
+const bar = new Chart($('bar').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: itemsForChart.map(i => i.label),
+    datasets: [
+      {
+        label: '현재',
+        data: itemsForChart.map(i => BASELINE[i.key]),
+        backgroundColor: '#e0d4b8',
+        borderColor: '#c4a47a',
+        borderWidth: 0,
+        borderRadius: 1,
+        barPercentage: 0.7,
+        categoryPercentage: 0.7
+      },
+      {
+        label: '시뮬',
+        data: itemsForChart.map(i => BASELINE[i.key]),
+        backgroundColor: '#1a1714',
+        borderColor: '#1a1714',
+        borderWidth: 0,
+        borderRadius: 1,
+        barPercentage: 0.7,
+        categoryPercentage: 0.7
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top', align: 'end',
+        labels: { boxWidth: 10, boxHeight: 10, padding: 14, font: { size: 11 }, color:'#4a4239' }
+      },
+      tooltip: {
+        backgroundColor: '#1a1714',
+        titleColor: '#faf8f3',
+        bodyColor: '#d4b888',
+        titleFont: { family: "'Cormorant Garamond'", size: 13, style:'italic' },
+        bodyFont: { family: "'JetBrains Mono'", size: 12 },
+        padding: 10, displayColors: true, boxPadding: 4,
+        callbacks: { label: c => ` ${c.dataset.label}: $${c.parsed.y.toFixed(1)}` }
+      }
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        border: { color: '#1a1714' },
+        ticks: { font: { size: 10 }, color:'#7a6f63', maxRotation: 35, minRotation: 0 }
+      },
+      y: {
+        beginAtZero: true,
+        grid: { color: '#f0ebde' },
+        border: { display: false },
+        ticks: { font: { size: 10, family:"'JetBrains Mono'" }, color:'#a89f93', callback: v => '$' + v }
+      }
+    }
+  }
+});
+
+/* -------- update -------- */
+function update() {
+  const p = getParams();
+
+  // 컨트롤 라벨
+  $('papersValue').textContent = p.papers.toLocaleString();
+  $('itemsValue').textContent = p.items.toLocaleString();
+  $('pagesValue').textContent = p.pages.toLocaleString();
+  $('cacheValue').textContent = (p.cache * 100).toFixed(0) + '%';
+  $('fallbackValue').textContent = (p.fallback * 100).toFixed(0) + '%';
+  $('figureValue').textContent = (p.figure * 100).toFixed(0) + '%';
+  $('dbValue').textContent = p.db;
+  $('verifyBudgetValue').textContent = p.verifyBudget + 'K';
+  $('userActionsValue').textContent = '$' + p.userActions;
+  $('scienceValue').textContent = '$' + p.science;
+
+  const r = calc(p);
+
+  // Hero
+  $('heroVal').textContent = fmtUSD(r.total);
+  $('heroVal').classList.remove('flash');
+  void $('heroVal').offsetWidth;
+  $('heroVal').classList.add('flash');
+  $('heroKrw').textContent = '₩' + fmtKRW(r.total);
+
+  // Per-unit
+  $('perItem').textContent = '$' + (r.total / p.items).toFixed(3);
+  $('perItemKrw').textContent = '₩' + Math.round(r.total / p.items * FX).toLocaleString();
+  $('perPaper').textContent = '$' + (r.total / p.papers).toFixed(2);
+  $('perPaperKrw').textContent = '₩' + Math.round(r.total / p.papers * FX).toLocaleString();
+
+  // Delta
+  const diff = r.total - BASELINE.total;
+  const pct = (diff / BASELINE.total) * 100;
+  const heroDelta = $('heroDelta');
+  if (Math.abs(pct) < 0.5) {
+    heroDelta.className = 'delta equal';
+    heroDelta.textContent = '기준값';
+  } else {
+    heroDelta.className = 'delta ' + (diff > 0 ? 'up' : 'down');
+    heroDelta.textContent = `${diff > 0 ? '+' : ''}$${Math.abs(diff).toFixed(0)} (${pct > 0 ? '+' : ''}${pct.toFixed(1)}%)`;
+  }
+
+  // Range marker (₩50만 ~ ₩140만 스케일)
+  // 현실적 범위: ₩80만 ~ ₩110만
+  const wonTotal = r.total * FX;
+  const minWon = 500000, maxWon = 1400000;
+  const pos = Math.max(0, Math.min(100, ((wonTotal - minWon) / (maxWon - minWon)) * 100));
+  $('rangeMarker').style.left = pos + '%';
+  $('rangeLabel').textContent = '₩' + fmtKRW(r.total);
+
+  // Range zone (₩80만~₩110만)
+  const zoneStart = ((800000 - minWon) / (maxWon - minWon)) * 100;
+  const zoneEnd = ((1100000 - minWon) / (maxWon - minWon)) * 100;
+  $('rangeZone').style.left = zoneStart + '%';
+  $('rangeZone').style.width = (zoneEnd - zoneStart) + '%';
+
+  // Table
+  const tbody = $('tableBody');
+  tbody.innerHTML = ITEMS.map(it => {
+    const now = BASELINE[it.key];
+    const sim = r[it.key];
+    const isDisabled = it.key === 'verify' && !p.verifyOn;
+    const d = sim - now;
+    const dpct = now > 0 ? (d / now) * 100 : 0;
+    let dCls, dStr;
+    if (isDisabled) { dCls = 'down'; dStr = 'OFF'; }
+    else if (Math.abs(dpct) < 0.5) { dCls = 'equal'; dStr = '—'; }
+    else { dCls = d > 0 ? 'up' : 'down'; dStr = `${d > 0 ? '+' : ''}${dpct.toFixed(0)}%`; }
+
+    return `
+      <tr class="${isDisabled ? 'disabled' : ''}">
+        <td>
+          <span class="item-bullet" style="background:${COLORS[it.key]}"></span>
+          <span class="item-name">${it.label}</span>
+          <div class="item-desc" style="margin-left:18px">${it.desc}</div>
+        </td>
+        <td><div class="item-cost dim"><span class="ccy">$</span>${fmtUSD(now)}</div></td>
+        <td><div class="item-cost"><span class="ccy">$</span>${fmtUSD(sim)}</div></td>
+        <td class="item-delta-cell ${dCls}">${dStr}</td>
+      </tr>
+    `;
+  }).join('') + (
+    (p.userActions > 0 || p.science > 0) ? `
+      <tr style="border-top: 2px solid var(--line);">
+        <td>
+          <span class="item-bullet" style="background:${COLORS.fallback}"></span>
+          <span class="item-name" style="font-style:italic;color:var(--ink-3)">변동 (사용자 액션 + 과학)</span>
+          <div class="item-desc" style="margin-left:18px">user actions + science</div>
+        </td>
+        <td><div class="item-cost dim"><span class="ccy">$</span>0</div></td>
+        <td><div class="item-cost"><span class="ccy">$</span>${p.userActions + p.science}</div></td>
+        <td class="item-delta-cell up">+$${p.userActions + p.science}</td>
+      </tr>
+    ` : ''
+  );
+
+  // Charts
+  donut.data.datasets[0].data = ITEMS.map(it => r[it.key]);
+  donut.update('none');
+  bar.data.datasets[1].data = ITEMS.map(it => r[it.key]);
+  bar.update('none');
+}
+
+/* -------- events -------- */
+Object.values(inputs).forEach(el => {
+  el.addEventListener('input', update);
+  el.addEventListener('change', update);
+});
+
+/* -------- presets -------- */
+const PRESETS = {
+  baseline: () => resetAll(),
+  'verify-low': () => { resetAll(); inputs.verifyBudget.value = 1; },
+  'verify-off': () => { resetAll(); inputs.verifyOn.checked = false; },
+  'fallback-high': () => { resetAll(); inputs.fallback.value = 10; },
+  'figure-high': () => { resetAll(); inputs.figure.value = 50; },
+  'cache-low': () => { resetAll(); inputs.cache.value = 70; },
+  'full-load': () => {
+    resetAll();
+    inputs.fallback.value = 10;
+    inputs.figure.value = 50;
+    inputs.cache.value = 70;
+    inputs.userActions.value = 30;
+    inputs.science.value = 30;
+  }
+};
+
+function resetAll() {
+  inputs.papers.value = 100;
+  inputs.items.value = 2200;
+  inputs.pages.value = 600;
+  inputs.cache.value = 80;
+  inputs.fallback.value = 5;
+  inputs.figure.value = 30;
+  inputs.db.value = 3;
+  inputs.verifyOn.checked = true;
+  inputs.verifyBudget.value = 3;
+  inputs.userActions.value = 0;
+  inputs.science.value = 0;
+  inputs.modelExplain.value = 'sonnet';
+  inputs.modelVerify.value = 'sonnet';
+  inputs.modelClassify.value = 'sonnet';
+  inputs.modelSvg.value = 'sonnet';
+}
+
+document.querySelectorAll('.preset-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    PRESETS[btn.dataset.preset]?.();
+    update();
+  });
+});
+
+$('resetBtn').addEventListener('click', () => { resetAll(); update(); });
+
+/* 초기 렌더 */
+update();
+</script>
+
+</body>
+</html>
